@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html><!--Chessv12_2-->
+    <head>
+        <title>Chess</title>
+        <meta charset="UTF-8" name = "viewport" content="width=device-width"/>
+        <link rel="stylesheet" href="../css/style.css" type="text/css"/>
+    </head>
+    <body>   
+      <table id="settings">
+        <tr>
+            <td onclick="rs()">Restart</td>
+            <td onclick="rhf()" id="rh">Remove Helper</td>
+            <td onclick="po()" id="poi">Piece Layout</td>
+        </tr>
+      </table>
+            <img id= "board" src= "../img/board800x800.jpg" />
+            <table id="ha1" class="hcell"></table>
+            <table id="ha2" class="hcell"></table>
+            <table id="ha3" class="hcell"></table>
+            <table id="ha4" class="hcell"></table>
+            <table id="ha5" class="hcell"></table>
+            <table id="ha6" class="hcell"></table>
+            <table id="ha7" class="hcell"></table>
+            <table id="ha8" class="hcell"></table>
+            <table id="hb1" class="hcell"></table>
+            <table id="hb2" class="hcell"></table>
+            <table id="hb3" class="hcell"></table>
+            <table id="hb4" class="hcell"></table>
+            <table id="hb5" class="hcell"></table>
+            <table id="hb6" class="hcell"></table>
+            <table id="hb7" class="hcell"></table>
+            <table id="hb8" class="hcell"></table>
+            <table id="hc1" class="hcell"></table>
+            <table id="hc2" class="hcell"></table>
+            <table id="hc3" class="hcell"></table>
+            <table id="hc4" class="hcell"></table>
+            <table id="hc5" class="hcell"></table>
+            <table id="hc6" class="hcell"></table>
+            <table id="hc7" class="hcell"></table>
+            <table id="hc8" class="hcell"></table>
+            <table id="hd1" class="hcell"></table>
+            <table id="hd2" class="hcell"></table>
+            <table id="hd3" class="hcell"></table>
+            <table id="hd4" class="hcell"></table>
+            <table id="hd5" class="hcell"></table>
+            <table id="hd6" class="hcell"></table>
+            <table id="hd7" class="hcell"></table>
+            <table id="hd8" class="hcell"></table>
+            <table id="he1" class="hcell"></table>
+            <table id="he2" class="hcell"></table>
+            <table id="he3" class="hcell"></table>
+            <table id="he4" class="hcell"></table>
+            <table id="he5" class="hcell"></table>
+            <table id="he6" class="hcell"></table>
+            <table id="he7" class="hcell"></table>
+            <table id="he8" class="hcell"></table>
+            <table id="hf1" class="hcell"></table>
+            <table id="hf2" class="hcell"></table>
+            <table id="hf3" class="hcell"></table>
+            <table id="hf4" class="hcell"></table>
+            <table id="hf5" class="hcell"></table>
+            <table id="hf6" class="hcell"></table>
+            <table id="hf7" class="hcell"></table>
+            <table id="hf8" class="hcell"></table>
+            <table id="hg1" class="hcell"></table>
+            <table id="hg2" class="hcell"></table>
+            <table id="hg3" class="hcell"></table>
+            <table id="hg4" class="hcell"></table>
+            <table id="hg5" class="hcell"></table>
+            <table id="hg6" class="hcell"></table>
+            <table id="hg7" class="hcell"></table>
+            <table id="hg8" class="hcell"></table>
+            <table id="hh1" class="hcell"></table>
+            <table id="hh2" class="hcell"></table>
+            <table id="hh3" class="hcell"></table>
+            <table id="hh4" class="hcell"></table>
+            <table id="hh5" class="hcell"></table>
+            <table id="hh6" class="hcell"></table>
+            <table id="hh7" class="hcell"></table>
+            <table id="hh8" class="hcell"></table>
+           
+            <img id="wqr" class="pieces white_pieces"  src="../img/w_rook.png"/>
+            <img id="wqn" class="pieces white_pieces"  src="../img/w_knight.png"/>
+            <img id="wqb" class="pieces white_pieces"  src="../img/w_bishop.png"/>
+            <img id="wq" class="pieces white_pieces"  src="../img/w_queen.png"/>
+            <img id="wk" class="pieces white_pieces"  src="../img/w_king.png"/>
+            <img id="wkb" class="pieces white_pieces"  src="../img/w_bishop.png"/>
+            <img id="wkn" class="pieces white_pieces"  src="../img/w_knight.png"/>
+            <img id="wkr" class="pieces white_pieces"  src="../img/w_rook.png"/>
+            <img id="wqrp" class="pieces white_pieces"  src="../img/w_pawn.png"/>
+            <img id="wqnp" class="pieces white_pieces"  src="../img/w_pawn.png"/>
+            <img id="wqbp" class="pieces white_pieces"  src="../img/w_pawn.png"/>
+            <img id="wqp" class="pieces white_pieces"  src="../img/w_pawn.png"/>
+            <img id="wkp" class="pieces white_pieces"  src="../img/w_pawn.png"/>
+            <img id="wkbp" class="pieces white_pieces"  src="../img/w_pawn.png"/>
+            <img id="wknp" class="pieces white_pieces"  src="../img/w_pawn.png"/>
+            <img id="wkrp" class="pieces white_pieces"  src="../img/w_pawn.png"/>
+            <img id="bqr" class="pieces black_pieces" src="../img/b_rook.png"/>
+            <img id="bqn" class="pieces black_pieces" src="../img/b_knight.png"/>
+            <img id="bqb" class="pieces black_pieces" src="../img/b_bishop.png"/>
+            <img id="bq" class="pieces black_pieces" src="../img/b_queen.png"/>
+            <img id="bk" class="pieces black_pieces" src="../img/b_king.png"/>
+            <img id="bkb" class="pieces black_pieces" src="../img/b_bishop.png"/>
+            <img id="bkn" class="pieces black_pieces" src="../img/b_knight.png"/>
+            <img id="bkr" class="pieces black_pieces" src="../img/b_rook.png"/>
+            <img id="bqrp" class="pieces black_pieces" src="../img/b_pawn.png"/>
+            <img id="bqnp" class="pieces black_pieces" src="../img/b_pawn.png"/>
+            <img id="bqbp" class="pieces black_pieces" src="../img/b_pawn.png"/>
+            <img id="bqp" class="pieces black_pieces" src="../img/b_pawn.png"/>
+            <img id="bkp" class="pieces black_pieces" src="../img/b_pawn.png"/>
+            <img id="bkbp" class="pieces black_pieces" src="../img/b_pawn.png"/>
+            <img id="bknp" class="pieces black_pieces" src="../img/b_pawn.png"/>
+            <img id="bkrp" class="pieces black_pieces" src="../img/b_pawn.png"/>
+            
+            <table id = "touchpad">
+              <tr>
+                  <td id="a8" onclick="chessgame(a, 8, 0)"> </td>
+                  <td id="b8" onclick="chessgame(b, 8, 0)"> </td>
+                  <td id="c8" onclick="chessgame(c, 8, 0)"> </td>
+                  <td id="d8" onclick="chessgame(d, 8, 0)"> </td>
+                  <td id="e8" onclick="chessgame(e, 8, 0)"> </td>
+                  <td id="f8" onclick="chessgame(f, 8, 0)"> </td>
+                  <td id="g8" onclick="chessgame(g, 8, 0)"> </td>
+                  <td id="h8" onclick="chessgame(h, 8, 0)"> </td>
+              </tr>
+              <tr>
+                  <td id="a7" onclick="chessgame(a, 7, 0)"> </td>
+                  <td id="b7" onclick="chessgame(b, 7, 0)"> </td>
+                  <td id="c7" onclick="chessgame(c, 7, 0)"> </td>
+                  <td id="d7" onclick="chessgame(d, 7, 0)"> </td>
+                  <td id="e7" onclick="chessgame(e, 7, 0)"> </td>
+                  <td id="f7" onclick="chessgame(f, 7, 0)"> </td>
+                  <td id="g7" onclick="chessgame(g, 7, 0)"> </td>
+                  <td id="h7" onclick="chessgame(h, 7, 0)"> </td>
+              </tr>
+              <tr>
+                  <td id="a6" onclick="chessgame(a, 6, 0)"> </td>
+                  <td id="b6" onclick="chessgame(b, 6, 0)"> </td>
+                  <td id="c6" onclick="chessgame(c, 6, 0)"> </td>
+                  <td id="d6" onclick="chessgame(d, 6, 0)"> </td>
+                  <td id="e6" onclick="chessgame(e, 6, 0)"> </td>
+                  <td id="f6" onclick="chessgame(f, 6, 0)"> </td>
+                  <td id="g6" onclick="chessgame(g, 6, 0)"> </td>
+                  <td id="h6" onclick="chessgame(h, 6, 0)"> </td>
+              </tr>
+              <tr>
+                  <td id="a5" onclick="chessgame(a, 5, 0)"> </td>
+                  <td id="b5" onclick="chessgame(b, 5, 0)"> </td>
+                  <td id="c5" onclick="chessgame(c, 5, 0)"> </td>
+                  <td id="d5" onclick="chessgame(d, 5, 0)"> </td>
+                  <td id="e5" onclick="chessgame(e, 5, 0)"> </td>
+                  <td id="f5" onclick="chessgame(f, 5, 0)"> </td>
+                  <td id="g5" onclick="chessgame(g, 5, 0)"> </td>
+                  <td id="h5" onclick="chessgame(h, 5, 0)"> </td>
+              </tr>
+              <tr>
+                  <td id="a4" onclick="chessgame(a, 4, 0)"> </td>
+                  <td id="b4" onclick="chessgame(b, 4, 0)"> </td>
+                  <td id="c4" onclick="chessgame(c, 4, 0)"> </td>
+                  <td id="d4" onclick="chessgame(d, 4, 0)"> </td>
+                  <td id="e4" onclick="chessgame(e, 4, 0)"> </td>
+                  <td id="f4" onclick="chessgame(f, 4, 0)"> </td>
+                  <td id="g4" onclick="chessgame(g, 4, 0)"> </td>
+                  <td id="h4" onclick="chessgame(h, 4, 0)"> </td>
+              </tr>
+              <tr>
+                  <td id="a3" onclick="chessgame(a, 3, 0)"> </td>
+                  <td id="b3" onclick="chessgame(b, 3, 0)"> </td>
+                  <td id="c3" onclick="chessgame(c, 3, 0)"> </td>
+                  <td id="d3" onclick="chessgame(d, 3, 0)"> </td>
+                  <td id="e3" onclick="chessgame(e, 3, 0)"> </td>
+                  <td id="f3" onclick="chessgame(f, 3, 0)"> </td>
+                  <td id="g3" onclick="chessgame(g, 3, 0)"> </td>
+                  <td id="h3" onclick="chessgame(h, 3, 0)"> </td>
+              </tr>
+              <tr>
+                  <td id="a2" onclick="chessgame(a, 2, 0)"> </td>
+                  <td id="b2" onclick="chessgame(b, 2, 0)"> </td>
+                  <td id="c2" onclick="chessgame(c, 2, 0)"> </td>
+                  <td id="d2" onclick="chessgame(d, 2, 0)"> </td>
+                  <td id="e2" onclick="chessgame(e, 2, 0)"> </td>
+                  <td id="f2" onclick="chessgame(f, 2, 0)"> </td>
+                  <td id="g2" onclick="chessgame(g, 2, 0)"> </td>
+                  <td id="h2" onclick="chessgame(h, 2, 0)"> </td>
+              </tr>
+              <tr>
+                  <td id="a1" onclick="chessgame(a, 1, 0)"> </td>
+                  <td id="b1" onclick="chessgame(b, 1, 0)"> </td>
+                  <td id="c1" onclick="chessgame(c, 1, 0)"> </td>
+                  <td id="d1" onclick="chessgame(d, 1, 0)"> </td>
+                  <td id="e1" onclick="chessgame(e, 1, 0)"> </td>
+                  <td id="f1" onclick="chessgame(f, 1, 0)"> </td>
+                  <td id="g1" onclick="chessgame(g, 1, 0)"> </td>
+                  <td id="h1" onclick="chessgame(h, 1, 0)"> </td>
+              </tr>
+          </table>
+            
+            
+            <div id="promotionModal" class="modal">
+                <div class="modal-content">
+                  <span class="close">&times;</span>
+                  <p>Promote your pawn to:</p>
+                  <img id="qrpp" src="../img/b_rook.png" onclick = "handlePromotionSelection('rook', 0)"/>
+                  <img id="qnpp" src="../img/b_knight.png" onclick = "handlePromotionSelection('knight', 0)"/>
+                  <img id="qbpp" src="../img/b_bishop.png" onclick = "handlePromotionSelection('bishop', 0)"/>
+                  <img id="qpp"  src="../img/b_queen.png" onclick = "handlePromotionSelection('queen', 0)"/>
+                </div>
+            </div>
+    </body>
+    <script src="../js/bav.js"></script>
+    <script src="../js/bfn.js"></script>
+    <script src="../js/script.js"></script>
+    <script src="../js/pro.js"></script>
+    <script src='../js/sf.js'></script>
+    <script src='../js/pf.js'></script>
+    <script src='../js/sch.js'></script>
+</html>

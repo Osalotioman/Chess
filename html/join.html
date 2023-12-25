@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Join Game</title>
+  <style>
+    body{
+      background-color: brown;
+    }
+    input{
+      width: 80%;
+      height: 20px;
+      position: relative;
+      left:0px;
+      top: 200px;
+      border-radius: 50px;
+    }
+    button{
+      width: 40px;
+      height: 40px;
+      position: relative;
+      left:0px;
+      top: 200px;
+      border-radius: 30px;
+    }
+  </style>
+  </head>
+  <body>
+    <input type="text" id="gl" placeholder="Enter game link..."></input>
+    <br>
+    <br>
+    <button onclick="join()">Join</button>
+  </body>
+  <script>
+    var key = document.getElementById("gl")
+    function join(cmd){
+      localStorage.gkj = key.value
+      location.href = "chess.html"
+      //localStorage.gkh = ""
+    }
+  </script>
+</html>

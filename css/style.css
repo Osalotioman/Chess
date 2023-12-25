@@ -1,0 +1,181 @@
+/* Modal container v2*/
+#settings tr td{
+  padding: 40px;
+  font-size: 40px;
+}
+.black_pieces{
+  transform: rotate(180deg);
+}
+.modal {
+  display: none; /* Hide the modal by default */
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.4); /* Semi-transparent background */
+}
+/* Modal content */
+.modal-content {
+  background-color: #fefefe;
+  margin: 15% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 300px;
+  text-align: center;
+}
+
+/* Close button */
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+.close:hover,
+  .close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+  }
+#plist{
+  width: 0px;/*464*/
+  height: 0px;/*116*/
+  background-color: grey;
+  position: absolute;
+  top: 727px;
+  left: 260.5px;
+  border: 5px solid black;
+  display: none;
+}
+/*Newly Modified Block*/
+#touchpad{
+	width: 970px;
+	height: 970px;
+	position: absolute;
+	top: 300px;
+  border-collapse: collapse;
+  border: 15px solid grey;
+  opacity: 0%;
+}
+/*Newly Added Block*/
+#touchpad tbody tr td{
+  /*background-color: #888;*/
+  border-collapse: collapse;
+  width: 110.25px;
+  height: 110.25px;
+  border: 1px solid red;
+}
+.hcell {
+  width: 116px;
+  height: 116px;
+  position: absolute;
+}
+#ha8,#hb8,#hc8,#hd8,#he8,#hf8,#hg8,#hh8{
+  top: 320px;
+}
+#ha7,#hb7,#hc7,#hd7,#he7,#hf7,#hg7,#hh7{
+  top: 435px;
+}
+#ha6,#hb6,#hc6,#hd6,#he6,#hf6,#hg6,#hh6{
+  top: 552px;
+}
+#ha5,#hb5,#hc5,#hd5,#he5,#hf5,#hg5,#hh5{
+  top: 669px;
+}
+#ha4,#hb4,#hc4,#hd4,#he4,#hf4,#hg4,#hh4{
+  top: 785px;
+}
+#ha3,#hb3,#hc3,#hd3,#he3,#hf3,#hg3,#hh3{
+  top: 901px;
+}
+#ha2,#hb2,#hc2,#hd2,#he2,#hf2,#hg2,#hh2{
+  top: 1019px;
+}
+#ha1,#hb1,#hc1,#hd1,#he1,#hf1,#hg1,#hh1{
+  top: 1134px;
+}
+#ha1,#ha2,#ha3,#ha4,#ha5,#ha6,#ha7,#ha8{
+  left: 27px;
+}
+#hb1,#hb2,#hb3,#hb4,#hb5,#hb6,#hb7,#hb8{
+  left: 143px;
+}
+#hc1,#hc2,#hc3,#hc4,#hc5,#hc6,#hc7,#hc8{
+  left: 260px;
+}
+#hd1,#hd2,#hd3,#hd4,#hd5,#hd6,#hd7,#hd8{
+  left: 376px;
+}
+#he1,#he2,#he3,#he4,#he5,#he6,#he7,#he8{
+  left: 493px;
+}
+#hf1,#hf2,#hf3,#hf4,#hf5,#hf6,#hf7,#hf8{
+  left: 610px;
+}
+#hg1,#hg2,#hg3,#hg4,#hg5,#hg6,#hg7,#hg8{
+  left: 727px;
+}
+#hh1,#hh2,#hh3,#hh4,#hh5,#hh6,#hh7,#hh8{
+  left: 842px;
+}
+#framepad {
+  width: 970px;
+	height: 970px;
+	position: absolute;
+	top: 300px;
+}
+#board{
+	width: 970px;
+	height: 970px;
+	position: absolute;
+	top: 300px;
+ }
+.pieces {
+    width: 100px;
+    height: 100px;
+    position:absolute;
+    transition: all 0.3s ease-out;
+    /*background-color: yellow;*/
+}
+#wqr,#wqn,#wqb,#wq,#wk,#wkb,#wkn,#wkr{
+  top:1144px;
+}
+#wqrp,#wqnp,#wqbp,#wqp,#wkp,#wkbp,#wknp,#wkrp{
+  top:1027px;
+}
+#bqr,#bqn,#bqb,#bq,#bk,#bkb,#bkn,#bkr{
+  top:325px;
+}
+#bqrp,#bqnp,#bqbp,#bqp,#bkp,#bkbp,#bknp,#bkrp{
+  top:442px;
+}
+#wqr,#wqrp,#bqr,#bqrp{
+  left:35px;
+}
+#wqn,#wqnp,#bqn,#bqnp{
+  left:152px;
+}
+#wqb,#wqbp,#bqb,#bqbp{
+  left:267px;
+}
+#wq,#wqp,#bq,#bqp{
+  left:384px;
+}
+#wk,#wkp,#bk,#bkp{
+  left:501px;
+}
+#wkb,#wkbp,#bkb,#bkbp{
+  left:618px;
+}
+#wkn,#wknp,#bkn,#bknp{
+  left:735px;
+}
+#wkr,#wkrp,#bkr,#bkrp{
+  left:852px;
+}
+body{
+	background-color: brown;
+}

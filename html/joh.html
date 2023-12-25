@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Join Or Host Game</title>
+  <style>
+    body{
+      background-color: brown;
+    }
+    button{
+      width: 100%;
+      height: 100px;
+      position: relative;
+      top: 180px;
+    }
+  </style>
+  </head>
+  <body>
+    <h1> Chess Championship Tournaments </h1>
+    <button onclick="joh('join')">Join Game</button>
+    <br>
+    <br>
+    <button onclick="joh('host')">Host Game</button>
+  </body>
+  <script>
+    function joh(cmd){
+      if(cmd == "join"){
+        location.href = "join.html"
+      }else if(cmd == "host"){
+        location.href = "host.html"
+      }
+    }
+  </script>
+</html>

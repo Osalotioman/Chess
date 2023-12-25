@@ -1,0 +1,19 @@
+1. In the dng_sq function, file and rank are parameters taken by the function but are never used.
+sol1. Solution, if they are not used, take them out, also take them out of the linos function.
+2. The pieces that are getting promoted are not evaluating the board after the change.
+sol2: Call the dng funcction in the handlepromotion function
+3. Come up with a reason why the knight on c6 is pinned in this config (525478667183616654614354335171725833216141856767314262774757672142314243425756627274625628362224362443874827264242836424321214171542152625152618281415252415162423161723221718#q#u#e#e#n2221#q#u#e#e#n3858477475565562635554644564635453636453526767527568458284681352618776587818323276546766756677756667787764657747483837286858261537354526474526143534211112322434124234343433143542454454634443524222333235543231#r#o#o#k432215375251#k#n#i#g#h#t37776768#r#o#o#k434268677778674778681854352828381618542818378248284743583868547468577574722826577281637574716242424241#b#i#s#h#o#p41225257265613243554747362537372246566576885747271#b#i#s#h#o#p5353535363635252535363727468585342711724586667585767438357476768#b#i#s#h#o#p6847366886411486648436262484852436138586133586871425268788#k#n#i#g#h#t262736887636564754644635263642465262362525365474313374626336366354333154663636363666633133665433316373)
+cause3: the in function does not see the knight blocking the white bishop.
+sol3: in the pin function, add a condition that checks if the second piece found is a k,n or p. break the loop if true cause the can't pin, 
+and'll block anyone who tries to.
+4. King does not seem to be recognising the promoted pieces (darn it)
+sol4: Seem to be refering to 4.1
+4.1 I think promoted pieces are ghost to pin function
+cause4.1: it was because the value of the promoted pawns are not changed in the cellid function
+sol4.1: created boardpid, and two 1 line functions for the board, then let the pin function make use
+of this board.
+4.2 Why do the promoted pieces not get recognised by other piees immediately they are promoted?
+sol4.2 seemto be same with 2.
+5. The pinned pieces do not know they can move in the direction of the pieces pinning them, or even kill
+the pieces pinning them.
+algo5: see the algo.txt

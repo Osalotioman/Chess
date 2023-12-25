@@ -1,0 +1,13 @@
+/*if((listf_dng[n].join("") == listf_dng[26].join("") && listr_dng[n].join("") == listr_dng[26].join("")) || (listf_dng[n].join("") == listf_dng[27].join("") && listr_dng[n].join("") == listr_dng[27].join(""))){
+              cohcelldng(c, 3, 200)
+              cohcelldng(a, 1, 200)
+            }else if((listf_dng[n].join("") == listf_dng[8].join("") && listr_dng[n].join("") == listr_dng[8].join("")) || (listf_dng[n].join("") == listf_dng[10].join("") && listr_dng[n].join("") == listr_dng[10].join(""))){
+              cohcelldng(b, 3, 200)
+              cohcelldng(b, 1, 200)
+            }else if((listf_dng[n].join("") == listf_dng[28].join("") && listr_dng[n].join("") == listr_dng[28].join("")) || (listf_dng[n].join("") == listf_dng[29].join("") && listr_dng[n].join("") == listr_dng[29].join(""))){
+              cohcelldng(a, 3, 200)
+              cohcelldng(c, 1, 200)
+            }else if((listf_dng[n].join("") == listf_dng[9].join("") && listr_dng[n].join("") == listr_dng[9].join("")) || (listf_dng[n].join("") == listf_dng[11].join("") && listr_dng[n].join("") == listr_dng[11].join(""))){
+              cohcelldng(a, 2, 200)
+              cohcelldng(c, 2, 200)
+            }*/

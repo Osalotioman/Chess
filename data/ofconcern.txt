@@ -1,0 +1,1 @@
+1. Pieces only evaluate the board against their counterpart kingdom.

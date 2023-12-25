@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Host Game</title>
+  <style>
+     body{
+      position: fixed;
+      z-index: 1;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: brown;
+      /*background-color: rgba(0, 0, 0, 0.4);  Semi-transparent background */
+     }
+     .body-content{
+       padding: 20px;
+       border: 1px solid #888;
+       width: 300px;
+       text-align: center;
+     }
+     p{
+       color: white;
+     }
+  </style>
+  </head>
+  <body>
+    <div class="body-content">
+      <p id="pla">Play As: </p>
+      <img id="wb" src="../img/w_bishop.png" onclick = "sp('white')"/>
+      <img id="bb" src="../img/b_bishop.png" onclick = "sp('black')"/>
+      <button onclick="gen_l()">Generate Game Link</button>
+       <p id="gld">Your Link Should Appear Here</p>
+       <p>Please Copy The Link</p>
+       <button onclick="host()">Join Game</button>
+    </div>
+  </body>
+  <script>
+    var gld = document.getElementById("gld")
+    var wb = document.getElementById("wb")
+    var bb = document.getElementById("bb")
+    var pla = document.getElementById("pla")
+    var pa =  -1
+    const socket = new WebSocket('ws://192.168.43.229:5050');
+    function sp(col){
+      if(col == "black"){
+        bb.style.border = "5px solid yellow"
+        wb.style.border = "0px"
+        pla.textContent = "Play As: "+"Black"
+        pa = 0        
+      }else if(col == "white"){
+        wb.style.border = "5px solid yellow"
+        bb.style.border = "0px"
+        pla.textContent = "Play As: "+"White"
+        pa = 1        
+      }
+    }
+    const currentDate = new Date();
+
+      const year = currentDate.getFullYear();
+      const month = (currentDate.getMonth() + 1).toString().padStart(2, '0'); // Adding 1 to month because it's zero-based
+      const day = currentDate.getDate().toString().padStart(2, '0');
+      const hours = currentDate.getHours().toString().padStart(2, '0');
+      const minutes = currentDate.getMinutes().toString().padStart(2, '0');
+      const seconds = currentDate.getSeconds().toString().padStart(2, '0');
+      
+      var formattedDateTime = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+      //console.log(formattedDateTime);
+    function gen_l(){
+      if(pa == -1){
+        alert("Please select who you want to play as.")
+        return
+      }
+      
+      if(pa == 0){
+        gld.textContent = formattedDateTime
+        socket.send(12345)
+      }else{
+        gld.textContent = formattedDateTime
+        socket.send(-12345)
+      }
+    }
+    function host(){
+      localStorage.gkh = formattedDateTime
+      location.href = "join.html"
+      //location.href = "chess.html"
+      //localStorage.gkh = ""
+      //Still has problems recognizing host cause using local storage for authentication
+      //Thinking of designing a database system to store games
+    }
+  </script>
+</html>

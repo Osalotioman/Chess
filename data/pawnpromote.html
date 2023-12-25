@@ -1,0 +1,80 @@
+<style>
+  /* Modal container */
+.modal {
+  display: none; /* Hide the modal by default */
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.4); /* Semi-transparent background */
+}
+/* Modal content */
+.modal-content {
+  background-color: #fefefe;
+  margin: 15% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 300px;
+  text-align: center;
+}
+
+/* Close button */
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+</style>
+<div id="promotionModal" class="modal">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <p>Promote your pawn to:</p>
+    <button id="queenBtn">Queen</button>
+    <button id="rookBtn">Rook</button>
+    <button id="bishopBtn">Bishop</button>
+    <button id="knightBtn">Knight</button>
+  </div>
+</div>
+<script>
+  // Get the modal container and buttons
+const modal = document.getElementById("promotionModal");
+const queenBtn = document.getElementById("queenBtn");
+const rookBtn = document.getElementById("rookBtn");
+const bishopBtn = document.getElementById("bishopBtn");
+const knightBtn = document.getElementById("knightBtn");
+
+// Show the modal when a pawn is eligible for promotion
+function showPromotionModal() {
+  modal.style.display = "block";
+}
+
+// Hide the modal when the user selects a promotion option
+function hidePromotionModal() {
+  modal.style.display = "none";
+}
+// Handle the promotion selection
+function handlePromotionSelection(piece) {
+  // Perform the necessary logic based on the selected piece
+  // For example, you can update the pawn to the selected piece
+
+  // Hide the modal
+  hidePromotionModal();
+}
+
+// Attach event listeners to the promotion buttons
+queenBtn.addEventListener("click", () => handlePromotionSelection("queen"));
+rookBtn.addEventListener("click", () => handlePromotionSelection("rook"));
+bishopBtn.addEventListener("click", () => handlePromotionSelection("bishop"));
+knightBtn.addEventListener("click", () => handlePromotionSelection("knight"));
+showPromotionModal()
+</script>

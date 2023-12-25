@@ -1,0 +1,137 @@
+if(cell(file, rank) > 0){
+        check_function(-1, "check", null, null)//for white, black is in check
+       }else{
+        check_function(1, "check", null, null)//for black, white is in check
+       }
+if(cell(file, rank) > 0){
+          check_function(-1, "check", null, null)//for white, black is in check
+       }else{
+          check_function(1, "check", null, null)//for black, white is in check
+       }
+function check_function(state, activity, file, rank){
+    highlighton = 0
+    clear_highlight()
+    let incheck = false
+    let other = false
+    let dsval = false
+    if(activity == "check"){
+      if(state == -1){
+        var n = 1
+        while(n<9){
+          if(boardindex(n)){
+            if(cell(rev_cell(n, 0), rev_cell(n, 1)) > 0 && cell(rev_cell(n, 0), rev_cell(n, 1)) < 9 && rev_cell(n, 1) + 1 > 0 && rev_cell(n, 1) + 1< 9){
+              wpawn_kmove(rev_cell(n, 0), rev_cell(n, 1))
+            }
+          }
+          n += 1
+        }
+      }else{
+        let n = -8
+        while(n<0){
+          if(boardindex(n)){
+            if(cell(rev_cell(n, 0), rev_cell(n, 1)) > -9 && cell(rev_cell(n, 0), rev_cell(n, 1)) < 0 && rev_cell(n, 1) - 1 > 0 && rev_cell(n, 1) - 1< 9){
+            bpawn_kmove(rev_cell(n, 0), rev_cell(n, 1))
+            }
+          }
+          n += 1
+        }
+      }
+      if(boardindex(-13*state)){
+        king_kmove(rev_cell(-13*state, 0), rev_cell(-13*state, 1), state)
+      }
+      if(boardindex(-12*state)){
+        bishop_kmove(rev_cell(-12*state, 0), rev_cell(-12*state, 1), state)
+        rook_kmove(rev_cell(-12*state, 0), rev_cell(-12*state, 1), state)
+      }
+      if(boardindex(-11*state)){
+        bishop_kmove(rev_cell(-11*state, 0), rev_cell(-11*state, 1), state)
+      }
+      if(boardindex(-14*state)){
+        bishop_kmove(rev_cell(-14*state, 0), rev_cell(-14*state, 1), state)
+      }
+      if(boardindex(-9*state)){
+        rook_kmove(rev_cell(-9*state, 0), rev_cell(-9*state, 1), state)
+      }
+      if(boardindex(-16*state)){
+        rook_kmove(rev_cell(-16*state, 0), rev_cell(-16*state, 1), state)
+      }
+      if(boardindex(-10*state)){
+        knight_kmove(rev_cell(-10*state, 0), rev_cell(-10*state, 1), state)
+      }
+      if(boardindex(-15*state)){
+        knight_kmove(rev_cell(-15*state, 0), rev_cell(-15*state, 1), state)
+      }
+    
+      state = -1*state
+      if(cellksq(rev_cell(-13*state, 0), rev_cell(-13*state, 1)) == 1){
+        incheck = true
+      }
+      clear_highlight()   
+      if(incheck){
+        highlighton = 1
+        coh(rev_cell(-13*state, 0), rev_cell(-13*state, 1), checkv)
+        check.play()
+        incheck = false
+        highlighton = 0
+      }else{
+        buttons.play()
+      }
+      incheck = false
+    }else if(activity == "ds"){
+      if(state == -1){
+        var n = 1
+        while(n<9){
+          if(boardindex(n)){
+            if(cell(rev_cell(n, 0), rev_cell(n, 1)) > 0 && cell(rev_cell(n, 0), rev_cell(n, 1)) < 9 && rev_cell(n, 1) + 1 > 0 && rev_cell(n, 1) + 1< 9){
+              wpawn_move(rev_cell(n, 0), rev_cell(n, 1))
+            }
+          }
+          n += 1
+        }
+      }else{
+        let n = -8
+        while(n<0){
+          if(boardindex(n)){
+            if(cell(rev_cell(n, 0), rev_cell(n, 1)) > -9 && cell(rev_cell(n, 0), rev_cell(n, 1)) < 0 && rev_cell(n, 1) - 1 > 0 && rev_cell(n, 1) - 1< 9){
+            bpawn_move(rev_cell(n, 0), rev_cell(n, 1))
+            }
+          }
+          n += 1
+        }
+      }
+      if(boardindex(-13*state)){
+        king_move(rev_cell(-13*state, 0), rev_cell(-13*state, 1), state)
+      }
+      if(boardindex(-12*state)){
+        bishop_move(rev_cell(-12*state, 0), rev_cell(-12*state, 1), state)
+        rook_move(rev_cell(-12*state, 0), rev_cell(-12*state, 1), state)
+      }
+      if(boardindex(-11*state)){
+        bishop_move(rev_cell(-11*state, 0), rev_cell(-11*state, 1), state)
+      }
+      if(boardindex(-14*state)){
+        bishop_move(rev_cell(-14*state, 0), rev_cell(-14*state, 1), state)
+      }
+      if(boardindex(-9*state)){
+        rook_move(rev_cell(-9*state, 0), rev_cell(-9*state, 1), state)
+      }
+      if(boardindex(-16*state)){
+        rook_move(rev_cell(-16*state, 0), rev_cell(-16*state, 1), state)
+      }
+      if(boardindex(-10*state)){
+        knight_move(rev_cell(-10*state, 0), rev_cell(-10*state, 1), state)
+      }
+      if(boardindex(-15*state)){
+        knight_move(rev_cell(-15*state, 0), rev_cell(-15*state, 1), state)
+      }
+      if(file > 0 && file < 9 && rank > 0 && rank < 9){
+        if(cellhsq(file, rank) == 1){
+          alert("Bad Square: "+file+", "+rank)
+          dsval = true
+        }
+      }
+      clear_highlight()   
+      return dsval
+    }
+    highlighton = 1
+  }

@@ -1,0 +1,42 @@
+This is made in order to store progress.
+I apologize for not having stored the recent progress, which by now I do not recall.
+None the less, I will try to store future progress here, to turn this into more of a documentation.
+
+#06/11/2023
+The last update I was very significant, it was in a bid to merge the dng_sq function and the linos 
+function that I cracked the code to stop the King from going backward in the same line of sight with
+attacking queen, bishop or rook.
+I also made progres on pinning pieces, but there is still much work to be done in that regards.
+Lets start with the first progress and see what I can recall.
+
+#1: Stopping King from moving backward in linos with enemy-
+sol1: Okay the code to cracking this one was that I discovered that when the king is in check by a piece with
+linos, all I had to do wa to get the coordinates of the backward square which the king should not land
+on.
+
+#2: Pinning-
+sol1: Thank God I explained this in the code.
+    /*for(let n=0; n < binum_dng.length; n++){
+      if(boardindex(binum_dng[n]*state)){
+        rev_cell1(binum_dng[n]*state)
+        for(let i=0; i<npoc; i++){
+          //I have noo idea why I repeated this twice
+          move_all(listpc[i][0], listpc[i][1], listf_dng[n], listr_dng[n], state*-1, pname_dng[n])
+          move_all(listpc[i][0], listpc[i][1], listf_dng[n], listr_dng[n], state, pname_dng[n])
+          move_all(rev_cell(-13*state, 0), rev_cell(-13*state, 1), [0], [0], state, "dng")
+          clear_highlight()     
+        }
+      }
+    }*/
+    //Step-1, search board for piece nums which are multiples of 19
+    //Step0, if found, set num to previous num divided by 19 
+    //Step1, change king to queen.
+    //Step2, turn on queen power
+    //Step3_1, use queen power to check all possible lines of site for others with the same state
+    //Step3_2, if one with same state is found, save coordinates
+    //Step3_3, continue the search but now for one of a different state
+    //Step3_4, if one of a different state is found next
+    //Step3_5, check if the king search orientation (+, x, +/x) 
+    //matches the piece orientation (rook, bisshop, queen)
+    //Step6, if it is a match, the piece num of the coordinates saved in Step3_2 should be 
+    //multiplied by 19

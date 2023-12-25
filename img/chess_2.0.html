@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Chess 2.0</title>
+    <link rel="stylesheet" href="main.css">
+  </head>
+  <style>
+  		* {
+				box-sizing: border-box;
+				margin: 0;
+				padding: 0;
+		}
+  body, html {
+		    position: fixed;
+		    top: 0;
+		    bottom: 0;
+		    left: 0;
+		    right: 0;
+		    background-image: url('bl.jpg');
+		    background-size: cover;
+	  	}
+.board {
+  width: 333px;
+  height: 333px;
+  outline: 1px solid black;
+  background-image: url('board.jpg');
+  background-size: cover;
+  position: relative;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.container {
+  width: 320px;
+  height: 320px;
+  background: transparent;
+  position: relative;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.pieces {
+ position: absolute;
+		   width: 40px;
+		   height: 40px
+		 }
+		 #piece1{
+		   top: 40px;
+		   left: 0;
+		 }
+		 #piece2{
+		   top: 40px;
+		   left: 40px;
+		 }
+		 #piece3{
+		   top: 40px;
+		   left: 80px;
+		 }
+		 #piece4{
+		   top: 40px;
+		   left: 120px;
+		 }
+		 #piece5{
+		   top: 40px;
+		   left: 160px;
+		 }
+		 #piece6{
+		   top: 40px;
+		   left: 200px;
+		 }
+		 #piece7{
+		   top: 40px;
+		   left: 240px;
+		 }
+		 #piece8{
+		   top: 40px;
+		   left: 280px;
+		 }
+		 #piece9{
+		   top: 0px;
+		   left: 0px;
+		 }
+		 #piece10{
+		   top: 0px;
+		   left: 80px;
+		 }
+		 #piece11{
+		   top: 0px;
+		   left: 40px;
+		 }
+		 #piece12{
+		   top: 0;
+		   left: 120px;
+		 }
+		 #piece13{
+		   top: 0;
+		   left: 160px;
+		 }
+		 #piece14{
+		   top: 0;
+		   left: 200px;
+		 }
+		 #piece15{
+		   top: 0;
+		   left: 240px;
+		 }
+		 #piece16{
+		   top: 0;
+		   left: 280px;
+		 }
+		 #piece17{
+		   top: 240px;
+		   left: 0;
+		 }
+		 #piece18{
+		   top: 240px;
+		   left: 40px;
+		 }
+		 #piece19{
+		   top: 240px;
+		   left: 80px;
+		 }
+		 #piece20{
+		   top: 240px;
+		   left: 120px;
+		 }
+		 #piece21{
+		   top: 240px;
+		   left: 160px;
+		 }
+		 #piece22{
+		   top: 240px;
+		   left: 200px;
+		 }
+		 #piece23{
+		   top: 240px;
+		   left: 240px;
+		 }
+		 #piece24{
+		   top: 240px;
+		   left: 280px;
+		 }
+		 #piece25{
+		   top: 280px;
+		   left: 0px;
+		 }
+		 #piece26{
+		   top: 280px;
+		   left: 40px;
+		 }
+		 #piece27{
+		   top: 280px;
+		   left: 80px;
+		 }
+		 #piece28{
+		   top: 280px;
+		   left: 120px;
+		 }
+		 #piece29{
+		   top: 280px;
+		   left: 160px;
+		 }
+		 #piece30{
+		   top: 280px;
+		   left: 200px;
+		 }
+		 #piece31{
+		   top: 280px;
+		   left: 240px;
+		 }
+		 #piece32{
+		   top: 280px;
+		   left: 280px;
+		 }
+  </style>
+  <body>
+    <div class="board">
+      <div class="container">
+        <img src="bp.png" alt="" class="pieces" id="piece1">
+        <img src="bp.png" alt="" class="pieces" id="piece2">
+        <img src="bp.png" alt="" class="pieces" id="piece3">
+        <img src="bp.png" alt="" class="pieces" id="piece4">
+        <img src="bp.png" alt="" class="pieces" id="piece5">
+        <img src="bp.png" alt="" class="pieces" id="piece6">
+        <img src="bp.png" alt="" class="pieces" id="piece7">
+        <img src="bp.png" alt="" class="pieces" id="piece8">
+        <img src="br.png" alt="" class="pieces" id="piece9">
+        <img src="bn.png" alt="" class="pieces" id="piece10">
+        <img src="bb.png" alt="" class="pieces" id="piece11">
+        <img src="bk.png" alt="" class="pieces" id="piece12">
+        <img src="bq.png" alt="" class="pieces" id="piece13">
+        <img src="bb.png" alt="" class="pieces" id="piece14">
+        <img src="bn.png" alt="" class="pieces" id="piece15">
+        <img src="br.png" alt="" class="pieces" id="piece16">
+        <img src="wp.png" alt="" class="pieces" id="piece17">
+        <img src="wp.png" alt="" class="pieces" id="piece18">
+        <img src="wp.png" alt="" class="pieces" id="piece19">
+        <img src="wp.png" alt="" class="pieces" id="piece20">
+        <img src="wp.png" alt="" class="pieces" id="piece21">
+        <img src="wp.png" alt="" class="pieces" id="piece22">
+        <img src="wp.png" alt="" class="pieces" id="piece23">
+        <img src="wp.png" alt="" class="pieces" id="piece24">
+        <img src="wr.png" alt="" class="pieces" id="piece25">
+        <img src="wn.png" alt="" class="pieces" id="piece26">
+        <img src="wb.png" alt="" class="pieces" id="piece27">
+        <img src="wq.png" alt="" class="pieces" id="piece28">
+        <img src="wk.png" alt="" class="pieces" id="piece29">
+        <img src="wb.png" alt="" class="pieces" id="piece30">
+        <img src="wr.png" alt="" class="pieces" id="piece31">
+        <img src="wn.png" alt="" class="pieces" id="piece32">
+      </div>
+    </div>
+  </body>
+</html>

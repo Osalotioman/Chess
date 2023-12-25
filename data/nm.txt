@@ -1,0 +1,18 @@
+#Script file names
+bav = boards and variables
+bfn = board functions
+dad = drag and drop
+pf = piece functions
+pro = promotion
+sch = ?(Save/Store Chess)
+sf = Special Functions
+
+#FunctionsName
+1. linos = line of sight
+2. dng_sq = danger square
+
+
+#VariableName
+hbd = highlight borders
+hsq = highlight squares
+ksq = highlight kill squares

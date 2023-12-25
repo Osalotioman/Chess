@@ -1,0 +1,23 @@
+//setboard()
+function ob(){
+    alert(3)
+}
+
+//Scheme1 to record game moves.
+//[[[], []], [[], []]],
+/*Abolished Cause f Rigidity
+var imgt = [[[[e,2], [e,4]],[[e,7], [e,5]]],
+            [[[f,2], [f,4]], [[e,5], [f,4]]]/*,
+            [[[f,1], [c,4]], [[], []]],
+            [[[], []], [[], []]],
+            [[[], []], [[], []]]*//*
+           ]
+function setboard(){
+    for(let i=0; i<imgt.length; i++){
+        for(let j=0; j<2; j++){
+            chessgame(imgt[i][j][0][0], imgt[i][j][0][1], 1)
+            chessgame(imgt[i][j][1][0], imgt[i][j][1][1], 1)
+        }
+    }
+}
+setboard()*/

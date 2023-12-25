@@ -1,0 +1,25 @@
+#Pinning_Function Initial Thought Stream:
+    //Step-1, search board for piece nums which are multiples of 19
+    //Step0, if found, set num to previous num divided by 19 
+    //Step1, change king to queen.
+    //Step2, turn on queen power
+    //Step3_1, use queen power to check all possible lines of site for others with the same state
+    //Step3_2, if one with same state is found, save coordinates
+    //Step3_3, continue the search but now for one of a different state
+    //Step3_4, if one of a different state is found next
+    //Step3_5, check if the king search orientation (+, x, +/x) 
+    //matches the piece orientation (rook, bisshop, queen)
+    //Step6, if it is a match, the piece num of the coordinates saved in Step3_2 should be 
+    //multiplied by 19
+5. Okay, the idea here is to first get soe info about the piece being pinned, also at the same time taking into account the fact that multiple
+pieces can be pinned at the same time, so you have to gather info about all pieces being pinned.
+Info Required: Name, num, position of the piece being pinned, line of sight with the pinner.
+Now, the king has eight squares around him so the highest number of pins that can occur is eight, but who'd ever be stupid enough to have eight
+pins on them right?
+Currently running a scenario to see if my code allows mor than one pins - Success,
+boardconfig = 85525367665882845867418577766134575681832836836366
+#1 Also I should start representing my game with chess algebra should't I.
+I'm thinking of also simulating a scenario for all eight pins - Success
+boardconfig = 85525367665882845867418577766134575681832836836366346666364745666653543648466353465566545485865554565362342556552534675634256676666578531725437866433468573443384743348868344368674334364834435424432524461214252727254836141536482543272515264836171826261717263717153738#q#u#e#e#n767584753617757617258686768725178788#q#u#e#e#n1725387274251732341725343525133536221325363738222517381622373717253738#q#u#e#e#n111514222414131112882517885817253848251786687453431725123225173237312437172537363148251748381725687825175354172543341312161374251742431374172574751325177576172576772517787878877717257778#q#u#e#e#n251787761725132325172341172541742525
+So, due to that fact that there can be more than one pin, I can't store the data with a variable unless a string, or I can use an array.
+Brain wave, I can use the faciliities for the check function on the pinned pieces for them to know where they are allowed to go.
