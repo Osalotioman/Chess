@@ -17,3 +17,16 @@ sol4.2 seemto be same with 2.
 5. The pinned pieces do not know they can move in the direction of the pieces pinning them, or even kill
 the pieces pinning them.
 algo5: see the algo.txt
+6. When castling for the first time, the mirror rook of your opponent gets castled with your king.
+cause6: At the point where it s about to castle, analysis is conducted to find out if the oposing king willl be in check after castling, in 
+doing so, the kings function is called, in calling the kings function, the castling function is recalled, which changes the castling data.
+sol6: put a condition in the kings functionso it does not execute the castling function during analysis not related to castling.
+7. When a piece that attacks the line of sight of a king is right in front of the king, the king thinks going back is a good idea.
+cause7: I changed the last member of the nlfdng and nlrdng array to 0, if the lawst memberand the first member are the same, then I cannot
+use the real first member in this cohcelldng(b+nlfdng[0], 2+nlrdng[0], 235), hence I use listf_dng and listr_dng to get the original first
+members.
+sol7: replace this cohcelldng(b+nlfdng[0], 2+nlrdng[0], 235) with this cohcelldng(b+listf_dng[n][0], 2+listr_dng[n][0], 235) in the linos 
+function
+8. The king's highlight does not show immediately it's checked.
+sol8: I created restore_check() function to show the red highlight when the king is in check.
+8.1 There are some places aorund the code where I've handled p8 before, hence I need to delete those lines of code as they are no longer neccesary.

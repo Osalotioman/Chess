@@ -52,6 +52,14 @@ function po(){
   //alert("I work")
   poc += 1
 }
-setboard(localStorage.test)
+function toggle_server(){
+  let server_states = [0, 1];
+  let server_states_colors = ["green", ""];
+  localStorage.server_state = server_states[(parseInt(localStorage.server_state) + 1) % 2];
+  let toggle_server = document.getElementById("toggle_server");
+  toggle_server.style.backgroundColor = server_states_colors[(parseInt(localStorage.server_state) + 1) % 2];
+  //localStorage.server_state += 1;
+}
+//setboard(localStorage.test)
 //rh()
 //alert(localStorage.test)

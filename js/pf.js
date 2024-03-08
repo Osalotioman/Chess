@@ -75,13 +75,13 @@
       move_all(file, rank, [-1,-2,-3,-4,-5,-6,-7], [0,0,0,0,0,0,0], 1, "q")
     }
   }
-  function king_check(file, rank){
+  function king_check(file, rank, toggle_castling){
     if(cell(file, rank) == 13 && piece_turn % 2 == 0){
       console.log(boarddng)
       coh(file, rank, hbd)
       cohcellhbd(file, rank, 1)
       move_all(file, rank, [0+celldng(b, 3), 0+celldng(b, 1), 1+celldng(c, 2), -1+celldng(a, 2), 1+celldng(c, 3), 1+celldng(c, 1), -1+celldng(a, 3), -1+celldng(a, 1)], [1, -1, 0, 0, 1, -1, 1, -1], -1, "k")
-      if((cellpmv(e, 1) + celldng(b, 2)) == 0){
+      if((cellpmv(e, 1) + celldng(b, 2)) == 0 && toggle_castling == 1){
         castling(e, 1, cellpmv(a, 1), cellpmv(h, 1), 1)
       }
     }else if(cell(file, rank) == -13 && piece_turn % 2 == 1){
@@ -89,19 +89,19 @@
       coh(file, rank, hbd)
       cohcellhbd(file, rank, 1)
       move_all(file, rank, [0+celldng(b, 3), 0+celldng(b, 1), 1+celldng(c, 2), -1+celldng(a, 2), 1+celldng(c, 3), 1+celldng(c, 1), -1+celldng(a, 3), -1+celldng(a, 1)], [1, -1, 0, 0, 1, -1, 1, -1], 1, "k")
-      if((cellpmv(e, 4) + celldng(b, 2)) == 0){
+      if((cellpmv(e, 4) + celldng(b, 2)) == 0 && toggle_castling == 1){
         castling(e, 8, cellpmv(a, 4), cellpmv(h, 4), -1)
       }
     }
   }
-  function piece_psh(file, rank){
+  function piece_psh(file, rank, toggle_castling){
     initialfr[0] = file
     initialfr[1] = rank
     pin(file, rank)
     pin_r(file, rank)
     pawn_check(file, rank)
     knight_check(file, rank)
-    king_check(file, rank)
+    king_check(file, rank, toggle_castling)
     rook_check(file, rank)
     bishop_check(file, rank)
     queen_check(file, rank)

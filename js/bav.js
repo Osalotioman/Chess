@@ -1,5 +1,9 @@
   //Connecting to web socket server, code should be removed from here in future
-  const socket = new WebSocket('ws://192.168.137.1:8080');
+  if(localStorage.server_state == null){
+    localStorage.server_state = 0;
+  }else if(localStorage.server_state == 1){
+    const socket = new WebSocket('ws://192.168.137.1:8080');
+  }
   var board = [
     [-9, -10, -11, -12, -13, -14, -15, -16],
     [-1,  -2,  -3,  -4,  -5,  -6,  -7,  -8],
@@ -121,11 +125,20 @@
   var ksq = ""
   var csl = ""
   var checkv = ""*/
+function play_sound(path){
+  let song = new Audio(path)
+  song.play()
+}
   var castl = new Audio("../aud/castl.mp3")
   var buttons = new Audio("../aud/movesound.ogg")
   //There is also a buttons.mp3 file
   var check = new Audio("../aud/check.mp3")
   var promote = new Audio("../aud/promote.mp3")
+window.onload = function() {
+  let  a = document.getElementById("sound");
+  a.onclick = function  () {play_sound("../aud/burn1.mp3");}
+}
+  //What happens if there is no path to music file?{Youu get an error dude}
   var z = 0
   var a = 1
   var b = 2

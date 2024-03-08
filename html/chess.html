@@ -6,13 +6,7 @@
         <link rel="stylesheet" href="../css/style.css" type="text/css"/>
     </head>
     <body>   
-      <table id="settings">
-        <tr>
-            <td onclick="rs()">Restart</td>
-            <td onclick="rhf()" id="rh">Remove Helper</td>
-            <td onclick="po()" id="poi">Piece Layout</td>
-        </tr>
-      </table>
+            <table id="settings" ><a href="settings.html"> Game Settings </a></table>
             <img id= "board" src= "../img/board800x800.jpg" />
             <table id="ha1" class="hcell"></table>
             <table id="ha2" class="hcell"></table>
@@ -214,4 +208,9 @@
     <script src='../js/sf.js'></script>
     <script src='../js/pf.js'></script>
     <script src='../js/sch.js'></script>
+    <script>
+        //window.onload = function() {
+            setboard(localStorage.test);
+        //}
+    </script>
 </html>

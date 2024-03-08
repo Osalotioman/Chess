@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title> Game Settings </title>
+        <link rel="stylesheet" href="../css/style.css" type="text/css"/>
+    </head>
+    <body>
+        <table id="settings">
+            <tr>
+                <td onclick="rs()">Restart</td>
+            </tr>
+            <tr>
+                <td onclick="rhf()" id="rh">Remove Helper</td>
+            </tr>
+            <tr>
+                <td onclick="po()" id="poi">Piece Layout</td>
+            </tr>
+            <tr>
+                <td onclick="toggle_server()" id="toggle_server">Toggle Server</td>
+            </tr>
+            <tr>
+                <td onclick="sound()" id="sound">Sound</td>
+            </tr>
+            <tr>
+                <td onclick="resume_game()" id="resume_game">Resume Game</td>
+            </tr>
+        </table>
+        <script src="../js/bav.js"></script>
+        <script src="../js/bfn.js"></script>
+        <script src="../js/script.js"></script>
+        <script src="../js/pro.js"></script>
+        <script src='../js/sf.js'></script>
+        <script src='../js/pf.js'></script>
+        <script src='../js/sch.js'></script>
+        <script>
+	    function sound(){alert("Sound")}
+	    function resume_game(){alert("Resume game")}
+            window.onload = function() { 
+                let server_states_colors = ["green", ""];
+                let toggle_server = document.getElementById("toggle_server");
+                toggle_server.style.backgroundColor = server_states_colors[(parseInt(localStorage.server_state) + 1) % 2];
+            }
+        </script>
+    </body>
+</html>

@@ -1,3 +1,10 @@
+  function restore_check(){
+    if(incheck && piece_turn % 2 == 0){
+        coh(rev_cell(-13*-1, 0), rev_cell(-13*-1, 1), checkv)
+      }else if(incheck){
+        coh(rev_cell(-13*1, 0), rev_cell(-13*1, 1), checkv)
+      }
+  }
   function coh(file, rank, htype){
     document.getElementById("h"+sv[file]+rank).style = htype
   }
@@ -91,7 +98,7 @@
   function checkmate(){
     for(let f = 1; f < 9; f++){
       for(let r = 1; r < 9; r++){
-        piece_psh(f, r)
+        piece_psh(f, r, 0)
       }
     }
     let checkmate = true
@@ -197,7 +204,7 @@
       //Call your piece function with your file, rank
       pawn_check(file, rank)
       knight_check(file, rank)
-      king_check(file, rank)
+      king_check(file, rank, 0) //Does the king function even need to be here????comebackhere
       rook_check(file, rank)
       bishop_check(file, rank)
       queen_check(file, rank)
@@ -226,7 +233,9 @@
             console.log("nlfdng: "+nlfdng)
             console.log("nlrdng: "+nlrdng)
             move_all(listpc[i][0], listpc[i][1], nlfdng, nlrdng, state, "linos")
-            cohcelldng(b+nlfdng[0], 2+nlrdng[0], 235)
+            //cohcelldng(b+nlfdng[0], 2+nlrdng[0], 235)
+            cohcelldng(b+listf_dng[n][0], 2+listr_dng[n][0], 235)
+            console.log("I am here.")
             console.log(boardasq)
             break
           }else if(celldng(b, 2) != 0 && p == "nk"){
@@ -306,22 +315,24 @@
       dngsq(1, "nk", s)
     }
   }
-  socket.onmessage = function(event) {
-    const mg = event.data;
-    if(mg == "queen" || mg == "knight" || mg == "bishop" || mg == "rook"){
-      handlePromotionSelection(mg, 1)
-      //mdl = ""
-    }else{
-      chessgame(parseInt(mg[0]), parseInt(mg[1]), 1);
-    }
-    clear_ho();
-  };
+  if(localStorage.server_state == 1){
+    socket.onmessage = function(event) {
+      const mg = event.data;
+      if(mg == "queen" || mg == "knight" || mg == "bishop" || mg == "rook"){
+        handlePromotionSelection(mg, 1)
+        //mdl = ""
+      }else{
+        chessgame(parseInt(mg[0]), parseInt(mg[1]), 1);
+      }
+      clear_ho();
+    };
+  }
   function chessgame(file, rank,  s){
     if(cell(file, rank) != 0 && cellhbd(file, rank) == 0 && cellksq(file, rank) == 0){
       clear_highlight()
       coh(file, rank, hbd)
       cohcellhbd(file, rank, 1)
-      piece_psh(file, rank)
+      piece_psh(file, rank, 1)
       if(incheck && piece_turn % 2 == 0){
         coh(rev_cell(-13*-1, 0), rev_cell(-13*-1, 1), checkv)
       }else if(incheck){
@@ -382,8 +393,9 @@
       localStorage.test += file
       localStorage.test += rank
      }
-     if(s == 0){
+     if(s == 0 && localStorage.server_state == 1){
       socket.send(file+""+rank);
      }
+     restore_check()
   }
   
