@@ -267,3 +267,4 @@ window.onload = function() {
     [[], []],
     [[], []]
   ]
+  var mipcm = 0

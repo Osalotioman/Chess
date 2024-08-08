@@ -217,6 +217,7 @@
   }
   function linos(state, p){
     for(let n=0; n < binum_dng.length; n++){
+      if(mipcm > 1){incheck = true;mipcm = 0;break}
       if(boardindex(binum_dng[n]*state)){
         rev_cell1(binum_dng[n]*state)
         for(let i=0; i<npoc; i++){
@@ -259,6 +260,24 @@
       listr_dng[n1][1] = state
       n1 += 1
     }
+    /*
+      To find out if you're being check by more than one piece.
+    */
+    for(let n=0; n < binum_dng.length; n++){
+      if(boardindex(binum_dng[n]*state)){
+        //console.log(ntpa)
+        rev_cell1(binum_dng[n]*state)
+        for(let i=0; i<npoc; i++){
+          move_all(listpc[i][0], listpc[i][1], listf_dng[n], listr_dng[n], state*-1, pname_dng[n])
+          move_all(listpc[i][0], listpc[i][1], listf_dng[n], listr_dng[n], state, pname_dng[n])
+          move_all(rev_cell(-13*state, 0), rev_cell(-13*state, 1), [0, 0, 1, -1, 1, 1, -1, -1, 0, -2, 2], [1, -1, 0, 0, 1, -1, 1, -1, 0, 0, 0], state, "dng")
+          if(celldng(b, 2) != 0){
+            ++mipcm
+          }
+          clear_highlight()
+        }
+      }
+    }
     for(let n=0; n < binum_dng.length; n++){
       if(boardindex(binum_dng[n]*state)){
         //console.log(ntpa)
@@ -274,6 +293,7 @@
     if(celldng(b, 2) != 0 && p == "nk"){
       //linos(file, rank, state, p)
       linos(state, p)
+      // mipcm happensbinside linos
       //console.log("Linos")
       coh(rev_cell(-13*state, 0), rev_cell(-13*state, 1), checkv)
       if(s != 2){
