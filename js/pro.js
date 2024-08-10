@@ -19,7 +19,10 @@
     if(shps == 0){
       localStorage.test += hashstring(piece)
       promote.play()
-      socket.send(piece)
+      if(localStorage.server_state == 1){
+        //More attention here: 10th August 2024
+        socket.send(piece)
+      }
     }
     let state = 0
     if(cell(initialfr[8], initialfr[9]) > 0){

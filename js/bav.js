@@ -134,10 +134,12 @@ function play_sound(path){
   //There is also a buttons.mp3 file
   var check = new Audio("../aud/check.mp3")
   var promote = new Audio("../aud/promote.mp3")
+/*
 window.onload = function() {
   let  a = document.getElementById("sound");
   a.onclick = function  () {play_sound("../aud/burn1.mp3");}
 }
+*/
   //What happens if there is no path to music file?{Youu get an error dude}
   var z = 0
   var a = 1
@@ -267,4 +269,4 @@ window.onload = function() {
     [[], []],
     [[], []]
   ]
-  var mipcm = 0
+  var mipcm = 0 //for double check, it gets reset after use, so not a tool for data analysis.

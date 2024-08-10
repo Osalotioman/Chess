@@ -98,7 +98,7 @@
   function checkmate(){
     for(let f = 1; f < 9; f++){
       for(let r = 1; r < 9; r++){
-        piece_psh(f, r, 0)
+          piece_psh(f, r, 0)
       }
     }
     let checkmate = true
