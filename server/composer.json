@@ -1,5 +1,5 @@
 {
-    "name": "my-vendor/chess-server",
+    "name": "chess-websockect-server",
     "description": "A PHP WebSocket server application for a Chess game",
     "type": "project",
     "require": {
