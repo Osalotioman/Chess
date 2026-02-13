@@ -106,6 +106,29 @@ cd server
 composer start
 ```
 
+### Docker (recommended for development)
+
+From the repository root:
+
+```bash
+docker compose up --build
+```
+
+This starts the WebSocket server and exposes it on `ws://localhost:8080`.
+
+### Environment variables
+
+The WebSocket server supports:
+
+- `WS_HOST` (default `0.0.0.0`)
+- `WS_PORT` (default `8080`)
+
+Example:
+
+```bash
+WS_HOST=0.0.0.0 WS_PORT=5050 composer start
+```
+
 ## Step 7: Access the Game
 
 Open your browser and navigate to:

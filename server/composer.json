@@ -1,5 +1,5 @@
 {
-    "name": "chess-websockect-server",
+    "name": "osalotioman/chess",
     "description": "A PHP WebSocket server application for a Chess game",
     "type": "project",
     "require": {
@@ -17,7 +17,7 @@
     },
     "scripts": {
         "start": "php src/server.php",
-        "test": "phpunit --configuration phpunit.xml"
+        "test": "./vendor/bin/phpunit --configuration phpunit.xml"
     },
     "config": {
         "optimize-autoloader": true,

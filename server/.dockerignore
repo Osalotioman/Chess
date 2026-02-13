@@ -1,0 +1,16 @@
+.git
+.gitignore
+**/.DS_Store
+**/.idea
+**/.vscode
+
+# OS / tooling
+**/*.log
+
+# PHP / Composer
+server/vendor
+server/.phpunit.result.cache
+server/tests/_output
+
+# Project data
+node_modules

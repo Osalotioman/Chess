@@ -1,8 +1,11 @@
   //Connecting to web socket server, code should be removed from here in future
+  localStorage.server_state = 1;
+  let socket = null;
   if(localStorage.server_state == null){
     localStorage.server_state = 0;
   }else if(localStorage.server_state == 1){
-    const socket = new WebSocket('ws://192.168.137.1:8080');
+    //const socket = new WebSocket('ws://192.168.137.1:8080');
+    socket = new WebSocket('ws://10.122.72.116:8080');
   }
   var board = [
     [-9, -10, -11, -12, -13, -14, -15, -16],

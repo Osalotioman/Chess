@@ -1,0 +1,31 @@
+services:
+  chess-ws:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: base           # Uses the lean 'base' stage from your Dockerfile
+    environment:
+      WS_HOST: 0.0.0.0
+      WS_PORT: 8080
+    ports:
+      - "8080:8080"
+    volumes:
+      # Mount the entire app directory for dev (hot-reloading/editing)
+      - ..:/app
+      # PERSISTENT VENDOR: This trick prevents your local (empty) vendor 
+      # from overwriting the container's vendor if you haven't run install locally.
+      - /app/vendor
+    user: "${UID:-1000}:${GID:-1000}" # Matches your host user to avoid permission issues
+    restart: unless-stopped
+    # For Dev: Overwrite the prod CMD to run a watcher or just the server
+    command: php src/server.php 
+
+  # Separate service for running tests without stopping the server
+  tests:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: base
+    volumes:
+      - ..:/app
+    command: ./vendor/bin/phpunit
