@@ -37,4 +37,4 @@ EXPOSE 8080
 
 USER appuser
 
-CMD ["composer", "start"]
+CMD ["php", "src/server.php"]
