@@ -17,13 +17,18 @@ RUN set -eux; \
     docker-php-ext-install sockets; \
     apk del .build-deps
 
-RUN useradd appuser
-USER appuser
+ARG APP_UID=10001
+ARG APP_GID=10001
+
+RUN addgroup -S -g ${APP_GID} appgroup \
+    && adduser -S -D -u ${APP_UID} -G appgroup appuser
 
 ENV WS_HOST=0.0.0.0 \
     WS_PORT=8080 \
     APP_ENV=production
 
 EXPOSE 8080
+
+USER appuser
 
 CMD ["composer", "start"]
