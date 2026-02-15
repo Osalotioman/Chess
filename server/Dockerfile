@@ -1,50 +1,50 @@
-# syntax=docker/dockerfile:1
+# syntax=docker/dockerfile:1.7
 
-# 1. Base Stage: System dependencies only
-FROM php:8.3-cli-alpine AS base
+############################
+# 1) Dependencies builder
+############################
+FROM composer:2 AS deps
 WORKDIR /app
+
+COPY composer.json composer.lock ./
+
+RUN composer install \
+    --no-dev \
+    --no-interaction \
+    --no-progress \
+    --prefer-dist \
+    --optimize-autoloader \
+    --classmap-authoritative
+
+############################
+# 2) Production runtime
+############################
+FROM php:8.3-cli-alpine AS prod
+WORKDIR /app
+
+# Build/enable required PHP extensions, then clean build deps.
 RUN set -eux; \
-        for attempt in 1 2 3; do \
-            docker-php-ext-install sockets && break; \
-            if [ "$attempt" -eq 3 ]; then exit 1; fi; \
-            sleep 5; \
-        done
-# Create a non-privileged user for security
-RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+    apk add --no-cache --virtual .build-deps $PHPIZE_DEPS; \
+    docker-php-ext-install sockets; \
+    apk del --no-network .build-deps
 
-# 2. Builder Stage: Composer dependencies (production)
-FROM composer:2 AS deps-prod
-WORKDIR /app
-COPY composer.json composer.lock ./
-# Install production dependencies and optimize
-RUN composer install --no-dev --prefer-dist --no-interaction --no-progress --optimize-autoloader
+# Create non-root runtime user/group with deterministic IDs.
+ARG APP_UID=10001
+ARG APP_GID=10001
+RUN addgroup -g ${APP_GID} -S appgroup \
+    && adduser -u ${APP_UID} -S -D -G appgroup appuser
 
-# 3. Builder Stage: Composer dependencies (development/tests)
-FROM composer:2 AS deps-dev
-WORKDIR /app
-COPY composer.json composer.lock ./
-RUN composer install --prefer-dist --no-interaction --no-progress
-
-# 4. Final Production Stage
-FROM base AS prod
-# Copy vendor from prod deps and source from build context
-COPY --from=deps-prod --chown=appuser:appgroup /app/vendor /app/vendor
+# Copy only runtime artifacts.
+COPY --from=deps --chown=appuser:appgroup /app/vendor /app/vendor
 COPY --chown=appuser:appgroup composer.json composer.lock /app/
 COPY --chown=appuser:appgroup src /app/src
 
-# Run as non-root user
-USER appuser
-
 ENV WS_HOST=0.0.0.0 \
-    WS_PORT=8080
+    WS_PORT=8080 \
+    APP_ENV=production
 
 EXPOSE 8080
-CMD ["php", "src/server.php"]
 
-# 5. Development/Test Stage
-FROM base AS dev
-COPY --from=deps-dev --chown=appuser:appgroup /app/vendor /app/vendor
-COPY --chown=appuser:appgroup composer.json composer.lock phpunit.xml /app/
-COPY --chown=appuser:appgroup src /app/src
-COPY --chown=appuser:appgroup tests /app/tests
 USER appuser
+
+CMD ["php", "src/server.php"]

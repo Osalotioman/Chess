@@ -3,7 +3,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-      target: dev
+      target: prod
     environment:
       WS_HOST: 0.0.0.0
       WS_PORT: 8080
@@ -16,14 +16,3 @@ services:
       - /app/vendor
     restart: unless-stopped
     command: php src/server.php
-
-  # Separate service for running tests without stopping the server
-  tests:
-    build:
-      context: .
-      dockerfile: Dockerfile
-      target: dev
-    volumes:
-      - .:/app
-      - /app/vendor
-    command: ./vendor/bin/phpunit --configuration phpunit.xml
