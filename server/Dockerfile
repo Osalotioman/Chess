@@ -2,6 +2,7 @@ FROM composer:2 AS deps
 WORKDIR /app
 
 COPY composer.json composer.lock ./
+COPY src/ ./src/
 
 RUN composer install \
     --no-dev \
@@ -21,10 +22,6 @@ ARG APP_GID=10001
 
 RUN addgroup -S -g ${APP_GID} appgroup \
     && adduser -S -D -u ${APP_UID} -G appgroup appuser
-
-COPY --from=deps --chown=appuser:appgroup /app/vendor ./vendor
-COPY --chown=appuser:appgroup composer.json composer.lock ./
-COPY --chown=appuser:appgroup src ./src
 
 ENV WS_HOST=0.0.0.0 \
     WS_PORT=8080 \
