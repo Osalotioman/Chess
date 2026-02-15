@@ -1,18 +1,20 @@
 services:
-  chess-ws:
+  ws:
     build:
       context: .
-      dockerfile: Dockerfile
       target: prod
+
+    volumes:
+      - .:/app
+
+    ports:
+      - "8080:8080"
+
     environment:
       WS_HOST: 0.0.0.0
       WS_PORT: 8080
-    ports:
-      - "8080:8080"
-    volumes:
-      # Mount server folder for dev editing
-      - .:/app
-      # Keep container-managed vendor to avoid host/vendor mismatch
-      - /app/vendor
-    restart: unless-stopped
-    command: php src/server.php
+      APP_ENV: development
+
+    user: "${UID:-1000}:${GID:-1000}"
+
+    command: composer start

@@ -15,7 +15,7 @@ FROM php:8.3-cli-alpine AS prod
 WORKDIR /app
 
 RUN set -eux; \
-    apk add --no-cache --virtual .build-deps $PHPIZE_DEPS; \
+    apk add --no-cache --virtual .build-deps $PHPIZE_DEPS linux-headers; \
     docker-php-ext-install sockets; \
     apk del .build-deps
 
