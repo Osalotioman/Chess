@@ -3,29 +3,27 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-      target: base           # Uses the lean 'base' stage from your Dockerfile
+      target: dev
     environment:
       WS_HOST: 0.0.0.0
       WS_PORT: 8080
     ports:
       - "8080:8080"
     volumes:
-      # Mount the entire app directory for dev (hot-reloading/editing)
-      - ..:/app
-      # PERSISTENT VENDOR: This trick prevents your local (empty) vendor 
-      # from overwriting the container's vendor if you haven't run install locally.
+      # Mount server folder for dev editing
+      - .:/app
+      # Keep container-managed vendor to avoid host/vendor mismatch
       - /app/vendor
-    user: "${UID:-1000}:${GID:-1000}" # Matches your host user to avoid permission issues
     restart: unless-stopped
-    # For Dev: Overwrite the prod CMD to run a watcher or just the server
-    command: php src/server.php 
+    command: php src/server.php
 
   # Separate service for running tests without stopping the server
   tests:
     build:
       context: .
       dockerfile: Dockerfile
-      target: base
+      target: dev
     volumes:
-      - ..:/app
-    command: ./vendor/bin/phpunit
+      - .:/app
+      - /app/vendor
+    command: ./vendor/bin/phpunit --configuration phpunit.xml

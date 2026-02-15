@@ -8,9 +8,9 @@
 **/*.log
 
 # PHP / Composer
-server/vendor
-server/.phpunit.result.cache
-server/tests/_output
+vendor
+.phpunit.result.cache
+tests/_output
 
 # Project data
 node_modules

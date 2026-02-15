@@ -23,9 +23,10 @@ WS_HOST=127.0.0.1 WS_PORT=5050 composer start
 
 ## Run with Docker (development)
 
-From the repository root:
+From the `server` folder:
 
 ```bash
+cd server
 docker compose up --build
 ```
 
@@ -37,6 +38,12 @@ Build the production target:
 
 ```bash
 docker build -f server/Dockerfile --target prod -t chess-ws:prod .
+```
+
+Or from inside `server`:
+
+```bash
+docker build --target prod -t chess-ws:prod .
 ```
 
 Run it:
