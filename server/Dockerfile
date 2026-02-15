@@ -11,9 +11,6 @@ RUN composer install \
     --optimize-autoloader \
     --classmap-authoritative
 
-FROM php:8.3-cli-alpine AS prod
-WORKDIR /app
-
 RUN set -eux; \
     apk add --no-cache --virtual .build-deps $PHPIZE_DEPS linux-headers; \
     docker-php-ext-install sockets; \
@@ -37,4 +34,4 @@ EXPOSE 8080
 
 USER appuser
 
-CMD ["php", "src/server.php"]
+CMD ["composer", "start"]
