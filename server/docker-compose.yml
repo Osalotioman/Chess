@@ -2,7 +2,6 @@ services:
   ws:
     build:
       context: .
-      target: prod
 
     volumes:
       - .:/app
