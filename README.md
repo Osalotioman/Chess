@@ -2,6 +2,8 @@
 
 Modern Chess is a two-player chess experience with a Next.js frontend and a PHP WebSocket server for real-time multiplayer. The repository also includes the legacy HTML/CSS/JS implementation for reference.
 
+A working version of this game can be found here: [https://chess-championship-arena.vercel.app/](https://chess-championship-arena.vercel.app/)
+
 ## Repository Structure
 
 - [client/](client) — Next.js frontend (App Router)
