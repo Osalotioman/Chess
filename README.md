@@ -1,61 +1,46 @@
 # Chess
 
-Welcome to the **Chess** project! This is a two-player chess game implemented using HTML, CSS, and JavaScript. The game offers both local and online multiplayer modes, allowing you to play against friends or challenge opponents from around the world via a PHP WebSocket server.
+Modern Chess is a two-player chess experience with a Next.js frontend and a PHP WebSocket server for real-time multiplayer. The repository also includes the legacy HTML/CSS/JS implementation for reference.
 
-## Play the Game
+## Repository Structure
 
-Jump right into the game and test your skills:
+- [client/](client) — Next.js frontend (App Router)
+- [server/](server) — PHP WebSocket server (Ratchet)
+- [original/](original) — legacy static version and historical docs
 
-[Play the game here!](html/)
+## Quick Start
 
-## Learn and Improve
+### Frontend (Next.js)
 
-Enhance your chess abilities by watching these curated videos from the **Chess Moves Explained** playlist. Whether you're a beginner or looking to refine your strategies, these videos offer valuable insights:
+1. Install dependencies:
+   - From [client/](client):
+     - `pnpm install` (recommended)
+     - or `npm install`
+2. Start the dev server:
+   - `pnpm dev` or `npm run dev`
+3. Open http://localhost:3000
 
-### Opening Strategies
+### WebSocket Server (PHP)
 
-- **[Game 1: Basics of Chess Openings](https://www.youtube.com/watch?v=Rg7PV8nX2OQ&list=PLjpc-cCmUs68EYXpw9stM1T23vbxEJTac&index=1)**  
-  Learn the fundamental principles that guide successful chess openings.
+1. From [server/](server):
+   - `composer install`
+   - `composer start`
+2. The server listens on ws://localhost:8080 by default.
 
-- **[Game 2: Understanding Pawn Structures](https://www.youtube.com/watch?v=W_PQwAM4dsc&list=PLjpc-cCmUs68EYXpw9stM1T23vbxEJTac&index=2)**  
-  Explore how pawn structures can dictate the flow of the game from the very start.
+For Docker and advanced configuration, see [server/README.md](server/README.md).
 
-### Midgame Tactics
+### Legacy Static Version
 
-- **[Game 3: Positional Play and Control](https://www.youtube.com/watch?v=F9G8Njb1pH4&list=PLjpc-cCmUs68EYXpw9stM1T23vbxEJTac&index=3)**  
-  Discover the importance of controlling key squares and pieces in the midgame.
+The previous HTML/CSS/JS build is kept in [original/](original). You can open the static pages in [original/html/](original/html) with any static file server.
 
-- **[Game 4: Building Attacks](https://www.youtube.com/watch?v=Rg8I7RAJGlw&list=PLjpc-cCmUs68EYXpw9stM1T23vbxEJTac&index=4)**  
-  Learn how to build and execute powerful attacks against your opponent.
+## Documentation
 
-### Endgame Techniques
-
-- **[Game 5: Simplifying to Win](https://www.youtube.com/watch?v=5FPmVf2EEYc&list=PLjpc-cCmUs68EYXpw9stM1T23vbxEJTac&index=5)**  
-  Understand how to simplify complex positions to secure a win.
-
-- **[Game 6: Common Endgame Scenarios](https://www.youtube.com/watch?v=V2ZWVqO8t_w&list=PLjpc-cCmUs68EYXpw9stM1T23vbxEJTac&index=6)**  
-  Review common endgame situations and the best ways to handle them.
-
-For more videos and tutorials, explore the entire [Chess Moves Explained Playlist](https://youtube.com/playlist?list=PLjpc-cCmUs68EYXpw9stM1T23vbxEJTac&si=tJqTP5b_i6pFmUJe) and subscribe to the [Osalotioman YouTube Channel](https://m.youtube.com/@osalotioman?reload=9).
-
-## Additional Documentation
-
-For more detailed information, please refer to the following documentation files:
-
-- [Contribution Guidelines](docs/CONTRIBUTING.md)
-- [Changelog](docs/CHANGELOG.md)
-- [User Guide](docs/USER_GUIDE.md)
-- [API Documentation](docs/API.md)
-- [Deployment Instructions](docs/DEPLOYMENT.md)
+- [CONTRIBUTING.md](CONTRIBUTING.md)
+- [original/docs/CHANGELOG.md](original/docs/CHANGELOG.md)
+- [original/docs/USER_GUIDE.md](original/docs/USER_GUIDE.md)
+- [original/docs/API.md](original/docs/API.md)
+- [original/docs/DEPLOYMENT.md](original/docs/DEPLOYMENT.md)
 
 ## License
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
-
-## Acknowledgments
-
-Thank you to all contributors and supporters. Your input is crucial to the ongoing success of this project.
-
----
-
-Stay sharp and keep improving by following us on [YouTube](https://m.youtube.com/@osalotioman?reload=9)!
+This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.
