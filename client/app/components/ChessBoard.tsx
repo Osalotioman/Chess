@@ -115,19 +115,18 @@ export function ChessBoard({
       (typeof anyChess.isStalemate === "function" && anyChess.isStalemate()) ||
       (typeof anyChess.in_stalemate === "function" && anyChess.in_stalemate());
 
+    const isCheck =
+      (typeof anyChess.isCheck === "function" && anyChess.isCheck()) ||
+      (typeof anyChess.in_check === "function" && anyChess.in_check());
+
     if (isGameOver) {
       play("win");
-    } else if (wasCapture) {
-      play("capture");
-    } else if (move.flags.includes("c")) {
+    } else if (isCheck) {
+      play("check");
+    } else if (wasCapture || move.flags.includes("c")) {
       play("capture");
     } else if (move.flags.includes("k") || move.flags.includes("q")) {
       play("castling");
-    } else if (
-      (typeof anyChess.isCheck === "function" && anyChess.isCheck()) ||
-      (typeof anyChess.in_check === "function" && anyChess.in_check())
-    ) {
-      play("check");
     } else {
       play("move");
     }

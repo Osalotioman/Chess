@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Chess Championship Arena",
-  description: "Responsive Next.js frontend for Chess Championship Tournament",
+  description: "Responsive Next.js frontend for Chess Championship Arena",
 };
 
 export default function RootLayout({
