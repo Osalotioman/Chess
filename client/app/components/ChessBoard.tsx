@@ -27,7 +27,7 @@ const pieceImage: Record<`w${PieceSymbol}` | `b${PieceSymbol}`, string> = {
 interface ChessBoardProps {
   orientation?: "white" | "black";
   onOrientationChange?: (o: "white" | "black") => void;
-  onLocalMove?: (move: { from: Square; to: Square; promotion: PromotionPiece }) => void;
+  onLocalMove?: (move: { from: Square; to: Square; promotion?: PromotionPiece }) => void;
   remoteMove?: { from: Square; to: Square; promotion?: PromotionPiece; nonce: number } | null;
 }
 
@@ -76,14 +76,24 @@ export function ChessBoard({
   function movePiece(
     from: Square,
     to: Square,
-    promotion: PromotionPiece = "q",
+    promotion?: PromotionPiece,
     remote = false
   ) {
     if (!game) return false;
     const current = game;
 
     const wasCapture = current.get(to) !== null;
-    const move = current.move({ from, to, promotion });
+    let move:
+      | {
+          flags: string;
+        }
+      | null = null;
+
+    try {
+      move = current.move(promotion ? { from, to, promotion } : { from, to });
+    } catch {
+      return false;
+    }
     if (!move) return false;
 
     setLastMove([from, to]);
@@ -140,14 +150,14 @@ export function ChessBoard({
       return;
     }
 
-    movePiece(from, to, "q", false);
+    movePiece(from, to, undefined, false);
   }
 
   // Apply remote move when it changes.
   useEffect(() => {
     if (!game) return;
     if (!remoteMove) return;
-    movePiece(remoteMove.from, remoteMove.to, remoteMove.promotion ?? "q", true);
+    movePiece(remoteMove.from, remoteMove.to, remoteMove.promotion, true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [remoteMove?.nonce]);
 

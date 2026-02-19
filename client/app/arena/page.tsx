@@ -224,7 +224,14 @@ export default function ArenaPage() {
           onLocalMove={(mv) => {
             const socket = socketRef.current;
             if (!socket || socket.readyState !== WebSocket.OPEN) return;
-            socket.send(JSON.stringify({ type: "move", from: mv.from, to: mv.to, promotion: mv.promotion }));
+            socket.send(
+              JSON.stringify({
+                type: "move",
+                from: mv.from,
+                to: mv.to,
+                ...(mv.promotion ? { promotion: mv.promotion } : {}),
+              })
+            );
           }}
         />
       </section>
