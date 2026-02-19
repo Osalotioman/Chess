@@ -43,8 +43,18 @@ RUN pnpm install --prod --frozen-lockfile
 
 COPY --from=builder /app/dist ./dist
 
+ARG APP_UID=10001
+ARG APP_GID=10001
+
+RUN addgroup -S -g ${APP_GID} appgroup \
+	&& adduser -S -D -u ${APP_UID} -G appgroup appuser \
+	&& mkdir -p /pnpm \
+	&& chown -R appuser:appgroup /app /pnpm
+
 EXPOSE 8080
 ENV HOST=0.0.0.0
 ENV PORT=8080
+
+USER appuser
 
 CMD ["pnpm", "start"]

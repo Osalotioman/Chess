@@ -45,7 +45,17 @@ COPY --from=builder /app/.next ./.next
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/next.config.ts ./next.config.ts
 
+ARG APP_UID=10001
+ARG APP_GID=10001
+
+RUN addgroup -S -g ${APP_GID} appgroup \
+	&& adduser -S -D -u ${APP_UID} -G appgroup appuser \
+	&& mkdir -p /pnpm \
+	&& chown -R appuser:appgroup /app /pnpm
+
 EXPOSE 3000
 ENV PORT=3000
+
+USER appuser
 
 CMD ["pnpm", "start"]
