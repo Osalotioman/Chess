@@ -8,7 +8,6 @@ A working version of this game can be found here: [https://chess-championship-ar
 
 - [client/](client) — Next.js frontend (App Router)
 - [ws-server/](ws-server) — Node.js WebSocket server (TypeScript, `ws`)
-- [original/](original) — legacy static version and historical docs
 
 ## Quick Start
 
@@ -44,17 +43,9 @@ This starts:
 - WebSocket server on `ws://localhost:8080`
 - Frontend on http://localhost:3000
 
-### Legacy Static Version
-
-The previous HTML/CSS/JS build is kept in [original/](original). You can open the static pages in [original/html/](original/html) with any static file server.
-
 ## Documentation
 
 - [CONTRIBUTING.md](CONTRIBUTING.md)
-- [original/docs/CHANGELOG.md](original/docs/CHANGELOG.md)
-- [original/docs/USER_GUIDE.md](original/docs/USER_GUIDE.md)
-- [original/docs/API.md](original/docs/API.md)
-- [original/docs/DEPLOYMENT.md](original/docs/DEPLOYMENT.md)
 
 ## License
 
