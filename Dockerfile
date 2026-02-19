@@ -48,12 +48,12 @@ RUN addgroup -S -g ${APP_GID} appgroup \
 	&& mkdir -p /pnpm \
 	&& chown -R appuser:appgroup /app /pnpm
 
-EXPOSE 8080
-EXPOSE 3000
+EXPOSE 8081
+EXPOSE 3001
 
 ENV HOST=0.0.0.0
-ENV PORT=8080
-ENV CLIENT_PORT=3000
+ENV PORT=8081
+ENV CLIENT_PORT=3001
 
 USER appuser
 
