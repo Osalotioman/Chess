@@ -1,0 +1,10 @@
+services:
+  client:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "${CLIENT_PORT:-3000}:3000"
+    environment:
+      NODE_ENV: production
+      PORT: 3000
