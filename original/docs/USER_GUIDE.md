@@ -8,7 +8,7 @@ Welcome to the **Chess** game user guide! This document will help you get starte
 
 1. Open the game in your browser by navigating to the following URL:
     ```
-    http://localhost:8000/html/
+    http://localhost:8000/original/html/
     ```
 
 2. Choose your preferred mode:
@@ -32,7 +32,7 @@ Welcome to the **Chess** game user guide! This document will help you get starte
 ### Multiplayer Mode
 
 - **Local Multiplayer:** Play against a friend on the same device.
-- **Online Multiplayer:** Play against an opponent over the internet using a PHP WebSocket server.
+- **Online Multiplayer:** Play against an opponent over the internet using a Node.js WebSocket server.
 
 ### Responsive Design
 
@@ -46,7 +46,7 @@ Welcome to the **Chess** game user guide! This document will help you get starte
 
 ### Common Issues
 
-- **Connection Problems:** Ensure that your internet connection is stable and that the PHP WebSocket server is running.
+- **Connection Problems:** Ensure that your internet connection is stable and that the WebSocket server (`ws-server`) is running.
 - **Piece Movement Issues:** Make sure you are selecting valid moves for the pieces. If a piece cannot move, it may be blocked or in check.
 
 ### Getting Help

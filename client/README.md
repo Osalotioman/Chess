@@ -1,5 +1,9 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+## Multiplayer (WebSocket)
+
+Online multiplayer uses the Node WebSocket relay in [ws-server/](../ws-server). By default it listens on `ws://localhost:8080`.
+
 ## Getting Started
 
 First, run the development server:

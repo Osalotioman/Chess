@@ -4,7 +4,7 @@ Welcome to the **Chess** project documentation! This document provides a detaile
 
 ## Project Overview
 
-The **Chess** project is a two-player chess game implemented using HTML, CSS, and JavaScript. The game offers both local and online multiplayer modes, allowing you to play against friends or challenge opponents from around the world via a PHP WebSocket server.
+The **Chess** project is a two-player chess game implemented using HTML, CSS, and JavaScript. The game offers both local and online multiplayer modes, allowing you to play against friends or challenge opponents from around the world via a Node.js WebSocket server.
 
 ## Features
 
@@ -16,7 +16,7 @@ The **Chess** project is a two-player chess game implemented using HTML, CSS, an
 
 ### Prerequisites
 
-To run this project locally, ensure you have a web server with PHP support.
+To run this project locally, ensure you have a static file server for the legacy site (optional) and Node.js for the multiplayer WebSocket server.
 
 ### Installation
 
@@ -35,13 +35,13 @@ To run this project locally, ensure you have a web server with PHP support.
 3. Start your local server:
 
     ```bash
-    php -S localhost:8000
+    python3 -m http.server 8000
     ```
 
 4. Open your browser and navigate to:
 
     ```
-    http://localhost:8000/html/
+    http://localhost:8000/original/html/
     ```
 
 5. Start playing!

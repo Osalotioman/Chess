@@ -1,14 +1,15 @@
 # Deployment Instructions
 
-This document provides detailed instructions for deploying the **Chess** project and setting up the PHP WebSocket server.
+This document provides detailed instructions for deploying the **Chess** project and setting up the WebSocket server.
 
 ## Prerequisites
 
 Before you begin, ensure you have the following:
 
-- A web server with PHP support (e.g., Apache, Nginx)
-- PHP 7.4 or higher installed
-- Composer installed
+- Node.js (recommended: 20+)
+- pnpm (recommended) or npm
+
+If you are deploying the legacy static site under `original/html/`, you may also want a static web server (e.g., Apache, Nginx) to serve those files.
 
 ## Step 1: Clone the Repository
 
@@ -26,10 +27,11 @@ cd Chess
 
 ## Step 2: Install Dependencies
 
-Use Composer to install the required dependencies for the PHP WebSocket server:
+Install dependencies for the Node WebSocket server:
 
 ```bash
-composer install
+cd ws-server
+pnpm install
 ```
 
 ## Step 3: Configure the Web Server
@@ -41,9 +43,9 @@ If you are using Apache, create a virtual host configuration for the **Chess** p
 ```apache
 <VirtualHost *:80>
     ServerName chess.local
-    DocumentRoot /path/to/Chess/html
+    DocumentRoot /path/to/Chess/original/html
 
-    <Directory /path/to/Chess/html>
+    <Directory /path/to/Chess/original/html>
         Options Indexes FollowSymLinks
         AllowOverride All
         Require all granted
@@ -63,7 +65,7 @@ server {
     listen 80;
     server_name chess.local;
 
-    root /path/to/Chess/html;
+    root /path/to/Chess/original/html;
     index index.html;
 
     location / {
@@ -97,13 +99,13 @@ For Nginx, use the following command:
 sudo service nginx restart
 ```
 
-## Step 6: Start the PHP WebSocket Server
+## Step 6: Start the WebSocket Server
 
-Navigate to the `server` directory and start the PHP WebSocket server using Composer:
+Navigate to the `ws-server` directory and start the Node WebSocket server:
 
 ```bash
-cd server
-composer start
+cd ws-server
+pnpm dev
 ```
 
 ### Docker (recommended for development)
@@ -116,17 +118,23 @@ docker compose up --build
 
 This starts the WebSocket server and exposes it on `ws://localhost:8080`.
 
+Health check:
+
+```bash
+curl http://localhost:8080/health
+```
+
 ### Environment variables
 
 The WebSocket server supports:
 
-- `WS_HOST` (default `0.0.0.0`)
-- `WS_PORT` (default `8080`)
+- `HOST` (default `0.0.0.0`)
+- `PORT` (default `8080`)
 
 Example:
 
 ```bash
-WS_HOST=0.0.0.0 WS_PORT=5050 composer start
+HOST=0.0.0.0 PORT=5050 pnpm dev
 ```
 
 ## Step 7: Access the Game
@@ -144,8 +152,9 @@ You should now be able to play the **Chess** game locally.
 If you encounter any issues during deployment, check the following:
 
 - Ensure your web server is running and properly configured.
-- Verify that PHP and Composer are installed and working correctly.
-- Check the web server and PHP error logs for any error messages.
+- Verify that Node.js and pnpm are installed and working correctly.
+- Ensure the WebSocket server is running and listening on the expected port.
+- Check the WebSocket server logs for any error messages.
 
 For further assistance, feel free to reach out to the project maintainers.
 

@@ -15,7 +15,7 @@ All notable changes to this project will be documented in this file.
 
 ## [1.1.0] - 2024-01-10
 ### Added
-- Online multiplayer mode using PHP WebSocket server.
+- Online multiplayer mode using a WebSocket server.
 - Real-time gameplay with smooth, lag-free interaction.
 
 ## [1.2.0] - 2024-02-05
