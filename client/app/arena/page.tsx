@@ -8,7 +8,7 @@ import type { Square } from "chess.js";
 export default function ArenaPage() {
   const { settings, mounted } = useSettings();
   const [orientation, setOrientation] = useState<"white" | "black">("white");
-  const [wsUrl, setWsUrl] = useState("ws://127.0.0.1:8080");
+  const [wsUrl, setWsUrl] = useState("https://chess-championship-arena.onrender.com"); //ws://127.0.0.1:8080
   const [room, setRoom] = useState("championship-1");
   const [connected, setConnected] = useState(false);
   const [status, setStatus] = useState("Disconnected");
