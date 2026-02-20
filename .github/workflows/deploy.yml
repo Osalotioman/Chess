@@ -38,8 +38,8 @@ jobs:
           username: ${{ env.DEPLOY_USER }}
           key: ${{ secrets.DEPLOY_KEY }}
           script: |
-            cd osalotioman-chess
             cat <<'EOF' > osalotioman-chess/docker-compose.yml
             $(< docker-compose.yml)
             EOF
+            cd osalotioman-chess
             ./deploy-osalotioman-chess.sh ${GITHUB_SHA}
