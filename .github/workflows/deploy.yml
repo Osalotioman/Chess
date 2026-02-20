@@ -16,7 +16,7 @@ jobs:
       - name: Determine if build is needed
         id: check_build
         run: |
-          if git diff --name-only ${{ github.sha }}~1 ${{ github.sha }} | grep -E 'client|ws-server'; then
+          if git diff --name-only ${{ github.sha }}~1 ${{ github.sha }} | grep -E 'client|ws-server|.'; then
             echo "BUILD_REQUIRED=1" >> $GITHUB_ENV
           fi
           echo "Build required: $BUILD_REQUIRED"
@@ -40,7 +40,7 @@ jobs:
       - name: Build and push Docker image
         if: env.BUILD_REQUIRED == '1'
         run: |
-          IMAGE=ghcr.io/osalotioman/chess:${GITHUB_SHA}
+          IMAGE=ghcr.io/osalotioman/chess:latest
           docker build -t $IMAGE .
           docker push $IMAGE
       
