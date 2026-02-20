@@ -6,7 +6,7 @@ export default function Home() {
   return (
     <main className="page-shell landing">
       <section className="landing-hero">
-        <h1>Chess Championship Arena</h1>
+        <h1>Chess Championship Arena...</h1>
         <p>Compete in real-time chess tournaments with players worldwide</p>
         
         <div className="landing-features">
