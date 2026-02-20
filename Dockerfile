@@ -57,4 +57,4 @@ ENV CLIENT_PORT=3001
 
 USER appuser
 
-CMD ["sh", "-c", "node /app/ws-server/dist/index.js & cd /app/client && PORT=$CLIENT_PORT pnpm start -p $CLIENT_PORT"]
+CMD ["sh", "-c", "node /app/ws-server/dist/index.js & cd /app/client && PORT=$CLIENT_PORT pnpm start -- -p $CLIENT_PORT"]
