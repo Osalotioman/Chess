@@ -2,6 +2,10 @@ name: Deploy Container
 
 on:
   push:
+    paths:
+      - 'client/**'       
+      - 'ws-server/**'
+      - '/**' # Leave like this until I am ready to restrict paths properly
 
 jobs:
   build:
@@ -10,6 +14,7 @@ jobs:
     env:                           
       DEPLOY_HOST: drid-uniben.org
       DEPLOY_USER: github-drid-deploy-user
+      BUILD_REQUIRED: 0
 
     steps:
       - name: Checkout code
@@ -25,7 +30,16 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GHCR_PAT }}
 
+      - name: Determine if build is needed
+        id: check_build
+        run: |
+          if git diff --name-only ${{ github.sha }}~1 ${{ github.sha }} | grep -E 'client|ws-server'; then
+            echo "BUILD_REQUIRED=1" >> $GITHUB_ENV
+          fi
+          echo "Build required: $BUILD_REQUIRED"
+
       - name: Build and push Docker image
+        if: env.BUILD_REQUIRED == '1'
         run: |
           IMAGE=ghcr.io/osalotioman/chess:${GITHUB_SHA}
           docker build -t $IMAGE .
@@ -38,8 +52,5 @@ jobs:
           username: ${{ env.DEPLOY_USER }}
           key: ${{ secrets.DEPLOY_KEY }}
           script: |
-            cat <<'EOF' > osalotioman-chess/docker-compose.yml
-            $(< docker-compose.yml)
-            EOF
             cd osalotioman-chess
             ./deploy-osalotioman-chess.sh ${GITHUB_SHA}
