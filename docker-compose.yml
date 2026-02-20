@@ -4,7 +4,7 @@ services:
       context: ./ws-server
       dockerfile: Dockerfile
     ports:
-      - "${WS_PORT:-8080}:8080"
+      - "${WS_PORT:-8081}:8081"
     environment:
       HOST: 0.0.0.0
       PORT: 8081
