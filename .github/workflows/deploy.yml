@@ -52,5 +52,5 @@ jobs:
           key: ${{ secrets.DEPLOY_KEY }}
           script: |
             cd osalotioman-chess
-            export GITHUB_SHA = ${GITHUB_SHA}
+            export GITHUB_SHA=${GITHUB_SHA}
             ./deploy-osalotioman-chess.sh 
