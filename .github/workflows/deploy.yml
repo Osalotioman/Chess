@@ -6,6 +6,11 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+
+    env:                           
+      DEPLOY_HOST: drid-uniben.org
+      DEPLOY_USER: github-drid-deploy-user
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -25,3 +30,16 @@ jobs:
           IMAGE=ghcr.io/osalotioman/chess:${GITHUB_SHA}
           docker build -t $IMAGE .
           docker push $IMAGE
+      
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v0.1.9
+        with:
+          host: ${{ env.DEPLOY_HOST }}
+          username: ${{ env.DEPLOY_USER }}
+          key: ${{ secrets.DEPLOY_KEY }}
+          script: |
+            cd osalotioman-chess
+            cat <<'EOF' > docker-compose.yml
+            $(< docker-compose.yml)
+            EOF
+            ./deploy-osalotioman-chess.sh ${GITHUB_SHA}
