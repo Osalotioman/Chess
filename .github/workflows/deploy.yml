@@ -39,7 +39,7 @@ jobs:
           key: ${{ secrets.DEPLOY_KEY }}
           script: |
             cd osalotioman-chess
-            cat <<'EOF' > docker-compose.yml
+            cat <<'EOF' > osalotioman-chess/docker-compose.yml
             $(< docker-compose.yml)
             EOF
             ./deploy-osalotioman-chess.sh ${GITHUB_SHA}
