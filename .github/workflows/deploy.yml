@@ -5,7 +5,7 @@ on:
     paths:
       - 'client/**'       
       - 'ws-server/**'
-      - '/**' # Leave like this until I am ready to restrict paths properly
+      - './**' # Leave like this until I am ready to restrict paths properly
 
 jobs:
   build:
