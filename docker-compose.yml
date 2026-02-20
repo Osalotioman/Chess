@@ -15,7 +15,7 @@ services:
       context: ./client
       dockerfile: Dockerfile
     ports:
-      - "${CLIENT_PORT:-3000}:3000"
+      - "${CLIENT_PORT:-3001}:3001"
     environment:
       NODE_ENV: production
       PORT: 3001
