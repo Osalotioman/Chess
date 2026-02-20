@@ -2,7 +2,7 @@ name: Deploy Container
 
 on:
   push:
-    
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -13,19 +13,6 @@ jobs:
       BUILD_REQUIRED: 0
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-
-      - name: Login to GHCR
-        uses: docker/login-action@v2
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GHCR_PAT }}
-
       - name: Determine if build is needed
         id: check_build
         run: |
@@ -33,6 +20,22 @@ jobs:
             echo "BUILD_REQUIRED=1" >> $GITHUB_ENV
           fi
           echo "Build required: $BUILD_REQUIRED"
+
+      - name: Checkout code
+        if: env.BUILD_REQUIRED == '1'
+        uses: actions/checkout@v3
+
+      - name: Set up Docker Buildx
+        if: env.BUILD_REQUIRED == '1'
+        uses: docker/setup-buildx-action@v2
+
+      - name: Login to GHCR
+        if: env.BUILD_REQUIRED == '1'
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GHCR_PAT }}
 
       - name: Build and push Docker image
         if: env.BUILD_REQUIRED == '1'
