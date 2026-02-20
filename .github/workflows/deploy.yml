@@ -10,7 +10,7 @@ jobs:
     env:                           
       DEPLOY_HOST: drid-uniben.org
       DEPLOY_USER: github-drid-deploy-user
-      BUILD_REQUIRED: 0
+      BUILD_REQUIRED: 1
 
     steps:
       - name: Determine if build is needed
@@ -40,10 +40,16 @@ jobs:
       - name: Build and push Docker image
         if: env.BUILD_REQUIRED == '1'
         run: |
-          IMAGE=ghcr.io/osalotioman/chess:latest
-          docker build -t $IMAGE .
-          docker push $IMAGE
-      
+          IMAGE=ghcr.io/osalotioman/chess
+          
+          docker build \
+            -t $IMAGE:${GITHUB_SHA} \
+            -t $IMAGE:latest \
+            .
+
+          docker push $IMAGE:${GITHUB_SHA}
+          docker push $IMAGE:latest
+            
       - name: Deploy via SSH
         uses: appleboy/ssh-action@v0.1.9
         with:
@@ -52,6 +58,4 @@ jobs:
           key: ${{ secrets.DEPLOY_KEY }}
           script: |
             cd osalotioman-chess
-            echo ${GITHUB_SHA}
-            export GITHUB_SHA=${GITHUB_SHA}
             ./deploy-osalotioman-chess.sh 
