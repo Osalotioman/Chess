@@ -48,12 +48,12 @@ jobs:
             -t $IMAGE:latest \
             .
                   
-            - name: Deploy via SSH
-              uses: appleboy/ssh-action@v0.1.9
-              with:
-                host: ${{ env.DEPLOY_HOST }}
-                username: ${{ env.DEPLOY_USER }}
-                key: ${{ secrets.DEPLOY_KEY }}
-                script: |
-                  cd osalotioman-chess
-                  ./deploy-osalotioman-chess.sh 
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v0.1.9
+        with:
+          host: ${{ env.DEPLOY_HOST }}
+          username: ${{ env.DEPLOY_USER }}
+          key: ${{ secrets.DEPLOY_KEY }}
+          script: |
+            cd osalotioman-chess
+            ./deploy-osalotioman-chess.sh 
