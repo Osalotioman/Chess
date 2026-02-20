@@ -22,6 +22,6 @@ jobs:
 
       - name: Build and push Docker image
         run: |
-          IMAGE=ghcr.io/Osalotioman/Chess:${GITHUB_SHA}
+          IMAGE=ghcr.io/Osalotioman/chess:${GITHUB_SHA}
           docker build -t $IMAGE .
           docker push $IMAGE
