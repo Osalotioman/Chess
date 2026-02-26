@@ -41,18 +41,19 @@ export function registerAuthRoutes(app: FastifyInstance, authService: AuthServic
       return reply.status(400).send(fromZodError(parsed.error));
     }
 
-    const tokens = authService.refresh(parsed.data);
+    const tokens = await authService.refresh(parsed.data);
     return reply.send(tokens);
   });
 
   app.get("/auth/me", async (request, reply) => {
     const token = getBearerToken(request);
-    const user = authService.getMe(token);
+    const user = await authService.getMe(token);
     return reply.send(user);
   });
 
-  app.delete("/auth/logout", async (_request, reply) => {
-    return reply.send(authService.logout());
+  app.delete("/auth/logout", async (request, reply) => {
+    const token = getBearerToken(request);
+    return reply.send(await authService.logout(token));
   });
 
   app.setErrorHandler((error, _request, reply) => {

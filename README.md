@@ -8,7 +8,7 @@ A working version of this game can be found here: [https://chess-championship-ar
 
 - [client/](client) — Next.js frontend (App Router)
 - [ws-server/](ws-server) — Node.js WebSocket server (TypeScript, `ws`)
-- [api-server/](api-server) — Node.js REST API server (Fastify, Zod, TypeScript)
+- [api-server/](api-server) — Node.js REST API server (Fastify, Zod, Prisma, PostgreSQL, TypeScript)
 
 ## Quick Start
 
@@ -43,6 +43,8 @@ Health check: http://localhost:8080/health
    - `pnpm dev` (recommended for development)
    - or `pnpm build && pnpm start`
 3. The server listens on http://localhost:4000 by default.
+4. Run migrations before first start:
+   - `pnpm prisma:migrate:dev`
 
 Health check: http://localhost:4000/health
 

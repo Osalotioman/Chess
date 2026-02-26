@@ -1,13 +1,18 @@
 import Fastify from "fastify";
 import { AuthService } from "../domain/auth/authService.js";
-import { UserRepository } from "../domain/user/userRepository.js";
+import { PrismaUserRepository } from "../domain/user/userRepository.js";
+import { prisma } from "../db/prisma.js";
 import { registerAuthRoutes } from "./routes/authRoutes.js";
 
 export function createServer() {
   const app = Fastify({ logger: true });
 
-  const userRepository = new UserRepository();
+  const userRepository = new PrismaUserRepository(prisma);
   const authService = new AuthService(userRepository);
+
+  app.addHook("onClose", async () => {
+    await prisma.$disconnect();
+  });
 
   app.get("/health", async () => {
     return {

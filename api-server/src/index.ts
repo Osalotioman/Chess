@@ -1,8 +1,11 @@
 import { env } from "./config/env.js";
+import { prisma } from "./db/prisma.js";
 import { createServer } from "./http/server.js";
 
 async function main() {
   const app = createServer();
+
+  await prisma.$connect();
 
   await app.listen({ host: env.HOST, port: env.PORT });
 
@@ -10,7 +13,6 @@ async function main() {
 }
 
 main().catch((error) => {
-  // eslint-disable-next-line no-console
   console.error(error);
   process.exit(1);
 });

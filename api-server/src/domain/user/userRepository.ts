@@ -1,4 +1,4 @@
-import { randomUUID } from "node:crypto";
+import type { PrismaClient, RefreshToken, User as PrismaUser } from "@prisma/client";
 
 export interface User {
   id: string;
@@ -19,6 +19,25 @@ export interface UserPublic {
   rating: number;
 }
 
+export interface UserRepositoryPort {
+  findByEmail(email: string): Promise<User | null>;
+  findByUsername(username: string): Promise<User | null>;
+  findById(userId: string): Promise<User | null>;
+  create(input: { username: string; email: string; passwordHash: string }): Promise<User>;
+  createRefreshTokenSession(input: {
+    userId: string;
+    tokenId: string;
+    expiresAt: Date;
+  }): Promise<void>;
+  findActiveRefreshTokenSession(input: {
+    userId: string;
+    tokenId: string;
+  }): Promise<{ tokenId: string; userId: string; expiresAt: Date } | null>;
+  revokeRefreshTokenSession(input: { userId: string; tokenId: string }): Promise<void>;
+  revokeAllRefreshTokenSessions(userId: string): Promise<void>;
+  toPublicUser(user: User): UserPublic;
+}
+
 function toPublicUser(user: User): UserPublic {
   return {
     id: user.id,
@@ -30,46 +49,118 @@ function toPublicUser(user: User): UserPublic {
   };
 }
 
-export class UserRepository {
-  private readonly usersById = new Map<string, User>();
-  private readonly userIdByEmail = new Map<string, string>();
-  private readonly userIdByUsername = new Map<string, string>();
+function mapPrismaUser(user: PrismaUser): User {
+  return {
+    id: user.id,
+    username: user.username,
+    email: user.email,
+    passwordHash: user.passwordHash,
+    createdAt: user.createdAt.toISOString(),
+    updatedAt: user.updatedAt.toISOString(),
+    rating: user.rating,
+  };
+}
 
-  findByEmail(email: string): User | null {
+function mapRefreshToken(session: RefreshToken) {
+  return {
+    tokenId: session.tokenId,
+    userId: session.userId,
+    expiresAt: session.expiresAt,
+  };
+}
+
+export class PrismaUserRepository implements UserRepositoryPort {
+  private readonly prisma: PrismaClient;
+
+  constructor(prisma: PrismaClient) {
+    this.prisma = prisma;
+  }
+
+  async findByEmail(email: string): Promise<User | null> {
     const normalizedEmail = email.trim().toLowerCase();
-    const userId = this.userIdByEmail.get(normalizedEmail);
-    if (!userId) return null;
-    return this.usersById.get(userId) ?? null;
+    const user = await this.prisma.user.findUnique({
+      where: { email: normalizedEmail },
+    });
+    if (!user) return null;
+    return mapPrismaUser(user);
   }
 
-  findByUsername(username: string): User | null {
+  async findByUsername(username: string): Promise<User | null> {
     const normalizedUsername = username.trim().toLowerCase();
-    const userId = this.userIdByUsername.get(normalizedUsername);
-    if (!userId) return null;
-    return this.usersById.get(userId) ?? null;
+    const user = await this.prisma.user.findUnique({
+      where: { username: normalizedUsername },
+    });
+    if (!user) return null;
+    return mapPrismaUser(user);
   }
 
-  findById(userId: string): User | null {
-    return this.usersById.get(userId) ?? null;
+  async findById(userId: string): Promise<User | null> {
+    const user = await this.prisma.user.findUnique({ where: { id: userId } });
+    if (!user) return null;
+    return mapPrismaUser(user);
   }
 
-  create(input: { username: string; email: string; passwordHash: string }): User {
-    const now = new Date().toISOString();
-    const user: User = {
-      id: randomUUID(),
-      username: input.username.trim(),
-      email: input.email.trim().toLowerCase(),
-      passwordHash: input.passwordHash,
-      createdAt: now,
-      updatedAt: now,
-      rating: 1200,
-    };
+  async create(input: { username: string; email: string; passwordHash: string }): Promise<User> {
+    const user = await this.prisma.user.create({
+      data: {
+        username: input.username.trim().toLowerCase(),
+        email: input.email.trim().toLowerCase(),
+        passwordHash: input.passwordHash,
+      },
+    });
 
-    this.usersById.set(user.id, user);
-    this.userIdByEmail.set(user.email, user.id);
-    this.userIdByUsername.set(user.username.toLowerCase(), user.id);
+    return mapPrismaUser(user);
+  }
 
-    return user;
+  async createRefreshTokenSession(input: {
+    userId: string;
+    tokenId: string;
+    expiresAt: Date;
+  }): Promise<void> {
+    await this.prisma.refreshToken.create({
+      data: {
+        userId: input.userId,
+        tokenId: input.tokenId,
+        expiresAt: input.expiresAt,
+      },
+    });
+  }
+
+  async findActiveRefreshTokenSession(input: {
+    userId: string;
+    tokenId: string;
+  }): Promise<{ tokenId: string; userId: string; expiresAt: Date } | null> {
+    const session = await this.prisma.refreshToken.findFirst({
+      where: {
+        userId: input.userId,
+        tokenId: input.tokenId,
+        revokedAt: null,
+      },
+    });
+
+    if (!session) return null;
+    return mapRefreshToken(session);
+  }
+
+  async revokeRefreshTokenSession(input: { userId: string; tokenId: string }): Promise<void> {
+    await this.prisma.refreshToken.updateMany({
+      where: {
+        userId: input.userId,
+        tokenId: input.tokenId,
+        revokedAt: null,
+      },
+      data: { revokedAt: new Date() },
+    });
+  }
+
+  async revokeAllRefreshTokenSessions(userId: string): Promise<void> {
+    await this.prisma.refreshToken.updateMany({
+      where: {
+        userId,
+        revokedAt: null,
+      },
+      data: { revokedAt: new Date() },
+    });
   }
 
   toPublicUser(user: User): UserPublic {

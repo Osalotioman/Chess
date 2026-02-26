@@ -1,11 +1,18 @@
-name: CI
+name: CI - client
 
 on:
   push:
+    paths:
+      - "client/**"
+      - ".github/workflows/ci-client.yml"
   pull_request:
+    paths:
+      - "client/**"
+      - ".github/workflows/ci-client.yml"
+  workflow_dispatch:
 
 jobs:
-  build:
+  client:
     runs-on: ubuntu-latest
 
     steps:
@@ -20,17 +27,11 @@ jobs:
       - name: Enable Corepack (pnpm)
         run: corepack enable
 
-      - name: ws-server install
-        run: pnpm -C ws-server install --frozen-lockfile
-
-      - name: ws-server typecheck
-        run: pnpm -C ws-server typecheck
-
-      - name: ws-server build
-        run: pnpm -C ws-server build
-
       - name: client install
         run: pnpm -C client install --frozen-lockfile
+
+      - name: client lint
+        run: pnpm -C client lint
 
       - name: client build
         run: pnpm -C client build

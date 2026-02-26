@@ -34,7 +34,24 @@ services:
     environment:
       HOST: 0.0.0.0
       PORT: 4000
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/chess_api?schema=public
       JWT_ACCESS_SECRET: ${JWT_ACCESS_SECRET:-change-this-access-secret}
       JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET:-change-this-refresh-secret}
       ACCESS_TOKEN_TTL: ${ACCESS_TOKEN_TTL:-15m}
       REFRESH_TOKEN_TTL: ${REFRESH_TOKEN_TTL:-7d}
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:16-alpine
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: chess_api
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+volumes:
+  postgres-data:

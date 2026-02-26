@@ -1,0 +1,43 @@
+name: CI - api-server
+
+on:
+  push:
+    paths:
+      - "api-server/**"
+      - ".github/workflows/ci-api-server.yml"
+  pull_request:
+    paths:
+      - "api-server/**"
+      - ".github/workflows/ci-api-server.yml"
+  workflow_dispatch:
+
+jobs:
+  api-server:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Enable Corepack (pnpm)
+        run: corepack enable
+
+      - name: api-server install
+        run: pnpm -C api-server install --frozen-lockfile
+
+      - name: api-server prisma generate
+        run: pnpm -C api-server prisma:generate
+
+      - name: api-server lint
+        run: pnpm -C api-server lint
+
+      - name: api-server typecheck
+        run: pnpm -C api-server typecheck
+
+      - name: api-server build
+        run: pnpm -C api-server build

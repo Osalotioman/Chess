@@ -1,0 +1,37 @@
+name: CI - ws-server
+
+on:
+  push:
+    paths:
+      - "ws-server/**"
+      - ".github/workflows/ci-ws-server.yml"
+  pull_request:
+    paths:
+      - "ws-server/**"
+      - ".github/workflows/ci-ws-server.yml"
+  workflow_dispatch:
+
+jobs:
+  ws-server:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Enable Corepack (pnpm)
+        run: corepack enable
+
+      - name: ws-server install
+        run: pnpm -C ws-server install --frozen-lockfile
+
+      - name: ws-server typecheck
+        run: pnpm -C ws-server typecheck
+
+      - name: ws-server build
+        run: pnpm -C ws-server build
