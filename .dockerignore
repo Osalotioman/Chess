@@ -1,9 +1,0 @@
-.git
-**/node_modules
-**/.next
-**/dist
-server/vendor
-server/.phpunit.result.cache
-**/.DS_Store
-**/npm-debug.log*
-**/pnpm-debug.log*

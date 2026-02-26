@@ -8,7 +8,6 @@ import type { Square } from "chess.js";
 export default function ArenaPage() {
   const { settings, mounted } = useSettings();
   const [orientation, setOrientation] = useState<"white" | "black">("white");
-  const [wsUrl, setWsUrl] = useState("https://chess-championship-arena.onrender.com"); //ws://127.0.0.1:8080
   const [room, setRoom] = useState("championship-1");
   const [connected, setConnected] = useState(false);
   const [status, setStatus] = useState("Disconnected");
@@ -23,13 +22,23 @@ export default function ArenaPage() {
   } | null>(null);
   const [remotePendingFrom, setRemotePendingFrom] = useState<Square | null>(null);
   const remoteNonceRef = useRef(0);
+  const wsPath = "/ws";
 
   const autoConnectEnabled = mounted ? settings.autoConnect : false;
   const canAttemptConnect = useMemo(() => {
     if (!autoConnectEnabled) return false;
-    if (!wsUrl.trim() || !room.trim()) return false;
+    if (!room.trim()) return false;
     return true;
-  }, [autoConnectEnabled, room, wsUrl]);
+  }, [autoConnectEnabled, room]);
+
+  function toWebSocketUrl(path: string) {
+    const normalizedPath = path.startsWith("/") ? path : `/${path}`;
+
+    if (typeof window === "undefined") return `ws://localhost:3000${normalizedPath}`;
+
+    const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
+    return `${protocol}//${window.location.host}${normalizedPath}`;
+  }
 
   function connect() {
     if (socketRef.current?.readyState === WebSocket.OPEN) return;
@@ -40,7 +49,7 @@ export default function ArenaPage() {
       retryTimerRef.current = null;
     }
 
-    const socket = new WebSocket(wsUrl);
+    const socket = new WebSocket(toWebSocketUrl(wsPath));
     socketRef.current = socket;
     setStatus("Connecting...");
 
@@ -164,7 +173,7 @@ export default function ArenaPage() {
       }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [mounted, canAttemptConnect, wsUrl, room, connected]);
+  }, [mounted, canAttemptConnect, room, connected]);
 
   return (
     <main className="page-shell">
@@ -197,12 +206,6 @@ export default function ArenaPage() {
         <details className="arena-details">
           <summary>Connection settings</summary>
           <div className="controls-row arena-controls">
-            <input
-              aria-label="WebSocket URL"
-              value={wsUrl}
-              onChange={(e) => setWsUrl(e.target.value)}
-              placeholder="ws://127.0.0.1:8080"
-            />
             <input
               aria-label="Room"
               value={room}

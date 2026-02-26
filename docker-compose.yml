@@ -1,24 +1,40 @@
 services:
-  ws-server:
-    build:
-      context: ./ws-server
-      dockerfile: Dockerfile
-    ports:
-      - "${WS_PORT:-8081}:8081"
-    environment:
-      HOST: 0.0.0.0
-      PORT: 8081
-    restart: unless-stopped
-
   client:
     build:
       context: ./client
       dockerfile: Dockerfile
     ports:
-      - "${CLIENT_PORT:-3001}:3001"
+      - "${CLIENT_PORT:-3000}:3000"
     environment:
       NODE_ENV: production
-      PORT: 3001
+      PORT: 3000
+      WS_BACKEND_ORIGIN: ws://ws-server:8080
+      WS_BACKEND_PATH: /
+      REST_BACKEND_ORIGIN: http://api-server:4000
     depends_on:
       - ws-server
-    restart: unless-stopped
+      - api-server
+
+  ws-server:
+    build:
+      context: ./ws-server
+      dockerfile: Dockerfile
+    ports:
+      - "${WS_PORT:-8080}:8080"
+    environment:
+      HOST: 0.0.0.0
+      PORT: 8080
+
+  api-server:
+    build:
+      context: ./api-server
+      dockerfile: Dockerfile
+    ports:
+      - "${API_PORT:-4000}:4000"
+    environment:
+      HOST: 0.0.0.0
+      PORT: 4000
+      JWT_ACCESS_SECRET: ${JWT_ACCESS_SECRET:-change-this-access-secret}
+      JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET:-change-this-refresh-secret}
+      ACCESS_TOKEN_TTL: ${ACCESS_TOKEN_TTL:-15m}
+      REFRESH_TOKEN_TTL: ${REFRESH_TOKEN_TTL:-7d}

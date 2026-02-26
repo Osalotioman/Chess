@@ -4,6 +4,38 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 Online multiplayer uses the Node WebSocket relay in [ws-server/](../ws-server). By default it listens on `ws://localhost:8080`.
 
+## Environment Configuration
+
+Configure backend upstreams in your frontend environment (for example `.env.local`):
+
+```bash
+# Server-side rewrite targets
+WS_BACKEND_ORIGIN=ws://localhost:8080
+WS_BACKEND_PATH=/
+REST_BACKEND_ORIGIN=http://localhost:4000
+```
+
+The frontend calls stable app-local paths:
+
+- WebSocket: `/ws`
+- REST: `/api/*`
+
+Next.js rewrites proxy these to the configured backend origins.
+
+Use `app/lib/api.ts` helpers for frontend REST requests so all calls consistently target the proxied API base path.
+
+## Auth Client Foundation
+
+Frontend auth request helpers are available in `app/lib/auth.ts`:
+
+- `signup`
+- `login`
+- `refreshSession`
+- `getMe`
+- `logout`
+
+Client-side auth session persistence helpers are in `app/lib/session.ts`.
+
 ## Getting Started
 
 First, run the development server:
