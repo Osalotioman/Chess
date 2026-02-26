@@ -24,6 +24,8 @@ Standalone REST backend for authentication and account/session operations.
 
 Copy `.env.example` to `.env` and set secure secrets.
 
+Prisma 7 datasource URLs are configured via `prisma.config.ts` (not in `schema.prisma`).
+
 `SHADOW_DATABASE_URL` is used by Prisma during `prisma migrate dev` to safely diff schemas without mutating your main development database.
 
 ## Migrations
