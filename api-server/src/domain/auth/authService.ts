@@ -4,7 +4,8 @@ import type { SignOptions } from "jsonwebtoken";
 import { randomUUID } from "node:crypto";
 import { z } from "zod";
 import { env } from "../../config/env.js";
-import { type UserPublic, type UserRepositoryPort } from "../user/userRepository.js";
+import type { UserRepositoryPort } from "../user/userRepository.port.js";
+import type { UserPublic } from "../user/user.types.js";
 import type { LoginInput, RefreshInput, SignupInput } from "./schemas.js";
 
 const tokenPayloadSchema = z.object({

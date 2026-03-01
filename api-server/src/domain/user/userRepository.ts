@@ -1,42 +1,10 @@
-import type { PrismaClient, RefreshToken, User as PrismaUser } from "@prisma/client";
+import type { prisma } from "../../db/prisma.js";
+import type { UserRepositoryPort } from "./userRepository.port.js";
+import type { RefreshTokenSession, User, UserPublic } from "./user.types.js";
 
-export interface User {
-  id: string;
-  username: string;
-  email: string;
-  passwordHash: string;
-  createdAt: string;
-  updatedAt: string;
-  rating: number;
-}
-
-export interface UserPublic {
-  id: string;
-  username: string;
-  email: string;
-  createdAt: string;
-  updatedAt: string;
-  rating: number;
-}
-
-export interface UserRepositoryPort {
-  findByEmail(email: string): Promise<User | null>;
-  findByUsername(username: string): Promise<User | null>;
-  findById(userId: string): Promise<User | null>;
-  create(input: { username: string; email: string; passwordHash: string }): Promise<User>;
-  createRefreshTokenSession(input: {
-    userId: string;
-    tokenId: string;
-    expiresAt: Date;
-  }): Promise<void>;
-  findActiveRefreshTokenSession(input: {
-    userId: string;
-    tokenId: string;
-  }): Promise<{ tokenId: string; userId: string; expiresAt: Date } | null>;
-  revokeRefreshTokenSession(input: { userId: string; tokenId: string }): Promise<void>;
-  revokeAllRefreshTokenSessions(userId: string): Promise<void>;
-  toPublicUser(user: User): UserPublic;
-}
+type PrismaClientLike = typeof prisma;
+type DbUser = NonNullable<Awaited<ReturnType<PrismaClientLike["user"]["findUnique"]>>>;
+type DbRefreshToken = NonNullable<Awaited<ReturnType<PrismaClientLike["refreshToken"]["findFirst"]>>>;
 
 function toPublicUser(user: User): UserPublic {
   return {
@@ -49,7 +17,7 @@ function toPublicUser(user: User): UserPublic {
   };
 }
 
-function mapPrismaUser(user: PrismaUser): User {
+function mapPrismaUser(user: DbUser): User {
   return {
     id: user.id,
     username: user.username,
@@ -61,7 +29,7 @@ function mapPrismaUser(user: PrismaUser): User {
   };
 }
 
-function mapRefreshToken(session: RefreshToken) {
+function mapRefreshToken(session: DbRefreshToken): RefreshTokenSession {
   return {
     tokenId: session.tokenId,
     userId: session.userId,
@@ -70,9 +38,9 @@ function mapRefreshToken(session: RefreshToken) {
 }
 
 export class PrismaUserRepository implements UserRepositoryPort {
-  private readonly prisma: PrismaClient;
+  private readonly prisma: PrismaClientLike;
 
-  constructor(prisma: PrismaClient) {
+  constructor(prisma: PrismaClientLike) {
     this.prisma = prisma;
   }
 
