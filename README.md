@@ -1,6 +1,6 @@
 # Chess
 
-Modern Chess is a two-player chess experience with a Next.js frontend, a Node.js WebSocket server for real-time multiplayer, and a dedicated REST API server for account/auth operations.
+Chess is a two-player chess experience with a Next.js frontend, a Node.js WebSocket server for real-time multiplayer, and a dedicated REST API server for account/auth operations.
 
 A working version of this game can be found here: [https://chess-championship-arena.vercel.app/](https://chess-championship-arena.vercel.app/)
 
@@ -57,7 +57,7 @@ From the repository root:
 This starts:
 - WebSocket server on `ws://localhost:8080`
 - API server on `http://localhost:4000`
-- Frontend on http://localhost:3000
+- Frontend on `http://localhost:3000`
 
 ## Documentation
 
