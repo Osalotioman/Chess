@@ -16,10 +16,9 @@ A working version of this game can be found here: [https://chess-championship-ar
 
 1. Install dependencies:
    - From [client/](client):
-     - `pnpm install` (recommended)
-     - or `npm install`
+     - `pnpm install`
 2. Start the dev server:
-   - `pnpm dev` or `npm run dev`
+   - `pnpm dev`
 3. Open http://localhost:3000
 
 ### WebSocket Server (Node.js)
