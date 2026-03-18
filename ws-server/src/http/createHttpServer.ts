@@ -1,5 +1,7 @@
 import http from "node:http";
 
+import { applyCors, handleCorsPreflight } from "./cors";
+
 type HealthStats = {
   rooms: number;
   clients: number;
@@ -7,6 +9,12 @@ type HealthStats = {
 
 export function createHttpServer(getHealthStats: () => HealthStats): http.Server {
   return http.createServer((req, res) => {
+    if (handleCorsPreflight(req, res)) {
+      return;
+    }
+
+    applyCors(req, res);
+
     if (req.url === "/health") {
       const stats = getHealthStats();
       res.writeHead(200, { "content-type": "application/json" });
