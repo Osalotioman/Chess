@@ -47,17 +47,6 @@ Health check: http://localhost:8080/health
 
 Health check: http://localhost:4000/health
 
-### Docker (Full Stack)
-
-From the repository root:
-
-- `docker compose up --build`
-
-This starts:
-- WebSocket server on `ws://localhost:8080`
-- API server on `http://localhost:4000`
-- Frontend on `http://localhost:3000`
-
 ## Documentation
 
 - [CONTRIBUTING.md](CONTRIBUTING.md)
