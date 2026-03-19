@@ -207,7 +207,8 @@ body {
 }
 
 .controls-row input,
-.controls-row button {
+.controls-row button,
+.controls-row select {
   border: 1px solid #34445f;
   border-radius: 8px;
   background: #0f141d;
@@ -232,6 +233,97 @@ body {
 .board-wrap {
   display: grid;
   place-items: center;
+  min-height: 0;
+}
+
+.arena-shell {
+  grid-template-columns: minmax(280px, 360px) 1fr;
+  grid-template-rows: 1fr;
+  align-items: stretch;
+  gap: 1rem;
+}
+
+.arena-sidebar {
+  border-radius: 16px;
+  padding: 1rem;
+  display: grid;
+  gap: 0.85rem;
+  align-content: start;
+  max-height: calc(100svh - 2rem);
+  overflow: auto;
+  position: sticky;
+  top: 1rem;
+  z-index: 12;
+}
+
+.arena-sidebar-head h1 {
+  margin: 0;
+  font-size: clamp(1.25rem, 2.8vw, 1.55rem);
+}
+
+.arena-sidebar-head p {
+  margin: 0.35rem 0 0;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+.arena-stage {
+  border-radius: 16px;
+  padding: 0.85rem;
+  display: grid;
+  grid-template-rows: auto 1fr;
+  gap: 0.7rem;
+  min-height: calc(100svh - 2rem);
+}
+
+.arena-stage-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.7rem;
+}
+
+.arena-stage-meta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--muted);
+  font-size: 0.9rem;
+  border: 1px solid rgba(73, 111, 129, 0.5);
+  border-radius: 999px;
+  padding: 0.3rem 0.55rem;
+  background: rgba(9, 22, 30, 0.42);
+}
+
+.arena-hamburger {
+  border: 1px solid #34445f;
+  border-radius: 10px;
+  background: #22314a;
+  color: var(--foreground);
+  min-height: 38px;
+  padding: 0 0.75rem;
+  cursor: pointer;
+  font-size: 0.9rem;
+  display: none;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.arena-hamburger-bars {
+  display: inline-grid;
+  gap: 3px;
+}
+
+.arena-hamburger-bars span {
+  width: 14px;
+  height: 2px;
+  background: #d9e7ff;
+  border-radius: 2px;
+  display: block;
+}
+
+.arena-sidebar-backdrop {
+  display: none;
 }
 
 .arena-status {
@@ -335,14 +427,15 @@ body {
 
 .invite-strip {
   grid-column: 1 / -1;
-  display: grid;
-  grid-template-columns: minmax(220px, 1fr) repeat(3, auto);
+  display: flex;
+  flex-wrap: wrap;
   gap: 0.5rem;
   align-items: center;
   margin-top: 0.2rem;
 }
 
 .invite-strip input {
+  flex: 1 1 240px;
   border: 1px solid #34445f;
   border-radius: 8px;
   background: #0f141d;
@@ -352,6 +445,7 @@ body {
 }
 
 .invite-copy-state {
+  flex-basis: 100%;
   color: var(--muted);
   font-size: 0.82rem;
 }
@@ -473,7 +567,8 @@ body {
   }
 
   .invite-strip {
-    grid-template-columns: 1fr;
+    flex-direction: column;
+    align-items: stretch;
   }
 
   .lobby-toolbar {
@@ -482,6 +577,47 @@ body {
 
   .lobby-grid {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 980px) {
+  .arena-shell {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
+  }
+
+  .arena-stage {
+    min-height: calc(100svh - 2rem);
+  }
+
+  .arena-hamburger {
+    display: inline-flex;
+  }
+
+  .arena-sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: min(86vw, 340px);
+    max-height: none;
+    border-radius: 0;
+    transform: translateX(-104%);
+    transition: transform 0.24s ease;
+    z-index: 50;
+  }
+
+  .arena-sidebar.is-open {
+    transform: translateX(0);
+  }
+
+  .arena-sidebar-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.42);
+    border: 0;
+    z-index: 40;
   }
 }
 

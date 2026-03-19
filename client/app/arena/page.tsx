@@ -1,64 +1,27 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ChessBoard } from "../components/ChessBoard";
+import { ArenaSidebar } from "./ArenaSidebar";
 import { apiGet, apiPost } from "../lib/api";
 import { getAccessToken } from "../lib/session";
 import { useSettings } from "../lib/useSettings";
 import { usePlayerIdentity } from "../lib/usePlayerIdentity";
-import type { Square } from "chess.js";
-
-type InviteLookupResponse = {
-  invite: {
-    code: string;
-    roomCode: string;
-    status: string;
-    active: boolean;
-    expiresAt: string;
-  };
-};
-
-type InviteCreateResponse = {
-  invite: {
-    code: string;
-    roomCode: string;
-    expiresAt: string;
-  };
-};
-
-type InviteAcceptResponse = {
-  invite: {
-    code: string;
-    roomCode: string;
-    seat: "white" | "black" | "spectator";
-  };
-};
+import type { InviteAcceptResponse, InviteCreateResponse, InviteLookupResponse } from "./types";
+import { useArenaRealtime } from "./useArenaRealtime";
 
 export default function ArenaPage() {
   const { settings, mounted } = useSettings();
   const { mode, setMode, guestProfile, setGuestDisplayName, ensureGuestProfile } = usePlayerIdentity();
   const [orientation, setOrientation] = useState<"white" | "black">("white");
   const [room, setRoom] = useState("championship-1");
-  const [connected, setConnected] = useState(false);
-  const [status, setStatus] = useState("Disconnected");
-  const [lastWsError, setLastWsError] = useState<string | null>(null);
-  const [peersInRoom, setPeersInRoom] = useState(0);
   const [inviteLink, setInviteLink] = useState("");
   const [inviteCode, setInviteCode] = useState<string | null>(null);
   const [inviteInfo, setInviteInfo] = useState<string | null>(null);
+  const [seat, setSeat] = useState<"white" | "black" | "spectator" | null>(null);
   const [inviteBusy, setInviteBusy] = useState(false);
   const [copyStatus, setCopyStatus] = useState<"idle" | "copied" | "failed">("idle");
-  const socketRef = useRef<WebSocket | null>(null);
-  const retryTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const retryAttemptRef = useRef(0);
-  const [remoteMove, setRemoteMove] = useState<{
-    from: Square;
-    to: Square;
-    promotion?: "q" | "r" | "b" | "n";
-    nonce: number;
-  } | null>(null);
-  const [remotePendingFrom, setRemotePendingFrom] = useState<Square | null>(null);
-  const remoteNonceRef = useRef(0);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const wsUrl = process.env.NEXT_PUBLIC_WS_URL ?? "ws://localhost:8080";
 
   const autoConnectEnabled = mounted ? settings.autoConnect : false;
@@ -68,141 +31,14 @@ export default function ArenaPage() {
     return true;
   }, [autoConnectEnabled, room]);
 
-  function connect() {
-    if (socketRef.current?.readyState === WebSocket.OPEN) return;
-    if (socketRef.current?.readyState === WebSocket.CONNECTING) return;
-
-    if (retryTimerRef.current) {
-      clearTimeout(retryTimerRef.current);
-      retryTimerRef.current = null;
-    }
-
-    const socket = new WebSocket(wsUrl);
-    socketRef.current = socket;
-    setStatus("Connecting...");
-    setLastWsError(null);
-
-    socket.onopen = () => {
-      setConnected(true);
-      setStatus("Connected");
-      retryAttemptRef.current = 0;
-      socket.send(
-        JSON.stringify({
-          type: "join",
-          room,
-          player: {
-            mode,
-            guestId: guestProfile.id,
-            guestName: guestProfile.displayName,
-          },
-        })
-      );
-    };
-
-    socket.onclose = () => {
-      setConnected(false);
-      setStatus("Disconnected");
-      setPeersInRoom(0);
-      socketRef.current = null;
-
-      if (canAttemptConnect) {
-        scheduleRetry();
-      }
-    };
-
-    socket.onerror = () => {
-      setStatus("Connection error");
-      setLastWsError("WebSocket transport error");
-    };
-
-    socket.onmessage = (event) => {
-      const raw = String(event.data);
-
-      try {
-        const message = JSON.parse(raw) as {
-          type?: string;
-          room?: string;
-          peers?: number;
-          message?: string;
-          from?: Square;
-          to?: Square;
-          promotion?: "q" | "r" | "b" | "n";
-        };
-
-        if (message.type === "joined" && message.room) {
-          setPeersInRoom(typeof message.peers === "number" ? message.peers : 0);
-          setStatus(`Connected (${mode} mode, room: ${message.room})`);
-          return;
-        }
-
-        if (message.type === "peer_joined" || message.type === "peer_left") {
-          if (typeof message.peers === "number") {
-            setPeersInRoom(message.peers);
-          }
-          return;
-        }
-
-        if (message.type === "error" && message.message) {
-          setLastWsError(message.message);
-          setStatus(message.message);
-          return;
-        }
-
-        if (message.type === "move" && message.from && message.to) {
-          remoteNonceRef.current += 1;
-          setRemoteMove({
-            from: message.from,
-            to: message.to,
-            promotion: message.promotion,
-            nonce: remoteNonceRef.current,
-          });
-          return;
-        }
-      } catch {
-        // Ignore parse errors
-      }
-
-      // Legacy relay protocol: raw "11" style coordinates sent twice (from then to).
-      if (/^[1-8][1-8]$/.test(raw)) {
-        const file = Number(raw[0]);
-        const rank = Number(raw[1]);
-        const sq = `${String.fromCharCode("a".charCodeAt(0) + (file - 1))}${rank}` as Square;
-
-        if (!remotePendingFrom) {
-          setRemotePendingFrom(sq);
-          return;
-        }
-
-        remoteNonceRef.current += 1;
-        setRemoteMove({ from: remotePendingFrom, to: sq, nonce: remoteNonceRef.current });
-        setRemotePendingFrom(null);
-      }
-    };
-  }
-
-  function scheduleRetry() {
-    if (!canAttemptConnect) return;
-    if (retryTimerRef.current) return;
-
-    const attempt = retryAttemptRef.current;
-    const delayMs = Math.min(10_000, 750 * Math.pow(1.6, attempt));
-    retryAttemptRef.current = attempt + 1;
-
-    setStatus(`Reconnecting in ${Math.ceil(delayMs / 1000)}s...`);
-    retryTimerRef.current = setTimeout(() => {
-      retryTimerRef.current = null;
-      connect();
-    }, delayMs);
-  }
-
-  function disconnect() {
-    if (retryTimerRef.current) {
-      clearTimeout(retryTimerRef.current);
-      retryTimerRef.current = null;
-    }
-    retryAttemptRef.current = 0;
-    socketRef.current?.close();
-  }
+  const { connected, status, lastWsError, peersInRoom, remoteMove, connect, disconnect, sendMove } =
+    useArenaRealtime({
+      wsUrl,
+      room,
+      mode,
+      guestProfile,
+      canAttemptConnect,
+    });
 
   useEffect(() => {
     ensureGuestProfile();
@@ -300,6 +136,7 @@ export default function ArenaPage() {
         { token }
       );
       setRoom(response.invite.roomCode);
+      setSeat(response.invite.seat);
       setInviteInfo(`Invite accepted as ${response.invite.seat}`);
     } catch {
       setInviteInfo("Unable to accept invite");
@@ -323,142 +160,98 @@ export default function ArenaPage() {
   }, [mounted, settings.boardOrientation]);
 
   useEffect(() => {
-    if (!mounted) return;
+    if (!isSidebarOpen) return;
 
-    if (!canAttemptConnect) {
-      if (retryTimerRef.current) {
-        clearTimeout(retryTimerRef.current);
-        retryTimerRef.current = null;
+    function onKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        setIsSidebarOpen(false);
       }
-      retryAttemptRef.current = 0;
-      return;
     }
 
-    if (!connected) connect();
-
+    window.addEventListener("keydown", onKeyDown);
     return () => {
-      if (retryTimerRef.current) {
-        clearTimeout(retryTimerRef.current);
-        retryTimerRef.current = null;
-      }
+      window.removeEventListener("keydown", onKeyDown);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [mounted, canAttemptConnect, room, connected]);
+  }, [isSidebarOpen]);
 
   return (
-    <main className="page-shell">
-      <header className="topbar shell-card">
-        <h1>Chess Championship Arena</h1>
-        <p>Live competitive board with direct WebSocket play.</p>
-      </header>
+    <main className="page-shell arena-shell">
+      <ArenaSidebar
+        isOpen={isSidebarOpen}
+        connected={connected}
+        room={room}
+        status={status}
+        mode={mode}
+        guestProfile={guestProfile}
+        autoConnectEnabled={autoConnectEnabled}
+        peersInRoom={peersInRoom}
+        wsUrl={wsUrl}
+        lastWsError={lastWsError}
+        inviteLink={inviteLink}
+        inviteCode={inviteCode}
+        inviteBusy={inviteBusy}
+        copyStatus={copyStatus}
+        inviteInfo={inviteInfo}
+        seat={seat}
+        onRoomChange={setRoom}
+        onModeChange={setMode}
+        onGuestNameChange={setGuestDisplayName}
+        onConnect={connect}
+        onDisconnect={disconnect}
+        onCopyInvite={copyInviteLink}
+        onCreateSignedInvite={createSignedInvite}
+        onAcceptInvite={acceptInvite}
+      />
 
-      <section className="panel arena-status shell-card">
-        <div className="arena-status-row">
-          <div className="arena-status-left">
-            <div className={`pill ${connected ? "ok" : "warn"}`}>{connected ? "Live" : "Offline"}</div>
-            <div className="arena-status-text">
-              <div className="arena-status-title">Room: {room}</div>
-              <div className="arena-status-sub">{status}</div>
-            </div>
+      {isSidebarOpen ? (
+        <button
+          type="button"
+          aria-label="Close arena sidebar"
+          className="arena-sidebar-backdrop"
+          onClick={() => setIsSidebarOpen(false)}
+        />
+      ) : null}
+
+      <section className="arena-stage shell-card" aria-label="Arena board stage">
+        <div className="arena-stage-top">
+          <button
+            className="arena-hamburger"
+            type="button"
+            aria-label="Open arena menu"
+            aria-expanded={isSidebarOpen}
+            onClick={() => setIsSidebarOpen((current) => !current)}
+          >
+            <span className="arena-hamburger-bars" aria-hidden="true">
+              <span />
+              <span />
+              <span />
+            </span>
+            Menu
+          </button>
+
+          <div className="arena-stage-meta">
+            <span className={`pill ${connected ? "ok" : "warn"}`}>{connected ? "Live" : "Offline"}</span>
+            {seat ? <span className="pill">Seat: {seat}</span> : null}
+            <span>
+              Room <strong>{room}</strong>
+            </span>
           </div>
-
-          {!connected ? (
-            <button onClick={connect} className="control-btn">
-              Connect
-            </button>
-          ) : (
-            <button onClick={disconnect} className="control-btn">
-              Disconnect
-            </button>
-          )}
         </div>
 
-        <details className="arena-details">
-          <summary>Connection settings</summary>
-          <div className="controls-row arena-controls">
-            <input
-              aria-label="Room"
-              value={room}
-              onChange={(e) => setRoom(e.target.value)}
-              placeholder="championship-1"
-            />
-            <select
-              aria-label="Play mode"
-              value={mode}
-              onChange={(e) => setMode(e.target.value as "guest" | "account")}
-            >
-              <option value="guest">Play as Guest</option>
-              <option value="account">Play with Account (coming soon)</option>
-            </select>
-            {mode === "guest" ? (
-              <input
-                aria-label="Guest display name"
-                value={guestProfile.displayName}
-                onChange={(e) => setGuestDisplayName(e.target.value)}
-                placeholder="Guest display name"
-              />
-            ) : null}
-            <div className="arena-autoconnect">
-              Auto-connect: <strong>{autoConnectEnabled ? "On" : "Off"}</strong>
-            </div>
-            <div className="arena-meta-grid">
-              <div>
-                Peers in room: <strong>{peersInRoom}</strong>
-              </div>
-              <div>
-                Mode: <strong>{mode === "guest" ? "Guest" : "Account"}</strong>
-              </div>
-              <div>
-                Guest ID: <strong>{guestProfile.id}</strong>
-              </div>
-              <div>
-                WS endpoint: <code>{wsUrl}</code>
-              </div>
-              <div>
-                Last WS error: <strong>{lastWsError ?? "None"}</strong>
-              </div>
-            </div>
-
-            <div className="invite-strip">
-              <input readOnly value={inviteLink} aria-label="Invite link" />
-              <button onClick={copyInviteLink} className="control-btn" type="button">
-                Copy Invite Link
-              </button>
-              <button onClick={createSignedInvite} className="control-btn" type="button" disabled={inviteBusy}>
-                Create Signed Invite
-              </button>
-              {inviteCode ? (
-                <button onClick={acceptInvite} className="control-btn" type="button" disabled={inviteBusy}>
-                  Accept Invite
-                </button>
-              ) : null}
-              <span className="invite-copy-state">
-                {copyStatus === "copied" ? "Copied" : copyStatus === "failed" ? "Copy failed" : ""}
-              </span>
-            </div>
-            {inviteInfo ? <div className="lobby-note">{inviteInfo}</div> : null}
-          </div>
-        </details>
-      </section>
-
-      <section className="board-wrap" aria-label="Chess board">
-        <ChessBoard
-          orientation={orientation}
-          onOrientationChange={setOrientation}
-          remoteMove={remoteMove}
-          onLocalMove={(mv) => {
-            const socket = socketRef.current;
-            if (!socket || socket.readyState !== WebSocket.OPEN) return;
-            socket.send(
-              JSON.stringify({
-                type: "move",
-                from: mv.from,
-                to: mv.to,
-                ...(mv.promotion ? { promotion: mv.promotion } : {}),
-              })
-            );
-          }}
-        />
+        <section className="board-wrap" aria-label="Chess board">
+          <ChessBoard
+            orientation={orientation}
+            onOrientationChange={setOrientation}
+            remoteMove={remoteMove}
+            onLocalMove={(move) => {
+              if (seat === "spectator") {
+                setInviteInfo("Spectators cannot make moves in this game session.");
+                return;
+              }
+              sendMove(move);
+            }}
+          />
+        </section>
       </section>
     </main>
   );
