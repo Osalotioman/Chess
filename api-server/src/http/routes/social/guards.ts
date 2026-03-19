@@ -1,7 +1,7 @@
 import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 
-import type { AuthService } from "../../../domain/auth/authService.js";
-import { getBearerToken } from "../../plugins/auth.js";
+import type { AuthService } from "../../../domain/auth/authService";
+import { getBearerToken } from "../../plugins/auth";
 
 function isTableMissingError(error: unknown): boolean {
   return (

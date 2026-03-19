@@ -1,8 +1,8 @@
 import type { FastifyInstance } from "fastify";
 import { z } from "zod";
 
-import { runWithTableGuard } from "./guards.js";
-import type { PrismaClientLike } from "./types.js";
+import { runWithTableGuard } from "./guards";
+import type { PrismaClientLike } from "./types";
 
 export function registerPlayerRoutes(app: FastifyInstance, socialPrisma: PrismaClientLike) {
   app.get("/players", async (request, reply) => {

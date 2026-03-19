@@ -1,10 +1,10 @@
 import type { FastifyInstance } from "fastify";
 
-import type { AuthService } from "../../../domain/auth/authService.js";
-import { getCurrentUserId, runWithTableGuard } from "./guards.js";
-import { createInviteSchema, inviteCodeParamsSchema } from "./schemas.js";
-import type { PrismaClientLike } from "./types.js";
-import { generateFallbackRoomCode, generateUniqueInviteCode } from "./utils.js";
+import type { AuthService } from "../../../domain/auth/authService";
+import { getCurrentUserId, runWithTableGuard } from "./guards";
+import { createInviteSchema, inviteCodeParamsSchema } from "./schemas";
+import type { PrismaClientLike } from "./types";
+import { generateFallbackRoomCode, generateUniqueInviteCode } from "./utils";
 
 const initialFen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 

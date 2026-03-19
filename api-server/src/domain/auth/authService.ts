@@ -3,10 +3,10 @@ import jwt from "jsonwebtoken";
 import type { SignOptions } from "jsonwebtoken";
 import { randomUUID } from "node:crypto";
 import { z } from "zod";
-import { env } from "../../config/env.js";
-import type { UserRepositoryPort } from "../user/userRepository.port.js";
-import type { UserPublic } from "../user/user.types.js";
-import type { LoginInput, RefreshInput, SignupInput } from "./schemas.js";
+import { env } from "../../config/env";
+import type { UserRepositoryPort } from "../user/userRepository.port";
+import type { UserPublic } from "../user/user.types";
+import type { LoginInput, RefreshInput, SignupInput } from "./schemas";
 
 const tokenPayloadSchema = z.object({
   sub: z.string().min(1),

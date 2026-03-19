@@ -8,10 +8,10 @@
  *
  * 🟢 You can import this file directly.
  */
-export type * from './models/User'
-export type * from './models/RefreshToken'
-export type * from './models/FriendRequest'
-export type * from './models/Friendship'
-export type * from './models/GameSession'
-export type * from './models/Invite'
-export type * from './commonInputTypes'
+export type * from './models/User.js'
+export type * from './models/RefreshToken.js'
+export type * from './models/FriendRequest.js'
+export type * from './models/Friendship.js'
+export type * from './models/GameSession.js'
+export type * from './models/Invite.js'
+export type * from './commonInputTypes.js'

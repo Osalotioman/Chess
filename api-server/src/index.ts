@@ -1,6 +1,6 @@
-import { env } from "./config/env.js";
-import { prisma } from "./db/prisma.js";
-import { createServer } from "./http/server.js";
+import { env } from "./config/env";
+import { prisma } from "./db/prisma";
+import { createServer } from "./http/server";
 
 async function main() {
   const app = createServer();

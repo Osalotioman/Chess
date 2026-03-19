@@ -1,6 +1,6 @@
-import type { prisma } from "../../db/prisma.js";
-import type { UserRepositoryPort } from "./userRepository.port.js";
-import type { RefreshTokenSession, User, UserPublic } from "./user.types.js";
+import type { prisma } from "../../db/prisma";
+import type { UserRepositoryPort } from "./userRepository.port";
+import type { RefreshTokenSession, User, UserPublic } from "./user.types";
 
 type PrismaClientLike = typeof prisma;
 type DbUser = NonNullable<Awaited<ReturnType<PrismaClientLike["user"]["findUnique"]>>>;

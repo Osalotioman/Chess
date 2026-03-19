@@ -1,10 +1,10 @@
 import type { FastifyInstance } from "fastify";
 
-import type { AuthService } from "../../../domain/auth/authService.js";
-import { getCurrentUserId, runWithTableGuard } from "./guards.js";
-import { requestIdParamsSchema, sendFriendRequestSchema } from "./schemas.js";
-import type { PrismaClientLike } from "./types.js";
-import { createBidirectionalFriendship } from "./utils.js";
+import type { AuthService } from "../../../domain/auth/authService";
+import { getCurrentUserId, runWithTableGuard } from "./guards";
+import { requestIdParamsSchema, sendFriendRequestSchema } from "./schemas";
+import type { PrismaClientLike } from "./types";
+import { createBidirectionalFriendship } from "./utils";
 
 export function registerFriendRequestRoutes(
   app: FastifyInstance,

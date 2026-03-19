@@ -1,10 +1,10 @@
 import type { FastifyInstance } from "fastify";
 
-import type { AuthService } from "../../../domain/auth/authService.js";
-import { registerFriendRoutes } from "./friends.js";
-import { registerInviteRoutes } from "./invites.js";
-import { registerPlayerRoutes } from "./players.js";
-import type { PrismaClientLike } from "./types.js";
+import type { AuthService } from "../../../domain/auth/authService";
+import { registerFriendRoutes } from "./friends";
+import { registerInviteRoutes } from "./invites";
+import { registerPlayerRoutes } from "./players";
+import type { PrismaClientLike } from "./types";
 
 export function registerSocialRoutes(
   app: FastifyInstance,

@@ -1,8 +1,8 @@
 import type { FastifyInstance } from "fastify";
 import { z } from "zod";
 
-import { env } from "../../config/env.js";
-import type { PrismaClient } from "../../db/generated/prisma/client.js";
+import { env } from "../../config/env";
+import type { PrismaClient } from "../../db/generated/prisma/client";
 
 const paramsSchema = z.object({
   roomCode: z.string().min(1).max(64),

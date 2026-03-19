@@ -1,6 +1,6 @@
 import { randomBytes } from "node:crypto";
 
-import type { PrismaClientLike } from "./types.js";
+import type { PrismaClientLike } from "./types";
 
 export async function createBidirectionalFriendship(
   socialPrisma: PrismaClientLike,

@@ -1,4 +1,4 @@
-import type { RefreshTokenSession, User, UserPublic } from "./user.types.js";
+import type { RefreshTokenSession, User, UserPublic } from "./user.types";
 
 export interface UserRepositoryPort {
   findByEmail(email: string): Promise<User | null>;

@@ -1,10 +1,10 @@
 import Fastify from "fastify";
-import { AuthService } from "../domain/auth/authService.js";
-import { PrismaUserRepository } from "../domain/user/userRepository.js";
-import { prisma } from "../db/prisma.js";
-import { registerAuthRoutes } from "./routes/authRoutes.js";
-import { registerInternalWsRoutes } from "./routes/internalWsRoutes.js";
-import { registerSocialRoutes } from "./routes/socialRoutes.js";
+import { AuthService } from "../domain/auth/authService";
+import { PrismaUserRepository } from "../domain/user/userRepository";
+import { prisma } from "../db/prisma";
+import { registerAuthRoutes } from "./routes/authRoutes";
+import { registerInternalWsRoutes } from "./routes/internalWsRoutes";
+import { registerSocialRoutes } from "./routes/socialRoutes";
 
 export function createServer() {
   const app = Fastify({ logger: true });

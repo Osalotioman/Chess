@@ -1,5 +1,5 @@
 import type { FastifyRequest } from "fastify";
-import { AuthError } from "../../domain/auth/authService.js";
+import { AuthError } from "../../domain/auth/authService";
 
 export function getBearerToken(request: FastifyRequest): string {
   const authorization = request.headers.authorization;

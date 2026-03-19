@@ -1,8 +1,8 @@
 import { z } from "zod";
 import type { FastifyInstance } from "fastify";
-import { AuthError, AuthService } from "../../domain/auth/authService.js";
-import { loginSchema, refreshSchema, signupSchema } from "../../domain/auth/schemas.js";
-import { getBearerToken } from "../plugins/auth.js";
+import { AuthError, AuthService } from "../../domain/auth/authService";
+import { loginSchema, refreshSchema, signupSchema } from "../../domain/auth/schemas";
+import { getBearerToken } from "../plugins/auth";
 
 function fromZodError(error: z.ZodError) {
   return {

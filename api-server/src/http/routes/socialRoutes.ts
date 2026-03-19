@@ -1,1 +1,1 @@
-export { registerSocialRoutes } from "./social/index.js";
+export { registerSocialRoutes } from "./social/index";
