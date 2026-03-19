@@ -1,9 +1,19 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
 node_modules/
+
+# production
 dist/
-.env
-.env.local
-.env.*.local
+
+# env files
+.env*
+!.env.example
+
 *.log
 pnpm-debug.log*
+
 .DS_Store
+
+# testing
 coverage/

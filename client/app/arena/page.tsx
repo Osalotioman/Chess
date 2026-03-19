@@ -22,7 +22,7 @@ export default function ArenaPage() {
   } | null>(null);
   const [remotePendingFrom, setRemotePendingFrom] = useState<Square | null>(null);
   const remoteNonceRef = useRef(0);
-  const wsPath = "/ws";
+  const wsUrl = process.env.NEXT_PUBLIC_WS_URL ?? "ws://localhost:8080";
 
   const autoConnectEnabled = mounted ? settings.autoConnect : false;
   const canAttemptConnect = useMemo(() => {
@@ -30,15 +30,6 @@ export default function ArenaPage() {
     if (!room.trim()) return false;
     return true;
   }, [autoConnectEnabled, room]);
-
-  function toWebSocketUrl(path: string) {
-    const normalizedPath = path.startsWith("/") ? path : `/${path}`;
-
-    if (typeof window === "undefined") return `ws://localhost:3000${normalizedPath}`;
-
-    const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
-    return `${protocol}//${window.location.host}${normalizedPath}`;
-  }
 
   function connect() {
     if (socketRef.current?.readyState === WebSocket.OPEN) return;
@@ -49,7 +40,7 @@ export default function ArenaPage() {
       retryTimerRef.current = null;
     }
 
-    const socket = new WebSocket(toWebSocketUrl(wsPath));
+    const socket = new WebSocket(wsUrl);
     socketRef.current = socket;
     setStatus("Connecting...");
 
