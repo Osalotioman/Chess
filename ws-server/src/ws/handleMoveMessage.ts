@@ -1,4 +1,5 @@
 import type { WebSocket } from "ws";
+import { Chess } from "chess.js";
 
 import { apiServerOrigin, internalWsSharedSecret } from "../config.js";
 import type { PlayerIdentity } from "../protocol.js";
@@ -12,8 +13,8 @@ type MoveInput = {
   promotion?: string;
 };
 
-function broadcastMove(roomRegistry: RoomRegistry, ws: WebSocket, room: string, move: MoveInput) {
-  broadcast(roomRegistry, room, ws, {
+function broadcastMove(roomRegistry: RoomRegistry, room: string, move: MoveInput) {
+  broadcast(roomRegistry, room, null, {
     type: "move",
     from: move.from,
     to: move.to,
@@ -22,9 +23,75 @@ function broadcastMove(roomRegistry: RoomRegistry, ws: WebSocket, room: string, 
   });
 }
 
-function canGuestMove(roomRegistry: RoomRegistry, room: string, seat: "white" | "black") {
-  const currentTurn = roomRegistry.getTurn(room);
-  return currentTurn === seat;
+function parsePromotion(promotion?: string): "q" | "r" | "b" | "n" | undefined {
+  if (!promotion) return undefined;
+  const normalized = promotion.trim().toLowerCase();
+  if (normalized === "q" || normalized === "r" || normalized === "b" || normalized === "n") {
+    return normalized;
+  }
+  return undefined;
+}
+
+function validateMoveAgainstServerState(
+  roomRegistry: RoomRegistry,
+  room: string,
+  seat: "white" | "black",
+  move: MoveInput
+): { ok: true; nextTurn: "white" | "black"; normalizedPromotion?: "q" | "r" | "b" | "n" } | { ok: false; reason: string } {
+  const chess = new Chess();
+  const moves = roomRegistry.getMoves(room);
+
+  for (const previousMove of moves) {
+    try {
+      const applied = chess.move(
+        previousMove.promotion
+          ? {
+              from: previousMove.from,
+              to: previousMove.to,
+              promotion: previousMove.promotion,
+            }
+          : {
+              from: previousMove.from,
+              to: previousMove.to,
+            }
+      );
+      if (!applied) {
+        return { ok: false, reason: "Game state is out of sync on server" };
+      }
+    } catch {
+      return { ok: false, reason: "Game state is out of sync on server" };
+    }
+  }
+
+  const expectedSeat = chess.turn() === "w" ? "white" : "black";
+  if (seat !== expectedSeat) {
+    return { ok: false, reason: `It is ${expectedSeat}'s turn` };
+  }
+
+  const normalizedPromotion = parsePromotion(move.promotion);
+  if (move.promotion && !normalizedPromotion) {
+    return { ok: false, reason: "Invalid promotion piece" };
+  }
+
+  try {
+    const applied = chess.move(
+      normalizedPromotion
+        ? { from: move.from, to: move.to, promotion: normalizedPromotion }
+        : { from: move.from, to: move.to }
+    );
+
+    if (!applied) {
+      return { ok: false, reason: "Illegal move" };
+    }
+  } catch {
+    return { ok: false, reason: "Illegal move" };
+  }
+
+  return {
+    ok: true,
+    nextTurn: chess.turn() === "w" ? "white" : "black",
+    normalizedPromotion,
+  };
 }
 
 async function authorizeAccountMove(
@@ -53,21 +120,27 @@ export async function handleMoveMessage(
     return;
   }
 
-  if (!(player.mode === "account" && player.userId) && !canGuestMove(roomRegistry, room, seat)) {
-    send(ws, { type: "error", message: `It is ${roomRegistry.getTurn(room)}'s turn` });
+  const legality = validateMoveAgainstServerState(roomRegistry, room, seat, move);
+  if (!legality.ok) {
+    send(ws, { type: "error", message: legality.reason });
     return;
   }
 
+  const normalizedMove = {
+    ...move,
+    ...(legality.normalizedPromotion ? { promotion: legality.normalizedPromotion } : {}),
+  };
+
   if (!internalWsSharedSecret) {
-    roomRegistry.recordMove(room, move, seat === "white" ? "black" : "white");
-    broadcastMove(roomRegistry, ws, room, move);
+    roomRegistry.recordMove(room, normalizedMove, legality.nextTurn);
+    broadcastMove(roomRegistry, room, normalizedMove);
     return;
   }
 
   if (player.mode === "account" && player.userId) {
     let authorization;
     try {
-      authorization = await authorizeAccountMove(room, player, move);
+      authorization = await authorizeAccountMove(room, player, normalizedMove);
     } catch {
       send(ws, { type: "error", message: "Move verification request failed" });
       return;
@@ -78,11 +151,11 @@ export async function handleMoveMessage(
       return;
     }
 
-    roomRegistry.recordMove(room, move, authorization.nextTurn);
-    broadcastMove(roomRegistry, ws, room, move);
+    roomRegistry.recordMove(room, normalizedMove, authorization.nextTurn);
+    broadcastMove(roomRegistry, room, normalizedMove);
     return;
   }
 
-  roomRegistry.recordMove(room, move, seat === "white" ? "black" : "white");
-  broadcastMove(roomRegistry, ws, room, move);
+  roomRegistry.recordMove(room, normalizedMove, legality.nextTurn);
+  broadcastMove(roomRegistry, room, normalizedMove);
 }

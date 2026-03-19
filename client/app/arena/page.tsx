@@ -6,7 +6,8 @@ import { getAccessToken, getStoredSession } from "@lib/session";
 import { usePlayerIdentity } from "@lib/usePlayerIdentity";
 import { createRoomId } from "@lib/roomId";
 import { useSettings } from "@lib/useSettings";
-import { ArenaSidebar } from "./ArenaSidebar";
+import { Button } from "@components/ui/button";
+import { ArenaSetupPanel } from "./ArenaSetupPanel";
 import { ArenaStage } from "./ArenaStage";
 import type { InviteAcceptResponse, InviteCreateResponse, InviteLookupResponse } from "./types";
 import { useArenaRealtime } from "./useArenaRealtime";
@@ -24,9 +25,11 @@ export default function ArenaPage() {
   const [firstTurn, setFirstTurn] = useState<"white" | "black">("white");
   const [inviteKind, setInviteKind] = useState<"player" | "spectator">("player");
   const [setupApplied, setSetupApplied] = useState(false);
+  const [inviteResolved, setInviteResolved] = useState(false);
+  const [autoAcceptAttempted, setAutoAcceptAttempted] = useState(false);
+  const [autoAcceptDone, setAutoAcceptDone] = useState(false);
   const [inviteBusy, setInviteBusy] = useState(false);
   const [copyStatus, setCopyStatus] = useState<"idle" | "copied" | "failed">("idle");
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const wsUrl = process.env.NEXT_PUBLIC_WS_URL ?? "ws://localhost:8080";
 
   const autoConnectEnabled = mounted ? settings.autoConnect : false;
@@ -40,7 +43,6 @@ export default function ArenaPage() {
   const {
     connected,
     status,
-    lastWsError,
     peersInRoom,
     seat: realtimeSeat,
     historySnapshot,
@@ -69,6 +71,8 @@ export default function ArenaPage() {
 
     if (inviteFromQuery && inviteFromQuery.trim()) {
       setInviteCode(inviteFromQuery.trim());
+      setInviteResolved(false);
+      setAutoAcceptAttempted(false);
     }
 
     if (roomFromQuery && roomFromQuery.trim()) {
@@ -93,24 +97,44 @@ export default function ArenaPage() {
         if (!active) return;
         setRoom(response.invite.roomCode);
         setInviteKind(response.invite.kind);
+        setInviteResolved(true);
         if (!response.invite.active) {
+          setSetupApplied(false);
           setInviteInfo("Invite is no longer active");
           return;
         }
 
         if (response.invite.kind === "player" && response.invite.seatsFull) {
+          setSetupApplied(false);
           setInviteInfo("Game already has two players. Ask for a spectator invite link.");
           return;
         }
 
+        setSetupApplied(true);
+        if (response.invite.kind === "spectator") {
+          setSeat("spectator");
+        } else {
+          const whiteTaken = Boolean(response.invite.seats?.whitePlayerId);
+          const blackTaken = Boolean(response.invite.seats?.blackPlayerId);
+          if (whiteTaken && !blackTaken) {
+            setSeat("black");
+          } else if (blackTaken && !whiteTaken) {
+            setSeat("white");
+          } else {
+            setSeat(null);
+          }
+        }
+
         setInviteInfo(
           response.invite.kind === "spectator"
-            ? "Spectator invite ready. You will join as a watcher."
-            : "Player invite ready to join"
+            ? "Spectator invite ready. Entering game as watcher."
+            : "Player invite ready. Entering game and syncing with host."
         );
       })
       .catch((error) => {
         if (!active) return;
+        setInviteResolved(false);
+        setSetupApplied(false);
         if (error instanceof ApiError) {
           setInviteInfo(error.message);
           return;
@@ -125,6 +149,25 @@ export default function ArenaPage() {
       active = false;
     };
   }, [inviteCode]);
+
+  useEffect(() => {
+    if (!inviteCode || !inviteResolved) return;
+    if (autoAcceptAttempted) return;
+
+    setAutoAcceptAttempted(true);
+    void acceptInvite(true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [inviteCode, inviteResolved, autoAcceptAttempted]);
+
+  useEffect(() => {
+    if (copyStatus === "idle") return;
+
+    const timer = setTimeout(() => {
+      setCopyStatus("idle");
+    }, 2200);
+
+    return () => clearTimeout(timer);
+  }, [copyStatus]);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -172,7 +215,7 @@ export default function ArenaPage() {
     }
   }
 
-  async function acceptInvite() {
+  async function acceptInvite(auto = false) {
     if (!inviteCode) return;
 
     const token = getAccessToken();
@@ -181,12 +224,13 @@ export default function ArenaPage() {
       setSetupApplied(true);
       if (inviteKind === "spectator") {
         setSeat("spectator");
-      } else {
-        setSeat(null);
       }
-      setInviteInfo(
-        "You are not logged in. Joining as guest; this game will not be linked to an account profile."
-      );
+      if (!auto) {
+        setInviteInfo(
+          "You are not logged in. Joining as guest; this game will not be linked to an account profile."
+        );
+      }
+      setAutoAcceptDone(true);
       return;
     }
 
@@ -201,8 +245,13 @@ export default function ArenaPage() {
       setSeat(response.invite.seat);
       setInviteKind(response.invite.kind);
       setSetupApplied(true);
-      setInviteInfo(`Invite accepted as ${response.invite.seat}`);
+      setInviteInfo(`Invite accepted as ${response.invite.seat}. Waiting for realtime sync...`);
+      setAutoAcceptDone(true);
     } catch (error) {
+      if (auto) {
+        setAutoAcceptDone(true);
+        return;
+      }
       if (error instanceof ApiError) {
         setInviteInfo(error.message);
       } else {
@@ -271,6 +320,9 @@ export default function ArenaPage() {
     const nextRoom = createRoomId();
     setRoom(nextRoom);
     setInviteCode(null);
+    setInviteResolved(false);
+    setAutoAcceptAttempted(false);
+    setAutoAcceptDone(false);
     setSeat(null);
     setInviteKind("player");
     setSetupApplied(false);
@@ -288,67 +340,130 @@ export default function ArenaPage() {
     setOrientation(settings.boardOrientation);
   }, [mounted, settings.boardOrientation]);
 
-  useEffect(() => {
-    if (!isSidebarOpen) return;
+  function returnToSetup() {
+    disconnect();
+    setSetupApplied(false);
+  }
 
-    function onKeyDown(event: KeyboardEvent) {
-      if (event.key === "Escape") {
-        setIsSidebarOpen(false);
-      }
-    }
+  const joiningInvite =
+    Boolean(inviteCode) && (!inviteResolved || (inviteResolved && autoAcceptAttempted && !autoAcceptDone));
 
-    window.addEventListener("keydown", onKeyDown);
-    return () => {
-      window.removeEventListener("keydown", onKeyDown);
-    };
-  }, [isSidebarOpen]);
+  if (joiningInvite) {
+    return (
+      <main className="min-h-[calc(100svh-52px)] grid place-items-center p-4">
+        <section className="w-full max-w-lg rounded-2xl border border-slate-700 bg-gradient-to-br from-slate-900/95 to-slate-800/70 p-6 text-center shadow-2xl">
+          <p className="text-xs tracking-[0.16em] text-slate-400 uppercase">Joining Match</p>
+          <h1 className="mt-2 text-2xl font-semibold text-slate-100">Preparing your game</h1>
+          <p className="mt-2 text-sm text-slate-300">
+            Validating invite and syncing seat assignment. You will enter the board automatically.
+          </p>
+          <div className="mx-auto mt-5 h-2 w-full max-w-xs overflow-hidden rounded-full bg-slate-700">
+            <div className="h-full w-1/2 animate-pulse rounded-full bg-emerald-300/80" />
+          </div>
+        </section>
+      </main>
+    );
+  }
 
-  return (
-    <main className="grid min-h-[calc(100svh-52px)] gap-3 p-3 sm:gap-4 sm:p-4 lg:grid-cols-[minmax(300px,380px)_1fr]">
-      <ArenaSidebar
-        isOpen={isSidebarOpen}
-        connected={connected}
+  if (!setupApplied) {
+    return (
+      <main className="min-h-[calc(100svh-52px)] p-3 sm:p-4">
+        <ArenaSetupPanel
         room={room}
-        status={status}
         mode={mode}
         guestProfile={guestProfile}
-        autoConnectEnabled={autoConnectEnabled}
-        peersInRoom={peersInRoom}
-        wsUrl={wsUrl}
-        lastWsError={lastWsError}
+          inviteCode={inviteCode}
+          inviteKind={inviteKind}
+          inviteBusy={inviteBusy}
+          inviteInfo={inviteInfo}
         inviteLink={inviteLink}
-        inviteCode={inviteCode}
-        inviteBusy={inviteBusy}
         copyStatus={copyStatus}
-        inviteInfo={inviteInfo}
-        seat={seat}
         hostSeat={hostSeat}
         firstTurn={firstTurn}
-        inviteKind={inviteKind}
-        setupApplied={setupApplied}
-        onRoomChange={setRoom}
-        onModeChange={setMode}
-        onGuestNameChange={setGuestDisplayName}
-        onHostSeatChange={setHostSeat}
-        onFirstTurnChange={setFirstTurn}
-        onInviteKindChange={setInviteKind}
-        onApplySetup={applySetup}
-        onCreateRoom={createGameRoom}
-        onConnect={connect}
-        onDisconnect={disconnect}
-        onCopyInvite={copyInviteLink}
-        onCreateSignedInvite={createSignedInvite}
-        onAcceptInvite={acceptInvite}
-        onAbortGame={abortCurrentGame}
-      />
-
-      {isSidebarOpen ? (
-        <button
-          type="button"
-          aria-label="Close arena sidebar"
-          className="fixed inset-0 z-10 border-0 bg-black/45 lg:hidden"
-          onClick={() => setIsSidebarOpen(false)}
+          onRoomChange={setRoom}
+          onModeChange={setMode}
+          onGuestNameChange={setGuestDisplayName}
+          onHostSeatChange={setHostSeat}
+          onFirstTurnChange={setFirstTurn}
+          onInviteKindChange={setInviteKind}
+          onCreateRoom={createGameRoom}
+          onApplySetup={applySetup}
+          onCreateSignedInvite={createSignedInvite}
+          onCopyInvite={copyInviteLink}
+          onAcceptInvite={() => {
+            void acceptInvite(false);
+          }}
         />
+      </main>
+    );
+  }
+
+  return (
+    <main className="grid min-h-[calc(100svh-52px)] grid-rows-[auto_1fr] gap-3 p-3 sm:gap-4 sm:p-4">
+      <section className="flex flex-wrap items-center gap-2 rounded-2xl border border-slate-700 bg-gradient-to-br from-slate-900/95 to-slate-800/70 p-3">
+        <span className="text-xs text-slate-300">
+          Room <strong>{room}</strong>
+        </span>
+        <span className="text-xs text-slate-300">
+          Seat <strong>{seat ?? "unassigned"}</strong>
+        </span>
+        <span className="text-xs text-slate-300">
+          Peers <strong>{peersInRoom}</strong>
+        </span>
+        <span
+          className={`rounded-full border px-2 py-1 text-xs font-semibold ${
+            connected
+              ? "border-emerald-300/70 bg-emerald-300/15 text-emerald-100"
+              : "border-rose-300/60 bg-rose-300/10 text-rose-100"
+          }`}
+        >
+          {connected ? "Live" : status}
+        </span>
+        <div className="ml-auto flex flex-wrap gap-2">
+          <Button onClick={copyInviteLink} variant="secondary" type="button">
+            {copyStatus === "copied" ? "Invite Copied" : "Copy Invite"}
+          </Button>
+          {!connected ? (
+            <Button onClick={connect} variant="secondary" type="button">
+              Connect
+            </Button>
+          ) : (
+            <Button onClick={disconnect} variant="secondary" type="button">
+              Disconnect
+            </Button>
+          )}
+          <Button onClick={returnToSetup} variant="secondary" type="button">
+            Setup Screen
+          </Button>
+          <Button
+            onClick={() => {
+              void abortCurrentGame();
+            }}
+            variant="secondary"
+            type="button"
+            disabled={inviteBusy || !seat || seat === "spectator"}
+          >
+            Abort Game
+          </Button>
+        </div>
+      </section>
+
+      {inviteInfo ? (
+        <p className="rounded-lg border border-slate-700 bg-slate-900/70 px-3 py-2 text-xs text-slate-300">
+          {inviteInfo}
+        </p>
+      ) : null}
+
+      {!connected ? (
+        <p className="rounded-lg border border-rose-300/40 bg-rose-300/10 px-3 py-2 text-xs text-rose-100">
+          You are disconnected. Moves are locked until realtime connection is restored.
+        </p>
+      ) : null}
+
+      {connected && seat !== "spectator" && peersInRoom < 2 ? (
+        <p className="rounded-lg border border-amber-300/40 bg-amber-300/10 px-3 py-2 text-xs text-amber-100">
+          Waiting for opponent to join this room.
+        </p>
       ) : null}
 
       <ArenaStage
@@ -356,13 +471,18 @@ export default function ArenaPage() {
         seat={seat}
         room={room}
         setupApplied={setupApplied}
-        isSidebarOpen={isSidebarOpen}
+        isSidebarOpen={false}
         orientation={orientation}
         historySnapshot={historySnapshot}
         remoteMove={remoteMove}
-        onToggleMenu={() => setIsSidebarOpen((current) => !current)}
+        onToggleMenu={() => {}}
+        showMenuButton={false}
         onOrientationChange={setOrientation}
         onLocalMove={(move) => {
+          if (!connected) {
+            setInviteInfo("Reconnecting... moves are locked until connection is restored.");
+            return;
+          }
           if (!setupApplied) {
             setInviteInfo("Apply game setup before making moves.");
             return;

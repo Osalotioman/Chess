@@ -19,6 +19,7 @@ type ArenaStageProps = {
   onToggleMenu: () => void;
   onOrientationChange: (value: "white" | "black") => void;
   onLocalMove: (move: { from: Square; to: Square; promotion?: PromotionPiece }) => void;
+  showMenuButton?: boolean;
 };
 
 export function ArenaStage({
@@ -33,28 +34,35 @@ export function ArenaStage({
   onToggleMenu,
   onOrientationChange,
   onLocalMove,
+  showMenuButton = true,
 }: ArenaStageProps) {
+  const canPlay = connected && setupApplied && (seat === "white" || seat === "black");
+
   return (
     <section
       className="grid min-h-[calc(100svh-6.5rem)] grid-rows-[auto_1fr] gap-3 rounded-2xl border border-slate-700 bg-gradient-to-br from-slate-900/95 to-slate-800/70 p-3 shadow-2xl sm:min-h-[calc(100svh-6rem)]"
       aria-label="Arena board stage"
     >
       <div className="flex items-center justify-between gap-3">
-        <Button
-          variant="secondary"
-          className="lg:hidden"
-          type="button"
-          aria-label="Open arena menu"
-          aria-expanded={isSidebarOpen}
-          onClick={onToggleMenu}
-        >
-          <span className="inline-grid gap-1" aria-hidden="true">
-            <span className="block h-0.5 w-4 rounded bg-slate-100" />
-            <span className="block h-0.5 w-4 rounded bg-slate-100" />
-            <span className="block h-0.5 w-4 rounded bg-slate-100" />
-          </span>
-          Menu
-        </Button>
+        {showMenuButton ? (
+          <Button
+            variant="secondary"
+            className="lg:hidden"
+            type="button"
+            aria-label="Open arena menu"
+            aria-expanded={isSidebarOpen}
+            onClick={onToggleMenu}
+          >
+            <span className="inline-grid gap-1" aria-hidden="true">
+              <span className="block h-0.5 w-4 rounded bg-slate-100" />
+              <span className="block h-0.5 w-4 rounded bg-slate-100" />
+              <span className="block h-0.5 w-4 rounded bg-slate-100" />
+            </span>
+            Menu
+          </Button>
+        ) : (
+          <div />
+        )}
 
         <div className="inline-flex max-w-full flex-wrap items-center gap-2 rounded-2xl border border-slate-700 bg-slate-900/60 px-3 py-1 text-xs text-slate-300 sm:rounded-full">
           <span
@@ -67,13 +75,7 @@ export function ArenaStage({
             {connected ? "Live" : "Offline"}
           </span>
           {seat ? <span className="rounded-full border border-slate-600 px-2 py-1">Seat: {seat}</span> : null}
-          {setupApplied ? (
-            <span className="rounded-full border border-slate-600 px-2 py-1">Setup ready</span>
-          ) : (
-            <span className="rounded-full border border-amber-300/60 bg-amber-300/10 px-2 py-1 text-amber-100">
-              Setup required
-            </span>
-          )}
+          {setupApplied ? <span className="rounded-full border border-slate-600 px-2 py-1">Match active</span> : null}
           <span className="max-w-[180px] truncate sm:max-w-none">
             Room <strong>{room}</strong>
           </span>
@@ -87,6 +89,8 @@ export function ArenaStage({
           syncRoom={room}
           historySnapshot={historySnapshot}
           remoteMove={remoteMove}
+          readOnly={!canPlay}
+          authoritativeMoves
           onLocalMove={onLocalMove}
         />
       </section>

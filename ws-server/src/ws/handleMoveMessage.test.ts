@@ -33,7 +33,9 @@ test("handleMoveMessage records valid guest move and broadcasts to peer", async 
   );
 
   assert.equal(roomRegistry.getTurn("room-a"), "black");
+  assert.equal(whiteSocket.messages.length, 1);
   assert.equal(blackSocket.messages.length, 1);
+  assert.match(whiteSocket.messages[0] ?? "", /"type":"move"/);
   assert.match(blackSocket.messages[0] ?? "", /"type":"move"/);
 });
 
@@ -74,4 +76,22 @@ test("handleMoveMessage rejects out-of-turn and spectator moves", async () => {
 
   assert.equal(whiteErrors.length >= 1, true);
   assert.equal(spectatorErrors.length >= 1, true);
+});
+
+test("handleMoveMessage rejects illegal guest move", async () => {
+  const roomRegistry = new RoomRegistry();
+  const whiteSocket = createFakeSocket();
+
+  roomRegistry.join(whiteSocket as never, "room-c", { mode: "guest", preferredSeat: "white" });
+
+  await handleMoveMessage(
+    roomRegistry,
+    whiteSocket as never,
+    { mode: "guest" },
+    { from: "e2", to: "e5" }
+  );
+
+  const errors = whiteSocket.messages.filter((payload) => payload.includes('"type":"error"'));
+  assert.equal(errors.length >= 1, true);
+  assert.equal(roomRegistry.getMoves("room-c").length, 0);
 });

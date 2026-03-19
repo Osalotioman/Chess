@@ -7,6 +7,10 @@ export type InviteLookupResponse = {
     active: boolean;
     seatsFull: boolean;
     expiresAt: string;
+    seats?: {
+      whitePlayerId: string | null;
+      blackPlayerId: string | null;
+    };
   };
 };
 

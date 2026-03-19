@@ -32,6 +32,7 @@ interface ChessBoardProps {
   remoteMove?: { from: Square; to: Square; promotion?: PromotionPiece; nonce: number } | null;
   syncRoom?: string;
   readOnly?: boolean;
+  authoritativeMoves?: boolean;
   historySnapshot?: {
     moves: { from: Square; to: Square; promotion?: PromotionPiece }[];
     nonce: number;
@@ -45,6 +46,7 @@ export function ChessBoard({
   remoteMove,
   syncRoom,
   readOnly = false,
+  authoritativeMoves = false,
   historySnapshot,
 }: ChessBoardProps) {
   const [chess, setChess] = useState<Chess | null>(null);
@@ -184,6 +186,12 @@ export function ChessBoard({
       return;
     }
 
+    if (authoritativeMoves) {
+      refreshBoard();
+      onLocalMove?.({ from, to });
+      return;
+    }
+
     movePiece(from, to, undefined, false);
   }
 
@@ -311,7 +319,7 @@ export function ChessBoard({
       </div>
 
       <div className="mt-4 flex flex-wrap justify-center gap-2">
-        <Button onClick={resetGame} variant="secondary" disabled={readOnly}>
+        <Button onClick={resetGame} variant="secondary" disabled={readOnly || authoritativeMoves}>
           New Game
         </Button>
         <Button
@@ -336,6 +344,12 @@ export function ChessBoard({
                     onClick={() => {
                       const pending = pendingPromotion;
                       setPendingPromotion(null);
+                      if (authoritativeMoves) {
+                        refreshBoard();
+                        onLocalMove?.({ from: pending.from, to: pending.to, promotion: promo });
+                        return;
+                      }
+
                       movePiece(pending.from, pending.to, promo);
                     }}
                   >
