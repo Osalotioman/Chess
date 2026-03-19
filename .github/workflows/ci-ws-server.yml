@@ -33,5 +33,8 @@ jobs:
       - name: ws-server typecheck
         run: pnpm -C ws-server typecheck
 
+      - name: ws-server test
+        run: pnpm -C ws-server test
+
       - name: ws-server build
         run: pnpm -C ws-server build

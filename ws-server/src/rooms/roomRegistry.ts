@@ -1,6 +1,7 @@
 import type { WebSocket } from "ws";
 
 import type { MoveSnapshot, PlayerIdentity, RoomId, Seat, TurnColor } from "../protocol.js";
+import { assignSeat } from "./seat-assignment.js";
 
 type RoomState = {
   sockets: Set<WebSocket>;
@@ -96,7 +97,8 @@ export class RoomRegistry {
       state.sockets.add(ws);
       this.socketRoom.set(ws, room);
       this.socketPlayer.set(ws, player);
-      const seat = this.assignSeat(state, ws, player.preferredSeat);
+      const seat = assignSeat(state, ws, player.preferredSeat);
+      this.socketSeat.set(ws, seat);
 
       return {
         joined: true,
@@ -112,7 +114,8 @@ export class RoomRegistry {
     state.sockets.add(ws);
     this.socketRoom.set(ws, room);
     this.socketPlayer.set(ws, player);
-    const seat = this.assignSeat(state, ws, player.preferredSeat);
+    const seat = assignSeat(state, ws, player.preferredSeat);
+    this.socketSeat.set(ws, seat);
 
     return {
       joined: true,
@@ -147,39 +150,6 @@ export class RoomRegistry {
     };
     this.rooms.set(room, created);
     return created;
-  }
-
-  private assignSeat(state: RoomState, ws: WebSocket, preferredSeat?: Seat): Seat {
-    const current = state.socketSeats.get(ws);
-    if (current) {
-      this.socketSeat.set(ws, current);
-      return current;
-    }
-
-    const seats = new Set(state.socketSeats.values());
-
-    if (preferredSeat === "spectator") {
-      state.socketSeats.set(ws, "spectator");
-      this.socketSeat.set(ws, "spectator");
-      return "spectator";
-    }
-
-    if (preferredSeat === "white" && !seats.has("white")) {
-      state.socketSeats.set(ws, "white");
-      this.socketSeat.set(ws, "white");
-      return "white";
-    }
-
-    if (preferredSeat === "black" && !seats.has("black")) {
-      state.socketSeats.set(ws, "black");
-      this.socketSeat.set(ws, "black");
-      return "black";
-    }
-
-    const seat: Seat = !seats.has("white") ? "white" : !seats.has("black") ? "black" : "spectator";
-    state.socketSeats.set(ws, seat);
-    this.socketSeat.set(ws, seat);
-    return seat;
   }
 
   private leaveFromRoom(ws: WebSocket, room: RoomId): { room: RoomId; peers: number } {
