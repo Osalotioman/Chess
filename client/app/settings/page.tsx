@@ -8,72 +8,76 @@ export default function SettingsPage() {
 
   if (!mounted) {
     return (
-      <main className="page-shell">
+      <main className="grid min-h-[calc(100svh-52px)] place-items-center p-4 text-slate-300">
         <div>Loading...</div>
       </main>
     );
   }
 
   return (
-    <main className="page-shell">
-      <header className="topbar">
-        <h1>Settings</h1>
-        <p>Customize your chess experience</p>
+    <main className="grid min-h-[calc(100svh-52px)] grid-rows-[auto_1fr_auto] gap-3 p-4">
+      <header className="rounded-2xl border border-slate-700 bg-gradient-to-br from-slate-900/95 to-slate-800/70 p-4 shadow-xl">
+        <h1 className="text-2xl font-semibold text-slate-100">Settings</h1>
+        <p className="mt-1 text-sm text-slate-300">Customize your chess experience</p>
       </header>
 
-      <section className="panel settings-panel">
-        <div className="settings-group">
-          <label className="settings-label">
+      <section className="mx-auto w-full max-w-2xl rounded-2xl border border-slate-700 bg-gradient-to-br from-slate-900/95 to-slate-800/70 p-4 shadow-xl">
+        <div className="mb-5 border-b border-slate-700 pb-5">
+          <label className="mb-2 flex cursor-pointer items-center gap-3 text-sm font-medium text-slate-100">
             <input
               type="checkbox"
               checked={settings.autoConnect}
               onChange={(e) => patchSettings({ autoConnect: e.target.checked })}
+              className="h-4 w-4 accent-emerald-300"
             />
             <span>Auto-connect to WebSocket</span>
           </label>
-          <p className="settings-hint">
+          <p className="text-sm text-slate-300">
             Automatically connects and retries if the server is unavailable
           </p>
         </div>
 
-        <div className="settings-group">
-          <label className="settings-label">
+        <div className="mb-5 border-b border-slate-700 pb-5">
+          <label className="mb-2 flex cursor-pointer items-center gap-3 text-sm font-medium text-slate-100">
             <input
               type="checkbox"
               checked={settings.soundEnabled}
               onChange={(e) => patchSettings({ soundEnabled: e.target.checked })}
+              className="h-4 w-4 accent-emerald-300"
             />
             <span>Enable Sound Effects</span>
           </label>
-          <p className="settings-hint">Play move, capture, and check sounds</p>
+          <p className="text-sm text-slate-300">Play move, capture, and check sounds</p>
         </div>
 
-        <div className="settings-group">
-          <label className="settings-label">
+        <div className="mb-5 border-b border-slate-700 pb-5">
+          <label className="mb-2 flex cursor-pointer items-center gap-3 text-sm font-medium text-slate-100">
             <input
               type="checkbox"
               checked={settings.animationEnabled}
               onChange={(e) => patchSettings({ animationEnabled: e.target.checked })}
+              className="h-4 w-4 accent-emerald-300"
             />
             <span>Enable Animations</span>
           </label>
-          <p className="settings-hint">Smooth transitions for piece movements</p>
+          <p className="text-sm text-slate-300">Smooth transitions for piece movements</p>
         </div>
 
-        <div className="settings-group">
-          <label className="settings-label">
+        <div className="mb-5 border-b border-slate-700 pb-5">
+          <label className="mb-2 flex cursor-pointer items-center gap-3 text-sm font-medium text-slate-100">
             <input
               type="checkbox"
               checked={settings.notation}
               onChange={(e) => patchSettings({ notation: e.target.checked })}
+              className="h-4 w-4 accent-emerald-300"
             />
             <span>Show Algebraic Notation</span>
           </label>
-          <p className="settings-hint">Display square labels (a1, b2, etc.)</p>
+          <p className="text-sm text-slate-300">Display square labels (a1, b2, etc.)</p>
         </div>
 
-        <div className="settings-group">
-          <label className="settings-label">
+        <div className="mb-5 pb-1">
+          <label className="mb-2 block text-sm font-medium text-slate-100">
             Default Board Orientation
           </label>
           <select
@@ -83,25 +87,29 @@ export default function SettingsPage() {
                 boardOrientation: e.target.value as "white" | "black",
               })
             }
-            className="settings-select"
+            className="w-full rounded-lg border border-slate-600 bg-slate-950 px-3 py-2 text-sm text-slate-100 outline-none focus:border-emerald-300/70"
           >
             <option value="white">White (Bottom)</option>
             <option value="black">Black (Bottom)</option>
           </select>
         </div>
 
-        <div className="settings-action-row">
-          <button onClick={() => setSettings(defaultSettings)} className="control-btn settings-btn" type="button">
+        <div className="mt-2">
+          <button
+            onClick={() => setSettings(defaultSettings)}
+            className="inline-flex min-h-10 items-center justify-center rounded-lg border border-slate-600 bg-slate-800 px-4 text-sm font-medium text-slate-100 transition hover:border-emerald-300/70 hover:bg-slate-700"
+            type="button"
+          >
             Reset to Defaults
           </button>
         </div>
       </section>
 
-      <div className="settings-footer">
-        <Link href="/" className="control-btn settings-btn">
+      <div className="flex flex-wrap justify-center gap-3">
+        <Link href="/" className="inline-flex min-h-10 items-center justify-center rounded-lg border border-slate-600 bg-slate-800 px-4 text-sm font-medium text-slate-100 transition hover:border-emerald-300/70 hover:bg-slate-700">
           Back to Home
         </Link>
-        <Link href="/arena" className="control-btn settings-btn">
+        <Link href="/arena" className="inline-flex min-h-10 items-center justify-center rounded-lg border border-slate-600 bg-slate-800 px-4 text-sm font-medium text-slate-100 transition hover:border-emerald-300/70 hover:bg-slate-700">
           Go to Arena
         </Link>
       </div>

@@ -24,6 +24,9 @@ const pieceImage: Record<`w${PieceSymbol}` | `b${PieceSymbol}`, string> = {
   bk: "/pieces/b_king.png",
 };
 
+const controlBtn =
+  "inline-flex min-h-10 items-center justify-center rounded-lg border border-slate-600 bg-slate-800 px-4 text-sm font-medium text-slate-100 transition hover:border-emerald-300/70 hover:bg-slate-700";
+
 interface ChessBoardProps {
   orientation?: "white" | "black";
   onOrientationChange?: (o: "white" | "black") => void;
@@ -202,7 +205,7 @@ export function ChessBoard({
   }
 
   if (!game) {
-    return <div className="board-grid loading" />;
+    return <div className="aspect-square w-[min(94vw,78svh,880px)] rounded-xl border-2 border-slate-500 bg-slate-700/40" />;
   }
 
   const board = game.board();
@@ -229,7 +232,7 @@ export function ChessBoard({
 
   return (
     <>
-      <div className="board-grid">
+      <div className="grid aspect-square w-[min(94vw,78svh,880px)] grid-cols-8 grid-rows-8 overflow-hidden rounded-xl border-2 border-slate-500">
         {renderedRanks.map((rank, rowIndex) =>
           renderedFiles.map((file, colIndex) => {
             const square = `${file}${rank}` as Square;
@@ -250,10 +253,12 @@ export function ChessBoard({
             return (
               <button
                 key={square}
-                className={`square ${dark ? "dark" : "light"} ${
-                  isSelected ? "selected" : ""
-                } ${isLegal ? "legal" : ""} ${isInCheck ? "check" : ""} ${
-                  isLastMoveFrom || isLastMoveTo ? "last-move" : ""
+                className={`relative grid place-items-center border-2 p-0 transition ${
+                  dark ? "bg-[#5f7ba3]" : "bg-[#d8e0ef]"
+                } ${isSelected ? "border-amber-300" : "border-transparent"} ${
+                  isLegal ? "ring-1 ring-emerald-300/90" : ""
+                } ${isInCheck ? "ring-2 ring-rose-400" : ""} ${
+                  isLastMoveFrom || isLastMoveTo ? "ring-2 ring-yellow-300/85" : ""
                 }`}
                 onClick={() => onSquareClick(square)}
                 aria-label={square}
@@ -264,6 +269,7 @@ export function ChessBoard({
                     src={pieceImage[`${piece.color}${piece.type}`]}
                     alt={`${piece.color === "w" ? "White" : "Black"} ${piece.type}`}
                     draggable={false}
+                    className="h-[88%] w-[88%] object-contain select-none"
                   />
                 ) : null}
               </button>
@@ -272,28 +278,29 @@ export function ChessBoard({
         )}
       </div>
 
-      <div className="board-controls">
-        <button onClick={resetGame} className="control-btn">
+      <div className="mt-4 flex flex-wrap justify-center gap-2">
+        <button onClick={resetGame} className={controlBtn}>
           New Game
         </button>
         <button
           onClick={() => onOrientationChange?.(orientation === "white" ? "black" : "white")}
-          className="control-btn"
+          className={controlBtn}
         >
           Flip Board
         </button>
       </div>
 
       {pendingPromotion ? (
-        <div className="promotion-modal">
-          <div className="promotion-card">
-            <h2>Choose Promotion</h2>
-            <div className="promo-grid">
+        <div className="fixed inset-0 z-50 grid place-items-center bg-black/45 px-4">
+          <div className="w-full max-w-sm rounded-xl border border-slate-600 bg-slate-900 p-4">
+            <h2 className="mb-3 text-lg font-semibold text-slate-100">Choose Promotion</h2>
+            <div className="grid grid-cols-4 gap-2">
               {(["q", "r", "b", "n"] as PromotionPiece[]).map((promo) => {
                 const turn = game.turn() === "w" ? "w" : "b";
                 return (
                   <button
                     key={promo}
+                    className="rounded-lg border border-slate-600 bg-slate-800 p-2 transition hover:border-emerald-300/70 hover:bg-slate-700"
                     onClick={() => {
                       const pending = pendingPromotion;
                       setPendingPromotion(null);
@@ -301,7 +308,7 @@ export function ChessBoard({
                     }}
                   >
                     {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={pieceImage[`${turn}${promo}`]} alt={promo} />
+                    <img src={pieceImage[`${turn}${promo}`]} alt={promo} className="w-full" />
                   </button>
                 );
               })}

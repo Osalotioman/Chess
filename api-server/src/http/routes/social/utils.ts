@@ -33,5 +33,7 @@ export async function generateUniqueInviteCode(socialPrisma: PrismaClientLike): 
 }
 
 export function generateFallbackRoomCode() {
-  return `room-${randomBytes(3).toString("hex")}`;
+  const nowHex = Date.now().toString(16).padStart(12, "0").slice(-12);
+  const randomHex = randomBytes(10).toString("hex");
+  return `${nowHex.slice(0, 8)}-${nowHex.slice(8, 12)}-7${randomHex.slice(0, 3)}-${randomHex.slice(3, 7)}-${randomHex.slice(7, 19)}`;
 }

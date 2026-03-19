@@ -259,49 +259,57 @@ export default function LobbyPage() {
   }
 
   return (
-    <main className="page-shell lobby-shell">
-      <header className="topbar shell-card">
+    <main className="grid min-h-[calc(100svh-52px)] grid-rows-[auto_auto_1fr] gap-3 p-4">
+      <header className="rounded-2xl border border-slate-700 bg-gradient-to-br from-slate-900/95 to-slate-800/70 p-4 shadow-xl">
         <h1>Player Lobby</h1>
-        <p>Find players, build your friends list, and invite someone to a match.</p>
+        <p className="text-sm text-slate-300">Find players, build your friends list, and invite someone to a match.</p>
       </header>
 
-      <section className="panel shell-card lobby-toolbar">
+      <section className="grid items-center gap-3 rounded-2xl border border-slate-700 bg-gradient-to-br from-slate-900/95 to-slate-800/70 p-3 shadow-xl md:grid-cols-[1fr_auto]">
         <input
           aria-label="Search players"
           placeholder="Search by player name"
           value={query}
           onChange={(event) => setQuery(event.target.value)}
+          className="w-full rounded-lg border border-slate-600 bg-slate-950 px-3 py-2 text-sm text-slate-100 outline-none focus:border-emerald-300/70"
         />
-        <Link href="/arena" className="btn btn-primary">
+        <Link
+          href="/arena"
+          className="inline-flex min-h-10 items-center justify-center rounded-lg bg-gradient-to-r from-emerald-300 to-teal-200 px-4 text-sm font-semibold text-slate-900"
+        >
           Go to Arena
         </Link>
       </section>
 
-      {isLoading ? <div className="lobby-note">Loading player directory...</div> : null}
-      {loadError ? <div className="lobby-note">{loadError}</div> : null}
+      {isLoading ? <div className="border-t border-dashed border-slate-600 pt-2 text-sm text-slate-300">Loading player directory...</div> : null}
+      {loadError ? <div className="border-t border-dashed border-slate-600 pt-2 text-sm text-rose-200">{loadError}</div> : null}
 
-      <section className="lobby-grid">
-        <article className="panel shell-card">
+      <section className="grid gap-3 lg:grid-cols-2">
+        <article className="rounded-2xl border border-slate-700 bg-gradient-to-br from-slate-900/95 to-slate-800/70 p-4 shadow-xl">
           <h2>Players on Platform</h2>
-          <p className="lobby-sub">Browse real player accounts and add friends directly.</p>
-          <div className="player-list">
-            {filtered.length === 0 ? <div className="lobby-note">No players found.</div> : null}
+          <p className="mt-1 text-sm text-slate-300">Browse real player accounts and add friends directly.</p>
+          <div className="mt-3 grid gap-2">
+            {filtered.length === 0 ? <div className="border-t border-dashed border-slate-600 pt-2 text-sm text-slate-300">No players found.</div> : null}
             {filtered.map((player) => {
               const pending = pendingRequests.includes(player.id);
               return (
-                <div className="player-row" key={player.id}>
+                <div className="grid items-center gap-2 rounded-xl border border-slate-700 bg-slate-900/70 p-3 sm:grid-cols-[1fr_auto]" key={player.id}>
                   <div>
-                    <div className="player-name">{player.username}</div>
-                    <div className="player-meta">
+                    <div className="font-semibold text-slate-100">{player.username}</div>
+                    <div className="text-xs text-slate-300">
                       Rating {player.rating} | {player.online ? "Online" : "Offline"}
                     </div>
                   </div>
-                  <div className="player-actions">
-                    {player.isFriend ? <span className="pill ok">Friend</span> : null}
+                  <div className="flex items-center gap-2">
+                    {player.isFriend ? (
+                      <span className="rounded-full border border-emerald-300/70 bg-emerald-300/15 px-2 py-1 text-xs text-emerald-100">
+                        Friend
+                      </span>
+                    ) : null}
                     {!player.isFriend ? (
                       <button
                         type="button"
-                        className="control-btn"
+                        className="inline-flex min-h-9 items-center justify-center rounded-lg border border-slate-600 bg-slate-800 px-3 text-sm text-slate-100 transition hover:border-emerald-300/70 hover:bg-slate-700 disabled:opacity-60"
                         onClick={() => requestFriend(player.id)}
                         disabled={pending}
                       >
@@ -315,24 +323,24 @@ export default function LobbyPage() {
           </div>
         </article>
 
-        <article className="panel shell-card">
+        <article className="rounded-2xl border border-slate-700 bg-gradient-to-br from-slate-900/95 to-slate-800/70 p-4 shadow-xl">
           <h2>Friends and Invites</h2>
-          <p className="lobby-sub">Manage live friend requests and invite friends to active games.</p>
+          <p className="mt-1 text-sm text-slate-300">Manage live friend requests and invite friends to active games.</p>
 
           {incomingRequests.length > 0 ? (
-            <div className="player-list">
+            <div className="mt-3 grid gap-2">
               <h3>Incoming Requests</h3>
               {incomingRequests.map((request) => (
-                <div className="player-row" key={request.id}>
+                <div className="grid items-center gap-2 rounded-xl border border-slate-700 bg-slate-900/70 p-3 sm:grid-cols-[1fr_auto]" key={request.id}>
                   <div>
-                    <div className="player-name">{request.senderUsername}</div>
-                    <div className="player-meta">Rating {request.senderRating}</div>
+                    <div className="font-semibold text-slate-100">{request.senderUsername}</div>
+                    <div className="text-xs text-slate-300">Rating {request.senderRating}</div>
                   </div>
-                  <div className="player-actions">
-                    <button className="control-btn" type="button" onClick={() => acceptRequest(request.id)}>
+                  <div className="flex items-center gap-2">
+                    <button className="inline-flex min-h-9 items-center justify-center rounded-lg border border-slate-600 bg-slate-800 px-3 text-sm text-slate-100 transition hover:border-emerald-300/70 hover:bg-slate-700" type="button" onClick={() => acceptRequest(request.id)}>
                       Accept
                     </button>
-                    <button className="control-btn" type="button" onClick={() => rejectRequest(request.id)}>
+                    <button className="inline-flex min-h-9 items-center justify-center rounded-lg border border-slate-600 bg-slate-800 px-3 text-sm text-slate-100 transition hover:border-emerald-300/70 hover:bg-slate-700" type="button" onClick={() => rejectRequest(request.id)}>
                       Reject
                     </button>
                   </div>
@@ -342,16 +350,16 @@ export default function LobbyPage() {
           ) : null}
 
           {outgoingRequests.length > 0 ? (
-            <div className="player-list">
+            <div className="mt-3 grid gap-2">
               <h3>Outgoing Requests</h3>
               {outgoingRequests.map((request) => (
-                <div className="player-row" key={request.id}>
+                <div className="grid items-center gap-2 rounded-xl border border-slate-700 bg-slate-900/70 p-3 sm:grid-cols-[1fr_auto]" key={request.id}>
                   <div>
-                    <div className="player-name">{request.receiverUsername}</div>
-                    <div className="player-meta">Rating {request.receiverRating}</div>
+                    <div className="font-semibold text-slate-100">{request.receiverUsername}</div>
+                    <div className="text-xs text-slate-300">Rating {request.receiverRating}</div>
                   </div>
-                  <div className="player-actions">
-                    <button className="control-btn" type="button" onClick={() => cancelRequest(request.id)}>
+                  <div className="flex items-center gap-2">
+                    <button className="inline-flex min-h-9 items-center justify-center rounded-lg border border-slate-600 bg-slate-800 px-3 text-sm text-slate-100 transition hover:border-emerald-300/70 hover:bg-slate-700" type="button" onClick={() => cancelRequest(request.id)}>
                       Cancel
                     </button>
                   </div>
@@ -360,21 +368,28 @@ export default function LobbyPage() {
             </div>
           ) : null}
 
-          <ul className="friend-list">
-            {friends.length === 0 ? <li>No friends yet. Send a request from the player list.</li> : null}
+          <ul className="mt-3 grid list-none gap-2 p-0">
+            {friends.length === 0 ? (
+              <li className="rounded-xl border border-slate-700 bg-slate-900/70 p-3 text-sm text-slate-300">
+                No friends yet. Send a request from the player list.
+              </li>
+            ) : null}
             {friends.map((friend) => (
-              <li key={friend.id}>
+              <li
+                key={friend.id}
+                className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-slate-700 bg-slate-900/70 p-3"
+              >
                 <span>{friend.username}</span>
-                <div className="player-actions">
+                <div className="flex items-center gap-2">
                   <button
-                    className="control-btn"
+                    className="inline-flex min-h-9 items-center justify-center rounded-lg border border-slate-600 bg-slate-800 px-3 text-sm text-slate-100 transition hover:border-emerald-300/70 hover:bg-slate-700 disabled:opacity-60"
                     type="button"
                     onClick={() => inviteFriend(friend.id)}
                     disabled={!friend.online}
                   >
                     {friend.online ? "Invite to Game" : "Offline"}
                   </button>
-                  <button className="control-btn" type="button" onClick={() => removeFriend(friend.id)}>
+                  <button className="inline-flex min-h-9 items-center justify-center rounded-lg border border-slate-600 bg-slate-800 px-3 text-sm text-slate-100 transition hover:border-emerald-300/70 hover:bg-slate-700" type="button" onClick={() => removeFriend(friend.id)}>
                     Remove
                   </button>
                 </div>
@@ -382,7 +397,7 @@ export default function LobbyPage() {
             ))}
           </ul>
 
-          <div className="lobby-note">
+          <div className="mt-4 border-t border-dashed border-slate-600 pt-2 text-sm text-slate-300">
             {lastInviteLink
               ? `Latest invite link: ${lastInviteLink}`
               : "Create an invite from an online friend to start a match."}

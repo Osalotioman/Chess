@@ -5,6 +5,7 @@ import { ChessBoard } from "@components/ChessBoard";
 import { apiGet, apiPost } from "@lib/api";
 import { getAccessToken, getStoredSession } from "@lib/session";
 import { usePlayerIdentity } from "@lib/usePlayerIdentity";
+import { createRoomId } from "@lib/roomId";
 import { useSettings } from "@lib/useSettings";
 import { ArenaSidebar } from "./ArenaSidebar";
 import type { InviteAcceptResponse, InviteCreateResponse, InviteLookupResponse } from "./types";
@@ -14,7 +15,7 @@ export default function ArenaPage() {
   const { settings, mounted } = useSettings();
   const { mode, setMode, guestProfile, setGuestDisplayName, ensureGuestProfile } = usePlayerIdentity();
   const [orientation, setOrientation] = useState<"white" | "black">("white");
-  const [room, setRoom] = useState("championship-1");
+  const [room, setRoom] = useState(createRoomId);
   const [inviteLink, setInviteLink] = useState("");
   const [inviteCode, setInviteCode] = useState<string | null>(null);
   const [inviteInfo, setInviteInfo] = useState<string | null>(null);
@@ -89,7 +90,7 @@ export default function ArenaPage() {
     const origin = window.location.origin;
     const link = inviteCode
       ? `${origin}/arena?invite=${encodeURIComponent(inviteCode)}`
-      : `${origin}/arena?room=${encodeURIComponent(room.trim() || "championship-1")}`;
+      : `${origin}/arena?room=${encodeURIComponent(room.trim() || createRoomId())}`;
     setInviteLink(link);
     setCopyStatus("idle");
   }, [room, inviteCode]);
@@ -155,6 +156,14 @@ export default function ArenaPage() {
     }
   }
 
+  function createGameRoom() {
+    const nextRoom = createRoomId();
+    setRoom(nextRoom);
+    setInviteCode(null);
+    setSeat(null);
+    setInviteInfo(`Created room ${nextRoom}`);
+  }
+
   useEffect(() => {
     if (!mounted) return;
     setOrientation(settings.boardOrientation);
@@ -176,7 +185,7 @@ export default function ArenaPage() {
   }, [isSidebarOpen]);
 
   return (
-    <main className="page-shell arena-shell">
+    <main className="grid min-h-[calc(100svh-52px)] gap-4 p-4 lg:grid-cols-[minmax(300px,380px)_1fr]">
       <ArenaSidebar
         isOpen={isSidebarOpen}
         connected={connected}
@@ -197,6 +206,7 @@ export default function ArenaPage() {
         onRoomChange={setRoom}
         onModeChange={setMode}
         onGuestNameChange={setGuestDisplayName}
+        onCreateRoom={createGameRoom}
         onConnect={connect}
         onDisconnect={disconnect}
         onCopyInvite={copyInviteLink}
@@ -208,38 +218,49 @@ export default function ArenaPage() {
         <button
           type="button"
           aria-label="Close arena sidebar"
-          className="arena-sidebar-backdrop"
+          className="fixed inset-0 z-10 border-0 bg-black/45 lg:hidden"
           onClick={() => setIsSidebarOpen(false)}
         />
       ) : null}
 
-      <section className="arena-stage shell-card" aria-label="Arena board stage">
-        <div className="arena-stage-top">
+      <section
+        className="grid min-h-[calc(100svh-6rem)] grid-rows-[auto_1fr] gap-3 rounded-2xl border border-slate-700 bg-gradient-to-br from-slate-900/95 to-slate-800/70 p-3 shadow-2xl"
+        aria-label="Arena board stage"
+      >
+        <div className="flex items-center justify-between gap-3">
           <button
-            className="arena-hamburger"
+            className="inline-flex min-h-10 items-center gap-2 rounded-lg border border-slate-600 bg-slate-800 px-3 text-sm font-medium text-slate-100 lg:hidden"
             type="button"
             aria-label="Open arena menu"
             aria-expanded={isSidebarOpen}
             onClick={() => setIsSidebarOpen((current) => !current)}
           >
-            <span className="arena-hamburger-bars" aria-hidden="true">
-              <span />
-              <span />
-              <span />
+            <span className="inline-grid gap-1" aria-hidden="true">
+              <span className="block h-0.5 w-4 rounded bg-slate-100" />
+              <span className="block h-0.5 w-4 rounded bg-slate-100" />
+              <span className="block h-0.5 w-4 rounded bg-slate-100" />
             </span>
             Menu
           </button>
 
-          <div className="arena-stage-meta">
-            <span className={`pill ${connected ? "ok" : "warn"}`}>{connected ? "Live" : "Offline"}</span>
-            {seat ? <span className="pill">Seat: {seat}</span> : null}
-            <span>
+          <div className="inline-flex flex-wrap items-center gap-2 rounded-full border border-slate-700 bg-slate-900/60 px-3 py-1 text-xs text-slate-300">
+            <span
+              className={`rounded-full border px-2 py-1 text-[11px] font-semibold ${
+                connected
+                  ? "border-emerald-300/70 bg-emerald-300/15 text-emerald-100"
+                  : "border-rose-300/60 bg-rose-300/10 text-rose-100"
+              }`}
+            >
+              {connected ? "Live" : "Offline"}
+            </span>
+            {seat ? <span className="rounded-full border border-slate-600 px-2 py-1">Seat: {seat}</span> : null}
+            <span className="truncate">
               Room <strong>{room}</strong>
             </span>
           </div>
         </div>
 
-        <section className="board-wrap" aria-label="Chess board">
+        <section className="grid min-h-0 place-items-center" aria-label="Chess board">
           <ChessBoard
             orientation={orientation}
             onOrientationChange={setOrientation}

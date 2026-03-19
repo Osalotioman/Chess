@@ -26,7 +26,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} min-h-svh bg-[radial-gradient(circle_at_15%_15%,rgba(110,231,183,0.1),transparent_35%),radial-gradient(circle_at_85%_0%,rgba(251,191,36,0.12),transparent_30%),linear-gradient(180deg,#020617_0%,#0f172a_100%)] text-slate-200 antialiased`}
       >
         <AppNav />
         {children}

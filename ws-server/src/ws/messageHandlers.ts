@@ -20,7 +20,7 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 
 function isValidRoom(room: string): boolean {
   const trimmed = room.trim();
-  if (trimmed.length < 1 || trimmed.length > 64) return false;
+  if (trimmed.length < 3 || trimmed.length > 128) return false;
   return /^[a-zA-Z0-9_-]+$/.test(trimmed);
 }
 
@@ -66,7 +66,7 @@ async function handleJsonMessage(roomRegistry: RoomRegistry, ws: WebSocket, obj:
     if (!isValidRoom(room)) {
       send(ws, {
         type: "error",
-        message: "Invalid room. Use 1-64 chars: letters, digits, _ or -",
+        message: "Invalid room. Use 3-128 chars: letters, digits, _ or -",
       });
       return;
     }
