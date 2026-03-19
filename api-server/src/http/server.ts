@@ -3,6 +3,7 @@ import { AuthService } from "../domain/auth/authService.js";
 import { PrismaUserRepository } from "../domain/user/userRepository.js";
 import { prisma } from "../db/prisma.js";
 import { registerAuthRoutes } from "./routes/authRoutes.js";
+import { registerSocialRoutes } from "./routes/socialRoutes.js";
 
 export function createServer() {
   const app = Fastify({ logger: true });
@@ -27,6 +28,7 @@ export function createServer() {
   });
 
   registerAuthRoutes(app, authService);
+  registerSocialRoutes(app, prisma, authService);
 
   return app;
 }

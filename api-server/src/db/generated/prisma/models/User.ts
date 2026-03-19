@@ -233,6 +233,14 @@ export type UserWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   refreshTokens?: Prisma.RefreshTokenListRelationFilter
+  sentFriendRequests?: Prisma.FriendRequestListRelationFilter
+  receivedFriendRequests?: Prisma.FriendRequestListRelationFilter
+  friendshipsAsUser?: Prisma.FriendshipListRelationFilter
+  friendshipsAsFriend?: Prisma.FriendshipListRelationFilter
+  gamesAsWhite?: Prisma.GameSessionListRelationFilter
+  gamesAsBlack?: Prisma.GameSessionListRelationFilter
+  invitesCreated?: Prisma.InviteListRelationFilter
+  invitesReceived?: Prisma.InviteListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -244,6 +252,14 @@ export type UserOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   refreshTokens?: Prisma.RefreshTokenOrderByRelationAggregateInput
+  sentFriendRequests?: Prisma.FriendRequestOrderByRelationAggregateInput
+  receivedFriendRequests?: Prisma.FriendRequestOrderByRelationAggregateInput
+  friendshipsAsUser?: Prisma.FriendshipOrderByRelationAggregateInput
+  friendshipsAsFriend?: Prisma.FriendshipOrderByRelationAggregateInput
+  gamesAsWhite?: Prisma.GameSessionOrderByRelationAggregateInput
+  gamesAsBlack?: Prisma.GameSessionOrderByRelationAggregateInput
+  invitesCreated?: Prisma.InviteOrderByRelationAggregateInput
+  invitesReceived?: Prisma.InviteOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -258,6 +274,14 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   refreshTokens?: Prisma.RefreshTokenListRelationFilter
+  sentFriendRequests?: Prisma.FriendRequestListRelationFilter
+  receivedFriendRequests?: Prisma.FriendRequestListRelationFilter
+  friendshipsAsUser?: Prisma.FriendshipListRelationFilter
+  friendshipsAsFriend?: Prisma.FriendshipListRelationFilter
+  gamesAsWhite?: Prisma.GameSessionListRelationFilter
+  gamesAsBlack?: Prisma.GameSessionListRelationFilter
+  invitesCreated?: Prisma.InviteListRelationFilter
+  invitesReceived?: Prisma.InviteListRelationFilter
 }, "id" | "username" | "email">
 
 export type UserOrderByWithAggregationInput = {
@@ -297,6 +321,14 @@ export type UserCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   refreshTokens?: Prisma.RefreshTokenCreateNestedManyWithoutUserInput
+  sentFriendRequests?: Prisma.FriendRequestCreateNestedManyWithoutSenderInput
+  receivedFriendRequests?: Prisma.FriendRequestCreateNestedManyWithoutReceiverInput
+  friendshipsAsUser?: Prisma.FriendshipCreateNestedManyWithoutUserInput
+  friendshipsAsFriend?: Prisma.FriendshipCreateNestedManyWithoutFriendInput
+  gamesAsWhite?: Prisma.GameSessionCreateNestedManyWithoutWhitePlayerInput
+  gamesAsBlack?: Prisma.GameSessionCreateNestedManyWithoutBlackPlayerInput
+  invitesCreated?: Prisma.InviteCreateNestedManyWithoutCreatedByInput
+  invitesReceived?: Prisma.InviteCreateNestedManyWithoutReceiverInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -308,6 +340,14 @@ export type UserUncheckedCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   refreshTokens?: Prisma.RefreshTokenUncheckedCreateNestedManyWithoutUserInput
+  sentFriendRequests?: Prisma.FriendRequestUncheckedCreateNestedManyWithoutSenderInput
+  receivedFriendRequests?: Prisma.FriendRequestUncheckedCreateNestedManyWithoutReceiverInput
+  friendshipsAsUser?: Prisma.FriendshipUncheckedCreateNestedManyWithoutUserInput
+  friendshipsAsFriend?: Prisma.FriendshipUncheckedCreateNestedManyWithoutFriendInput
+  gamesAsWhite?: Prisma.GameSessionUncheckedCreateNestedManyWithoutWhitePlayerInput
+  gamesAsBlack?: Prisma.GameSessionUncheckedCreateNestedManyWithoutBlackPlayerInput
+  invitesCreated?: Prisma.InviteUncheckedCreateNestedManyWithoutCreatedByInput
+  invitesReceived?: Prisma.InviteUncheckedCreateNestedManyWithoutReceiverInput
 }
 
 export type UserUpdateInput = {
@@ -319,6 +359,14 @@ export type UserUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   refreshTokens?: Prisma.RefreshTokenUpdateManyWithoutUserNestedInput
+  sentFriendRequests?: Prisma.FriendRequestUpdateManyWithoutSenderNestedInput
+  receivedFriendRequests?: Prisma.FriendRequestUpdateManyWithoutReceiverNestedInput
+  friendshipsAsUser?: Prisma.FriendshipUpdateManyWithoutUserNestedInput
+  friendshipsAsFriend?: Prisma.FriendshipUpdateManyWithoutFriendNestedInput
+  gamesAsWhite?: Prisma.GameSessionUpdateManyWithoutWhitePlayerNestedInput
+  gamesAsBlack?: Prisma.GameSessionUpdateManyWithoutBlackPlayerNestedInput
+  invitesCreated?: Prisma.InviteUpdateManyWithoutCreatedByNestedInput
+  invitesReceived?: Prisma.InviteUpdateManyWithoutReceiverNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -330,6 +378,14 @@ export type UserUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   refreshTokens?: Prisma.RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
+  sentFriendRequests?: Prisma.FriendRequestUncheckedUpdateManyWithoutSenderNestedInput
+  receivedFriendRequests?: Prisma.FriendRequestUncheckedUpdateManyWithoutReceiverNestedInput
+  friendshipsAsUser?: Prisma.FriendshipUncheckedUpdateManyWithoutUserNestedInput
+  friendshipsAsFriend?: Prisma.FriendshipUncheckedUpdateManyWithoutFriendNestedInput
+  gamesAsWhite?: Prisma.GameSessionUncheckedUpdateManyWithoutWhitePlayerNestedInput
+  gamesAsBlack?: Prisma.GameSessionUncheckedUpdateManyWithoutBlackPlayerNestedInput
+  invitesCreated?: Prisma.InviteUncheckedUpdateManyWithoutCreatedByNestedInput
+  invitesReceived?: Prisma.InviteUncheckedUpdateManyWithoutReceiverNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -405,6 +461,11 @@ export type UserScalarRelationFilter = {
   isNot?: Prisma.UserWhereInput
 }
 
+export type UserNullableScalarRelationFilter = {
+  is?: Prisma.UserWhereInput | null
+  isNot?: Prisma.UserWhereInput | null
+}
+
 export type StringFieldUpdateOperationsInput = {
   set?: string
 }
@@ -435,6 +496,124 @@ export type UserUpdateOneRequiredWithoutRefreshTokensNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutRefreshTokensInput, Prisma.UserUpdateWithoutRefreshTokensInput>, Prisma.UserUncheckedUpdateWithoutRefreshTokensInput>
 }
 
+export type UserCreateNestedOneWithoutSentFriendRequestsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutSentFriendRequestsInput, Prisma.UserUncheckedCreateWithoutSentFriendRequestsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutSentFriendRequestsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserCreateNestedOneWithoutReceivedFriendRequestsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutReceivedFriendRequestsInput, Prisma.UserUncheckedCreateWithoutReceivedFriendRequestsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutReceivedFriendRequestsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutSentFriendRequestsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutSentFriendRequestsInput, Prisma.UserUncheckedCreateWithoutSentFriendRequestsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutSentFriendRequestsInput
+  upsert?: Prisma.UserUpsertWithoutSentFriendRequestsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutSentFriendRequestsInput, Prisma.UserUpdateWithoutSentFriendRequestsInput>, Prisma.UserUncheckedUpdateWithoutSentFriendRequestsInput>
+}
+
+export type UserUpdateOneRequiredWithoutReceivedFriendRequestsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutReceivedFriendRequestsInput, Prisma.UserUncheckedCreateWithoutReceivedFriendRequestsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutReceivedFriendRequestsInput
+  upsert?: Prisma.UserUpsertWithoutReceivedFriendRequestsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutReceivedFriendRequestsInput, Prisma.UserUpdateWithoutReceivedFriendRequestsInput>, Prisma.UserUncheckedUpdateWithoutReceivedFriendRequestsInput>
+}
+
+export type UserCreateNestedOneWithoutFriendshipsAsUserInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutFriendshipsAsUserInput, Prisma.UserUncheckedCreateWithoutFriendshipsAsUserInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutFriendshipsAsUserInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserCreateNestedOneWithoutFriendshipsAsFriendInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutFriendshipsAsFriendInput, Prisma.UserUncheckedCreateWithoutFriendshipsAsFriendInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutFriendshipsAsFriendInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutFriendshipsAsUserNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutFriendshipsAsUserInput, Prisma.UserUncheckedCreateWithoutFriendshipsAsUserInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutFriendshipsAsUserInput
+  upsert?: Prisma.UserUpsertWithoutFriendshipsAsUserInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutFriendshipsAsUserInput, Prisma.UserUpdateWithoutFriendshipsAsUserInput>, Prisma.UserUncheckedUpdateWithoutFriendshipsAsUserInput>
+}
+
+export type UserUpdateOneRequiredWithoutFriendshipsAsFriendNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutFriendshipsAsFriendInput, Prisma.UserUncheckedCreateWithoutFriendshipsAsFriendInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutFriendshipsAsFriendInput
+  upsert?: Prisma.UserUpsertWithoutFriendshipsAsFriendInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutFriendshipsAsFriendInput, Prisma.UserUpdateWithoutFriendshipsAsFriendInput>, Prisma.UserUncheckedUpdateWithoutFriendshipsAsFriendInput>
+}
+
+export type UserCreateNestedOneWithoutGamesAsWhiteInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutGamesAsWhiteInput, Prisma.UserUncheckedCreateWithoutGamesAsWhiteInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutGamesAsWhiteInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserCreateNestedOneWithoutGamesAsBlackInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutGamesAsBlackInput, Prisma.UserUncheckedCreateWithoutGamesAsBlackInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutGamesAsBlackInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneWithoutGamesAsWhiteNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutGamesAsWhiteInput, Prisma.UserUncheckedCreateWithoutGamesAsWhiteInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutGamesAsWhiteInput
+  upsert?: Prisma.UserUpsertWithoutGamesAsWhiteInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutGamesAsWhiteInput, Prisma.UserUpdateWithoutGamesAsWhiteInput>, Prisma.UserUncheckedUpdateWithoutGamesAsWhiteInput>
+}
+
+export type UserUpdateOneWithoutGamesAsBlackNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutGamesAsBlackInput, Prisma.UserUncheckedCreateWithoutGamesAsBlackInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutGamesAsBlackInput
+  upsert?: Prisma.UserUpsertWithoutGamesAsBlackInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutGamesAsBlackInput, Prisma.UserUpdateWithoutGamesAsBlackInput>, Prisma.UserUncheckedUpdateWithoutGamesAsBlackInput>
+}
+
+export type UserCreateNestedOneWithoutInvitesCreatedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutInvitesCreatedInput, Prisma.UserUncheckedCreateWithoutInvitesCreatedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutInvitesCreatedInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserCreateNestedOneWithoutInvitesReceivedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutInvitesReceivedInput, Prisma.UserUncheckedCreateWithoutInvitesReceivedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutInvitesReceivedInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutInvitesCreatedNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutInvitesCreatedInput, Prisma.UserUncheckedCreateWithoutInvitesCreatedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutInvitesCreatedInput
+  upsert?: Prisma.UserUpsertWithoutInvitesCreatedInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutInvitesCreatedInput, Prisma.UserUpdateWithoutInvitesCreatedInput>, Prisma.UserUncheckedUpdateWithoutInvitesCreatedInput>
+}
+
+export type UserUpdateOneWithoutInvitesReceivedNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutInvitesReceivedInput, Prisma.UserUncheckedCreateWithoutInvitesReceivedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutInvitesReceivedInput
+  upsert?: Prisma.UserUpsertWithoutInvitesReceivedInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutInvitesReceivedInput, Prisma.UserUpdateWithoutInvitesReceivedInput>, Prisma.UserUncheckedUpdateWithoutInvitesReceivedInput>
+}
+
 export type UserCreateWithoutRefreshTokensInput = {
   id?: string
   username: string
@@ -443,6 +622,14 @@ export type UserCreateWithoutRefreshTokensInput = {
   rating?: number
   createdAt?: Date | string
   updatedAt?: Date | string
+  sentFriendRequests?: Prisma.FriendRequestCreateNestedManyWithoutSenderInput
+  receivedFriendRequests?: Prisma.FriendRequestCreateNestedManyWithoutReceiverInput
+  friendshipsAsUser?: Prisma.FriendshipCreateNestedManyWithoutUserInput
+  friendshipsAsFriend?: Prisma.FriendshipCreateNestedManyWithoutFriendInput
+  gamesAsWhite?: Prisma.GameSessionCreateNestedManyWithoutWhitePlayerInput
+  gamesAsBlack?: Prisma.GameSessionCreateNestedManyWithoutBlackPlayerInput
+  invitesCreated?: Prisma.InviteCreateNestedManyWithoutCreatedByInput
+  invitesReceived?: Prisma.InviteCreateNestedManyWithoutReceiverInput
 }
 
 export type UserUncheckedCreateWithoutRefreshTokensInput = {
@@ -453,6 +640,14 @@ export type UserUncheckedCreateWithoutRefreshTokensInput = {
   rating?: number
   createdAt?: Date | string
   updatedAt?: Date | string
+  sentFriendRequests?: Prisma.FriendRequestUncheckedCreateNestedManyWithoutSenderInput
+  receivedFriendRequests?: Prisma.FriendRequestUncheckedCreateNestedManyWithoutReceiverInput
+  friendshipsAsUser?: Prisma.FriendshipUncheckedCreateNestedManyWithoutUserInput
+  friendshipsAsFriend?: Prisma.FriendshipUncheckedCreateNestedManyWithoutFriendInput
+  gamesAsWhite?: Prisma.GameSessionUncheckedCreateNestedManyWithoutWhitePlayerInput
+  gamesAsBlack?: Prisma.GameSessionUncheckedCreateNestedManyWithoutBlackPlayerInput
+  invitesCreated?: Prisma.InviteUncheckedCreateNestedManyWithoutCreatedByInput
+  invitesReceived?: Prisma.InviteUncheckedCreateNestedManyWithoutReceiverInput
 }
 
 export type UserCreateOrConnectWithoutRefreshTokensInput = {
@@ -479,6 +674,14 @@ export type UserUpdateWithoutRefreshTokensInput = {
   rating?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sentFriendRequests?: Prisma.FriendRequestUpdateManyWithoutSenderNestedInput
+  receivedFriendRequests?: Prisma.FriendRequestUpdateManyWithoutReceiverNestedInput
+  friendshipsAsUser?: Prisma.FriendshipUpdateManyWithoutUserNestedInput
+  friendshipsAsFriend?: Prisma.FriendshipUpdateManyWithoutFriendNestedInput
+  gamesAsWhite?: Prisma.GameSessionUpdateManyWithoutWhitePlayerNestedInput
+  gamesAsBlack?: Prisma.GameSessionUpdateManyWithoutBlackPlayerNestedInput
+  invitesCreated?: Prisma.InviteUpdateManyWithoutCreatedByNestedInput
+  invitesReceived?: Prisma.InviteUpdateManyWithoutReceiverNestedInput
 }
 
 export type UserUncheckedUpdateWithoutRefreshTokensInput = {
@@ -489,6 +692,718 @@ export type UserUncheckedUpdateWithoutRefreshTokensInput = {
   rating?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sentFriendRequests?: Prisma.FriendRequestUncheckedUpdateManyWithoutSenderNestedInput
+  receivedFriendRequests?: Prisma.FriendRequestUncheckedUpdateManyWithoutReceiverNestedInput
+  friendshipsAsUser?: Prisma.FriendshipUncheckedUpdateManyWithoutUserNestedInput
+  friendshipsAsFriend?: Prisma.FriendshipUncheckedUpdateManyWithoutFriendNestedInput
+  gamesAsWhite?: Prisma.GameSessionUncheckedUpdateManyWithoutWhitePlayerNestedInput
+  gamesAsBlack?: Prisma.GameSessionUncheckedUpdateManyWithoutBlackPlayerNestedInput
+  invitesCreated?: Prisma.InviteUncheckedUpdateManyWithoutCreatedByNestedInput
+  invitesReceived?: Prisma.InviteUncheckedUpdateManyWithoutReceiverNestedInput
+}
+
+export type UserCreateWithoutSentFriendRequestsInput = {
+  id?: string
+  username: string
+  email: string
+  passwordHash: string
+  rating?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  refreshTokens?: Prisma.RefreshTokenCreateNestedManyWithoutUserInput
+  receivedFriendRequests?: Prisma.FriendRequestCreateNestedManyWithoutReceiverInput
+  friendshipsAsUser?: Prisma.FriendshipCreateNestedManyWithoutUserInput
+  friendshipsAsFriend?: Prisma.FriendshipCreateNestedManyWithoutFriendInput
+  gamesAsWhite?: Prisma.GameSessionCreateNestedManyWithoutWhitePlayerInput
+  gamesAsBlack?: Prisma.GameSessionCreateNestedManyWithoutBlackPlayerInput
+  invitesCreated?: Prisma.InviteCreateNestedManyWithoutCreatedByInput
+  invitesReceived?: Prisma.InviteCreateNestedManyWithoutReceiverInput
+}
+
+export type UserUncheckedCreateWithoutSentFriendRequestsInput = {
+  id?: string
+  username: string
+  email: string
+  passwordHash: string
+  rating?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  refreshTokens?: Prisma.RefreshTokenUncheckedCreateNestedManyWithoutUserInput
+  receivedFriendRequests?: Prisma.FriendRequestUncheckedCreateNestedManyWithoutReceiverInput
+  friendshipsAsUser?: Prisma.FriendshipUncheckedCreateNestedManyWithoutUserInput
+  friendshipsAsFriend?: Prisma.FriendshipUncheckedCreateNestedManyWithoutFriendInput
+  gamesAsWhite?: Prisma.GameSessionUncheckedCreateNestedManyWithoutWhitePlayerInput
+  gamesAsBlack?: Prisma.GameSessionUncheckedCreateNestedManyWithoutBlackPlayerInput
+  invitesCreated?: Prisma.InviteUncheckedCreateNestedManyWithoutCreatedByInput
+  invitesReceived?: Prisma.InviteUncheckedCreateNestedManyWithoutReceiverInput
+}
+
+export type UserCreateOrConnectWithoutSentFriendRequestsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutSentFriendRequestsInput, Prisma.UserUncheckedCreateWithoutSentFriendRequestsInput>
+}
+
+export type UserCreateWithoutReceivedFriendRequestsInput = {
+  id?: string
+  username: string
+  email: string
+  passwordHash: string
+  rating?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  refreshTokens?: Prisma.RefreshTokenCreateNestedManyWithoutUserInput
+  sentFriendRequests?: Prisma.FriendRequestCreateNestedManyWithoutSenderInput
+  friendshipsAsUser?: Prisma.FriendshipCreateNestedManyWithoutUserInput
+  friendshipsAsFriend?: Prisma.FriendshipCreateNestedManyWithoutFriendInput
+  gamesAsWhite?: Prisma.GameSessionCreateNestedManyWithoutWhitePlayerInput
+  gamesAsBlack?: Prisma.GameSessionCreateNestedManyWithoutBlackPlayerInput
+  invitesCreated?: Prisma.InviteCreateNestedManyWithoutCreatedByInput
+  invitesReceived?: Prisma.InviteCreateNestedManyWithoutReceiverInput
+}
+
+export type UserUncheckedCreateWithoutReceivedFriendRequestsInput = {
+  id?: string
+  username: string
+  email: string
+  passwordHash: string
+  rating?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  refreshTokens?: Prisma.RefreshTokenUncheckedCreateNestedManyWithoutUserInput
+  sentFriendRequests?: Prisma.FriendRequestUncheckedCreateNestedManyWithoutSenderInput
+  friendshipsAsUser?: Prisma.FriendshipUncheckedCreateNestedManyWithoutUserInput
+  friendshipsAsFriend?: Prisma.FriendshipUncheckedCreateNestedManyWithoutFriendInput
+  gamesAsWhite?: Prisma.GameSessionUncheckedCreateNestedManyWithoutWhitePlayerInput
+  gamesAsBlack?: Prisma.GameSessionUncheckedCreateNestedManyWithoutBlackPlayerInput
+  invitesCreated?: Prisma.InviteUncheckedCreateNestedManyWithoutCreatedByInput
+  invitesReceived?: Prisma.InviteUncheckedCreateNestedManyWithoutReceiverInput
+}
+
+export type UserCreateOrConnectWithoutReceivedFriendRequestsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutReceivedFriendRequestsInput, Prisma.UserUncheckedCreateWithoutReceivedFriendRequestsInput>
+}
+
+export type UserUpsertWithoutSentFriendRequestsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutSentFriendRequestsInput, Prisma.UserUncheckedUpdateWithoutSentFriendRequestsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutSentFriendRequestsInput, Prisma.UserUncheckedCreateWithoutSentFriendRequestsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutSentFriendRequestsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutSentFriendRequestsInput, Prisma.UserUncheckedUpdateWithoutSentFriendRequestsInput>
+}
+
+export type UserUpdateWithoutSentFriendRequestsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  rating?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  refreshTokens?: Prisma.RefreshTokenUpdateManyWithoutUserNestedInput
+  receivedFriendRequests?: Prisma.FriendRequestUpdateManyWithoutReceiverNestedInput
+  friendshipsAsUser?: Prisma.FriendshipUpdateManyWithoutUserNestedInput
+  friendshipsAsFriend?: Prisma.FriendshipUpdateManyWithoutFriendNestedInput
+  gamesAsWhite?: Prisma.GameSessionUpdateManyWithoutWhitePlayerNestedInput
+  gamesAsBlack?: Prisma.GameSessionUpdateManyWithoutBlackPlayerNestedInput
+  invitesCreated?: Prisma.InviteUpdateManyWithoutCreatedByNestedInput
+  invitesReceived?: Prisma.InviteUpdateManyWithoutReceiverNestedInput
+}
+
+export type UserUncheckedUpdateWithoutSentFriendRequestsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  rating?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  refreshTokens?: Prisma.RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
+  receivedFriendRequests?: Prisma.FriendRequestUncheckedUpdateManyWithoutReceiverNestedInput
+  friendshipsAsUser?: Prisma.FriendshipUncheckedUpdateManyWithoutUserNestedInput
+  friendshipsAsFriend?: Prisma.FriendshipUncheckedUpdateManyWithoutFriendNestedInput
+  gamesAsWhite?: Prisma.GameSessionUncheckedUpdateManyWithoutWhitePlayerNestedInput
+  gamesAsBlack?: Prisma.GameSessionUncheckedUpdateManyWithoutBlackPlayerNestedInput
+  invitesCreated?: Prisma.InviteUncheckedUpdateManyWithoutCreatedByNestedInput
+  invitesReceived?: Prisma.InviteUncheckedUpdateManyWithoutReceiverNestedInput
+}
+
+export type UserUpsertWithoutReceivedFriendRequestsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutReceivedFriendRequestsInput, Prisma.UserUncheckedUpdateWithoutReceivedFriendRequestsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutReceivedFriendRequestsInput, Prisma.UserUncheckedCreateWithoutReceivedFriendRequestsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutReceivedFriendRequestsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutReceivedFriendRequestsInput, Prisma.UserUncheckedUpdateWithoutReceivedFriendRequestsInput>
+}
+
+export type UserUpdateWithoutReceivedFriendRequestsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  rating?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  refreshTokens?: Prisma.RefreshTokenUpdateManyWithoutUserNestedInput
+  sentFriendRequests?: Prisma.FriendRequestUpdateManyWithoutSenderNestedInput
+  friendshipsAsUser?: Prisma.FriendshipUpdateManyWithoutUserNestedInput
+  friendshipsAsFriend?: Prisma.FriendshipUpdateManyWithoutFriendNestedInput
+  gamesAsWhite?: Prisma.GameSessionUpdateManyWithoutWhitePlayerNestedInput
+  gamesAsBlack?: Prisma.GameSessionUpdateManyWithoutBlackPlayerNestedInput
+  invitesCreated?: Prisma.InviteUpdateManyWithoutCreatedByNestedInput
+  invitesReceived?: Prisma.InviteUpdateManyWithoutReceiverNestedInput
+}
+
+export type UserUncheckedUpdateWithoutReceivedFriendRequestsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  rating?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  refreshTokens?: Prisma.RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
+  sentFriendRequests?: Prisma.FriendRequestUncheckedUpdateManyWithoutSenderNestedInput
+  friendshipsAsUser?: Prisma.FriendshipUncheckedUpdateManyWithoutUserNestedInput
+  friendshipsAsFriend?: Prisma.FriendshipUncheckedUpdateManyWithoutFriendNestedInput
+  gamesAsWhite?: Prisma.GameSessionUncheckedUpdateManyWithoutWhitePlayerNestedInput
+  gamesAsBlack?: Prisma.GameSessionUncheckedUpdateManyWithoutBlackPlayerNestedInput
+  invitesCreated?: Prisma.InviteUncheckedUpdateManyWithoutCreatedByNestedInput
+  invitesReceived?: Prisma.InviteUncheckedUpdateManyWithoutReceiverNestedInput
+}
+
+export type UserCreateWithoutFriendshipsAsUserInput = {
+  id?: string
+  username: string
+  email: string
+  passwordHash: string
+  rating?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  refreshTokens?: Prisma.RefreshTokenCreateNestedManyWithoutUserInput
+  sentFriendRequests?: Prisma.FriendRequestCreateNestedManyWithoutSenderInput
+  receivedFriendRequests?: Prisma.FriendRequestCreateNestedManyWithoutReceiverInput
+  friendshipsAsFriend?: Prisma.FriendshipCreateNestedManyWithoutFriendInput
+  gamesAsWhite?: Prisma.GameSessionCreateNestedManyWithoutWhitePlayerInput
+  gamesAsBlack?: Prisma.GameSessionCreateNestedManyWithoutBlackPlayerInput
+  invitesCreated?: Prisma.InviteCreateNestedManyWithoutCreatedByInput
+  invitesReceived?: Prisma.InviteCreateNestedManyWithoutReceiverInput
+}
+
+export type UserUncheckedCreateWithoutFriendshipsAsUserInput = {
+  id?: string
+  username: string
+  email: string
+  passwordHash: string
+  rating?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  refreshTokens?: Prisma.RefreshTokenUncheckedCreateNestedManyWithoutUserInput
+  sentFriendRequests?: Prisma.FriendRequestUncheckedCreateNestedManyWithoutSenderInput
+  receivedFriendRequests?: Prisma.FriendRequestUncheckedCreateNestedManyWithoutReceiverInput
+  friendshipsAsFriend?: Prisma.FriendshipUncheckedCreateNestedManyWithoutFriendInput
+  gamesAsWhite?: Prisma.GameSessionUncheckedCreateNestedManyWithoutWhitePlayerInput
+  gamesAsBlack?: Prisma.GameSessionUncheckedCreateNestedManyWithoutBlackPlayerInput
+  invitesCreated?: Prisma.InviteUncheckedCreateNestedManyWithoutCreatedByInput
+  invitesReceived?: Prisma.InviteUncheckedCreateNestedManyWithoutReceiverInput
+}
+
+export type UserCreateOrConnectWithoutFriendshipsAsUserInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutFriendshipsAsUserInput, Prisma.UserUncheckedCreateWithoutFriendshipsAsUserInput>
+}
+
+export type UserCreateWithoutFriendshipsAsFriendInput = {
+  id?: string
+  username: string
+  email: string
+  passwordHash: string
+  rating?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  refreshTokens?: Prisma.RefreshTokenCreateNestedManyWithoutUserInput
+  sentFriendRequests?: Prisma.FriendRequestCreateNestedManyWithoutSenderInput
+  receivedFriendRequests?: Prisma.FriendRequestCreateNestedManyWithoutReceiverInput
+  friendshipsAsUser?: Prisma.FriendshipCreateNestedManyWithoutUserInput
+  gamesAsWhite?: Prisma.GameSessionCreateNestedManyWithoutWhitePlayerInput
+  gamesAsBlack?: Prisma.GameSessionCreateNestedManyWithoutBlackPlayerInput
+  invitesCreated?: Prisma.InviteCreateNestedManyWithoutCreatedByInput
+  invitesReceived?: Prisma.InviteCreateNestedManyWithoutReceiverInput
+}
+
+export type UserUncheckedCreateWithoutFriendshipsAsFriendInput = {
+  id?: string
+  username: string
+  email: string
+  passwordHash: string
+  rating?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  refreshTokens?: Prisma.RefreshTokenUncheckedCreateNestedManyWithoutUserInput
+  sentFriendRequests?: Prisma.FriendRequestUncheckedCreateNestedManyWithoutSenderInput
+  receivedFriendRequests?: Prisma.FriendRequestUncheckedCreateNestedManyWithoutReceiverInput
+  friendshipsAsUser?: Prisma.FriendshipUncheckedCreateNestedManyWithoutUserInput
+  gamesAsWhite?: Prisma.GameSessionUncheckedCreateNestedManyWithoutWhitePlayerInput
+  gamesAsBlack?: Prisma.GameSessionUncheckedCreateNestedManyWithoutBlackPlayerInput
+  invitesCreated?: Prisma.InviteUncheckedCreateNestedManyWithoutCreatedByInput
+  invitesReceived?: Prisma.InviteUncheckedCreateNestedManyWithoutReceiverInput
+}
+
+export type UserCreateOrConnectWithoutFriendshipsAsFriendInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutFriendshipsAsFriendInput, Prisma.UserUncheckedCreateWithoutFriendshipsAsFriendInput>
+}
+
+export type UserUpsertWithoutFriendshipsAsUserInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutFriendshipsAsUserInput, Prisma.UserUncheckedUpdateWithoutFriendshipsAsUserInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutFriendshipsAsUserInput, Prisma.UserUncheckedCreateWithoutFriendshipsAsUserInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutFriendshipsAsUserInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutFriendshipsAsUserInput, Prisma.UserUncheckedUpdateWithoutFriendshipsAsUserInput>
+}
+
+export type UserUpdateWithoutFriendshipsAsUserInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  rating?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  refreshTokens?: Prisma.RefreshTokenUpdateManyWithoutUserNestedInput
+  sentFriendRequests?: Prisma.FriendRequestUpdateManyWithoutSenderNestedInput
+  receivedFriendRequests?: Prisma.FriendRequestUpdateManyWithoutReceiverNestedInput
+  friendshipsAsFriend?: Prisma.FriendshipUpdateManyWithoutFriendNestedInput
+  gamesAsWhite?: Prisma.GameSessionUpdateManyWithoutWhitePlayerNestedInput
+  gamesAsBlack?: Prisma.GameSessionUpdateManyWithoutBlackPlayerNestedInput
+  invitesCreated?: Prisma.InviteUpdateManyWithoutCreatedByNestedInput
+  invitesReceived?: Prisma.InviteUpdateManyWithoutReceiverNestedInput
+}
+
+export type UserUncheckedUpdateWithoutFriendshipsAsUserInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  rating?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  refreshTokens?: Prisma.RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
+  sentFriendRequests?: Prisma.FriendRequestUncheckedUpdateManyWithoutSenderNestedInput
+  receivedFriendRequests?: Prisma.FriendRequestUncheckedUpdateManyWithoutReceiverNestedInput
+  friendshipsAsFriend?: Prisma.FriendshipUncheckedUpdateManyWithoutFriendNestedInput
+  gamesAsWhite?: Prisma.GameSessionUncheckedUpdateManyWithoutWhitePlayerNestedInput
+  gamesAsBlack?: Prisma.GameSessionUncheckedUpdateManyWithoutBlackPlayerNestedInput
+  invitesCreated?: Prisma.InviteUncheckedUpdateManyWithoutCreatedByNestedInput
+  invitesReceived?: Prisma.InviteUncheckedUpdateManyWithoutReceiverNestedInput
+}
+
+export type UserUpsertWithoutFriendshipsAsFriendInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutFriendshipsAsFriendInput, Prisma.UserUncheckedUpdateWithoutFriendshipsAsFriendInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutFriendshipsAsFriendInput, Prisma.UserUncheckedCreateWithoutFriendshipsAsFriendInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutFriendshipsAsFriendInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutFriendshipsAsFriendInput, Prisma.UserUncheckedUpdateWithoutFriendshipsAsFriendInput>
+}
+
+export type UserUpdateWithoutFriendshipsAsFriendInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  rating?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  refreshTokens?: Prisma.RefreshTokenUpdateManyWithoutUserNestedInput
+  sentFriendRequests?: Prisma.FriendRequestUpdateManyWithoutSenderNestedInput
+  receivedFriendRequests?: Prisma.FriendRequestUpdateManyWithoutReceiverNestedInput
+  friendshipsAsUser?: Prisma.FriendshipUpdateManyWithoutUserNestedInput
+  gamesAsWhite?: Prisma.GameSessionUpdateManyWithoutWhitePlayerNestedInput
+  gamesAsBlack?: Prisma.GameSessionUpdateManyWithoutBlackPlayerNestedInput
+  invitesCreated?: Prisma.InviteUpdateManyWithoutCreatedByNestedInput
+  invitesReceived?: Prisma.InviteUpdateManyWithoutReceiverNestedInput
+}
+
+export type UserUncheckedUpdateWithoutFriendshipsAsFriendInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  rating?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  refreshTokens?: Prisma.RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
+  sentFriendRequests?: Prisma.FriendRequestUncheckedUpdateManyWithoutSenderNestedInput
+  receivedFriendRequests?: Prisma.FriendRequestUncheckedUpdateManyWithoutReceiverNestedInput
+  friendshipsAsUser?: Prisma.FriendshipUncheckedUpdateManyWithoutUserNestedInput
+  gamesAsWhite?: Prisma.GameSessionUncheckedUpdateManyWithoutWhitePlayerNestedInput
+  gamesAsBlack?: Prisma.GameSessionUncheckedUpdateManyWithoutBlackPlayerNestedInput
+  invitesCreated?: Prisma.InviteUncheckedUpdateManyWithoutCreatedByNestedInput
+  invitesReceived?: Prisma.InviteUncheckedUpdateManyWithoutReceiverNestedInput
+}
+
+export type UserCreateWithoutGamesAsWhiteInput = {
+  id?: string
+  username: string
+  email: string
+  passwordHash: string
+  rating?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  refreshTokens?: Prisma.RefreshTokenCreateNestedManyWithoutUserInput
+  sentFriendRequests?: Prisma.FriendRequestCreateNestedManyWithoutSenderInput
+  receivedFriendRequests?: Prisma.FriendRequestCreateNestedManyWithoutReceiverInput
+  friendshipsAsUser?: Prisma.FriendshipCreateNestedManyWithoutUserInput
+  friendshipsAsFriend?: Prisma.FriendshipCreateNestedManyWithoutFriendInput
+  gamesAsBlack?: Prisma.GameSessionCreateNestedManyWithoutBlackPlayerInput
+  invitesCreated?: Prisma.InviteCreateNestedManyWithoutCreatedByInput
+  invitesReceived?: Prisma.InviteCreateNestedManyWithoutReceiverInput
+}
+
+export type UserUncheckedCreateWithoutGamesAsWhiteInput = {
+  id?: string
+  username: string
+  email: string
+  passwordHash: string
+  rating?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  refreshTokens?: Prisma.RefreshTokenUncheckedCreateNestedManyWithoutUserInput
+  sentFriendRequests?: Prisma.FriendRequestUncheckedCreateNestedManyWithoutSenderInput
+  receivedFriendRequests?: Prisma.FriendRequestUncheckedCreateNestedManyWithoutReceiverInput
+  friendshipsAsUser?: Prisma.FriendshipUncheckedCreateNestedManyWithoutUserInput
+  friendshipsAsFriend?: Prisma.FriendshipUncheckedCreateNestedManyWithoutFriendInput
+  gamesAsBlack?: Prisma.GameSessionUncheckedCreateNestedManyWithoutBlackPlayerInput
+  invitesCreated?: Prisma.InviteUncheckedCreateNestedManyWithoutCreatedByInput
+  invitesReceived?: Prisma.InviteUncheckedCreateNestedManyWithoutReceiverInput
+}
+
+export type UserCreateOrConnectWithoutGamesAsWhiteInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutGamesAsWhiteInput, Prisma.UserUncheckedCreateWithoutGamesAsWhiteInput>
+}
+
+export type UserCreateWithoutGamesAsBlackInput = {
+  id?: string
+  username: string
+  email: string
+  passwordHash: string
+  rating?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  refreshTokens?: Prisma.RefreshTokenCreateNestedManyWithoutUserInput
+  sentFriendRequests?: Prisma.FriendRequestCreateNestedManyWithoutSenderInput
+  receivedFriendRequests?: Prisma.FriendRequestCreateNestedManyWithoutReceiverInput
+  friendshipsAsUser?: Prisma.FriendshipCreateNestedManyWithoutUserInput
+  friendshipsAsFriend?: Prisma.FriendshipCreateNestedManyWithoutFriendInput
+  gamesAsWhite?: Prisma.GameSessionCreateNestedManyWithoutWhitePlayerInput
+  invitesCreated?: Prisma.InviteCreateNestedManyWithoutCreatedByInput
+  invitesReceived?: Prisma.InviteCreateNestedManyWithoutReceiverInput
+}
+
+export type UserUncheckedCreateWithoutGamesAsBlackInput = {
+  id?: string
+  username: string
+  email: string
+  passwordHash: string
+  rating?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  refreshTokens?: Prisma.RefreshTokenUncheckedCreateNestedManyWithoutUserInput
+  sentFriendRequests?: Prisma.FriendRequestUncheckedCreateNestedManyWithoutSenderInput
+  receivedFriendRequests?: Prisma.FriendRequestUncheckedCreateNestedManyWithoutReceiverInput
+  friendshipsAsUser?: Prisma.FriendshipUncheckedCreateNestedManyWithoutUserInput
+  friendshipsAsFriend?: Prisma.FriendshipUncheckedCreateNestedManyWithoutFriendInput
+  gamesAsWhite?: Prisma.GameSessionUncheckedCreateNestedManyWithoutWhitePlayerInput
+  invitesCreated?: Prisma.InviteUncheckedCreateNestedManyWithoutCreatedByInput
+  invitesReceived?: Prisma.InviteUncheckedCreateNestedManyWithoutReceiverInput
+}
+
+export type UserCreateOrConnectWithoutGamesAsBlackInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutGamesAsBlackInput, Prisma.UserUncheckedCreateWithoutGamesAsBlackInput>
+}
+
+export type UserUpsertWithoutGamesAsWhiteInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutGamesAsWhiteInput, Prisma.UserUncheckedUpdateWithoutGamesAsWhiteInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutGamesAsWhiteInput, Prisma.UserUncheckedCreateWithoutGamesAsWhiteInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutGamesAsWhiteInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutGamesAsWhiteInput, Prisma.UserUncheckedUpdateWithoutGamesAsWhiteInput>
+}
+
+export type UserUpdateWithoutGamesAsWhiteInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  rating?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  refreshTokens?: Prisma.RefreshTokenUpdateManyWithoutUserNestedInput
+  sentFriendRequests?: Prisma.FriendRequestUpdateManyWithoutSenderNestedInput
+  receivedFriendRequests?: Prisma.FriendRequestUpdateManyWithoutReceiverNestedInput
+  friendshipsAsUser?: Prisma.FriendshipUpdateManyWithoutUserNestedInput
+  friendshipsAsFriend?: Prisma.FriendshipUpdateManyWithoutFriendNestedInput
+  gamesAsBlack?: Prisma.GameSessionUpdateManyWithoutBlackPlayerNestedInput
+  invitesCreated?: Prisma.InviteUpdateManyWithoutCreatedByNestedInput
+  invitesReceived?: Prisma.InviteUpdateManyWithoutReceiverNestedInput
+}
+
+export type UserUncheckedUpdateWithoutGamesAsWhiteInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  rating?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  refreshTokens?: Prisma.RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
+  sentFriendRequests?: Prisma.FriendRequestUncheckedUpdateManyWithoutSenderNestedInput
+  receivedFriendRequests?: Prisma.FriendRequestUncheckedUpdateManyWithoutReceiverNestedInput
+  friendshipsAsUser?: Prisma.FriendshipUncheckedUpdateManyWithoutUserNestedInput
+  friendshipsAsFriend?: Prisma.FriendshipUncheckedUpdateManyWithoutFriendNestedInput
+  gamesAsBlack?: Prisma.GameSessionUncheckedUpdateManyWithoutBlackPlayerNestedInput
+  invitesCreated?: Prisma.InviteUncheckedUpdateManyWithoutCreatedByNestedInput
+  invitesReceived?: Prisma.InviteUncheckedUpdateManyWithoutReceiverNestedInput
+}
+
+export type UserUpsertWithoutGamesAsBlackInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutGamesAsBlackInput, Prisma.UserUncheckedUpdateWithoutGamesAsBlackInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutGamesAsBlackInput, Prisma.UserUncheckedCreateWithoutGamesAsBlackInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutGamesAsBlackInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutGamesAsBlackInput, Prisma.UserUncheckedUpdateWithoutGamesAsBlackInput>
+}
+
+export type UserUpdateWithoutGamesAsBlackInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  rating?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  refreshTokens?: Prisma.RefreshTokenUpdateManyWithoutUserNestedInput
+  sentFriendRequests?: Prisma.FriendRequestUpdateManyWithoutSenderNestedInput
+  receivedFriendRequests?: Prisma.FriendRequestUpdateManyWithoutReceiverNestedInput
+  friendshipsAsUser?: Prisma.FriendshipUpdateManyWithoutUserNestedInput
+  friendshipsAsFriend?: Prisma.FriendshipUpdateManyWithoutFriendNestedInput
+  gamesAsWhite?: Prisma.GameSessionUpdateManyWithoutWhitePlayerNestedInput
+  invitesCreated?: Prisma.InviteUpdateManyWithoutCreatedByNestedInput
+  invitesReceived?: Prisma.InviteUpdateManyWithoutReceiverNestedInput
+}
+
+export type UserUncheckedUpdateWithoutGamesAsBlackInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  rating?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  refreshTokens?: Prisma.RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
+  sentFriendRequests?: Prisma.FriendRequestUncheckedUpdateManyWithoutSenderNestedInput
+  receivedFriendRequests?: Prisma.FriendRequestUncheckedUpdateManyWithoutReceiverNestedInput
+  friendshipsAsUser?: Prisma.FriendshipUncheckedUpdateManyWithoutUserNestedInput
+  friendshipsAsFriend?: Prisma.FriendshipUncheckedUpdateManyWithoutFriendNestedInput
+  gamesAsWhite?: Prisma.GameSessionUncheckedUpdateManyWithoutWhitePlayerNestedInput
+  invitesCreated?: Prisma.InviteUncheckedUpdateManyWithoutCreatedByNestedInput
+  invitesReceived?: Prisma.InviteUncheckedUpdateManyWithoutReceiverNestedInput
+}
+
+export type UserCreateWithoutInvitesCreatedInput = {
+  id?: string
+  username: string
+  email: string
+  passwordHash: string
+  rating?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  refreshTokens?: Prisma.RefreshTokenCreateNestedManyWithoutUserInput
+  sentFriendRequests?: Prisma.FriendRequestCreateNestedManyWithoutSenderInput
+  receivedFriendRequests?: Prisma.FriendRequestCreateNestedManyWithoutReceiverInput
+  friendshipsAsUser?: Prisma.FriendshipCreateNestedManyWithoutUserInput
+  friendshipsAsFriend?: Prisma.FriendshipCreateNestedManyWithoutFriendInput
+  gamesAsWhite?: Prisma.GameSessionCreateNestedManyWithoutWhitePlayerInput
+  gamesAsBlack?: Prisma.GameSessionCreateNestedManyWithoutBlackPlayerInput
+  invitesReceived?: Prisma.InviteCreateNestedManyWithoutReceiverInput
+}
+
+export type UserUncheckedCreateWithoutInvitesCreatedInput = {
+  id?: string
+  username: string
+  email: string
+  passwordHash: string
+  rating?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  refreshTokens?: Prisma.RefreshTokenUncheckedCreateNestedManyWithoutUserInput
+  sentFriendRequests?: Prisma.FriendRequestUncheckedCreateNestedManyWithoutSenderInput
+  receivedFriendRequests?: Prisma.FriendRequestUncheckedCreateNestedManyWithoutReceiverInput
+  friendshipsAsUser?: Prisma.FriendshipUncheckedCreateNestedManyWithoutUserInput
+  friendshipsAsFriend?: Prisma.FriendshipUncheckedCreateNestedManyWithoutFriendInput
+  gamesAsWhite?: Prisma.GameSessionUncheckedCreateNestedManyWithoutWhitePlayerInput
+  gamesAsBlack?: Prisma.GameSessionUncheckedCreateNestedManyWithoutBlackPlayerInput
+  invitesReceived?: Prisma.InviteUncheckedCreateNestedManyWithoutReceiverInput
+}
+
+export type UserCreateOrConnectWithoutInvitesCreatedInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutInvitesCreatedInput, Prisma.UserUncheckedCreateWithoutInvitesCreatedInput>
+}
+
+export type UserCreateWithoutInvitesReceivedInput = {
+  id?: string
+  username: string
+  email: string
+  passwordHash: string
+  rating?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  refreshTokens?: Prisma.RefreshTokenCreateNestedManyWithoutUserInput
+  sentFriendRequests?: Prisma.FriendRequestCreateNestedManyWithoutSenderInput
+  receivedFriendRequests?: Prisma.FriendRequestCreateNestedManyWithoutReceiverInput
+  friendshipsAsUser?: Prisma.FriendshipCreateNestedManyWithoutUserInput
+  friendshipsAsFriend?: Prisma.FriendshipCreateNestedManyWithoutFriendInput
+  gamesAsWhite?: Prisma.GameSessionCreateNestedManyWithoutWhitePlayerInput
+  gamesAsBlack?: Prisma.GameSessionCreateNestedManyWithoutBlackPlayerInput
+  invitesCreated?: Prisma.InviteCreateNestedManyWithoutCreatedByInput
+}
+
+export type UserUncheckedCreateWithoutInvitesReceivedInput = {
+  id?: string
+  username: string
+  email: string
+  passwordHash: string
+  rating?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  refreshTokens?: Prisma.RefreshTokenUncheckedCreateNestedManyWithoutUserInput
+  sentFriendRequests?: Prisma.FriendRequestUncheckedCreateNestedManyWithoutSenderInput
+  receivedFriendRequests?: Prisma.FriendRequestUncheckedCreateNestedManyWithoutReceiverInput
+  friendshipsAsUser?: Prisma.FriendshipUncheckedCreateNestedManyWithoutUserInput
+  friendshipsAsFriend?: Prisma.FriendshipUncheckedCreateNestedManyWithoutFriendInput
+  gamesAsWhite?: Prisma.GameSessionUncheckedCreateNestedManyWithoutWhitePlayerInput
+  gamesAsBlack?: Prisma.GameSessionUncheckedCreateNestedManyWithoutBlackPlayerInput
+  invitesCreated?: Prisma.InviteUncheckedCreateNestedManyWithoutCreatedByInput
+}
+
+export type UserCreateOrConnectWithoutInvitesReceivedInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutInvitesReceivedInput, Prisma.UserUncheckedCreateWithoutInvitesReceivedInput>
+}
+
+export type UserUpsertWithoutInvitesCreatedInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutInvitesCreatedInput, Prisma.UserUncheckedUpdateWithoutInvitesCreatedInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutInvitesCreatedInput, Prisma.UserUncheckedCreateWithoutInvitesCreatedInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutInvitesCreatedInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutInvitesCreatedInput, Prisma.UserUncheckedUpdateWithoutInvitesCreatedInput>
+}
+
+export type UserUpdateWithoutInvitesCreatedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  rating?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  refreshTokens?: Prisma.RefreshTokenUpdateManyWithoutUserNestedInput
+  sentFriendRequests?: Prisma.FriendRequestUpdateManyWithoutSenderNestedInput
+  receivedFriendRequests?: Prisma.FriendRequestUpdateManyWithoutReceiverNestedInput
+  friendshipsAsUser?: Prisma.FriendshipUpdateManyWithoutUserNestedInput
+  friendshipsAsFriend?: Prisma.FriendshipUpdateManyWithoutFriendNestedInput
+  gamesAsWhite?: Prisma.GameSessionUpdateManyWithoutWhitePlayerNestedInput
+  gamesAsBlack?: Prisma.GameSessionUpdateManyWithoutBlackPlayerNestedInput
+  invitesReceived?: Prisma.InviteUpdateManyWithoutReceiverNestedInput
+}
+
+export type UserUncheckedUpdateWithoutInvitesCreatedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  rating?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  refreshTokens?: Prisma.RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
+  sentFriendRequests?: Prisma.FriendRequestUncheckedUpdateManyWithoutSenderNestedInput
+  receivedFriendRequests?: Prisma.FriendRequestUncheckedUpdateManyWithoutReceiverNestedInput
+  friendshipsAsUser?: Prisma.FriendshipUncheckedUpdateManyWithoutUserNestedInput
+  friendshipsAsFriend?: Prisma.FriendshipUncheckedUpdateManyWithoutFriendNestedInput
+  gamesAsWhite?: Prisma.GameSessionUncheckedUpdateManyWithoutWhitePlayerNestedInput
+  gamesAsBlack?: Prisma.GameSessionUncheckedUpdateManyWithoutBlackPlayerNestedInput
+  invitesReceived?: Prisma.InviteUncheckedUpdateManyWithoutReceiverNestedInput
+}
+
+export type UserUpsertWithoutInvitesReceivedInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutInvitesReceivedInput, Prisma.UserUncheckedUpdateWithoutInvitesReceivedInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutInvitesReceivedInput, Prisma.UserUncheckedCreateWithoutInvitesReceivedInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutInvitesReceivedInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutInvitesReceivedInput, Prisma.UserUncheckedUpdateWithoutInvitesReceivedInput>
+}
+
+export type UserUpdateWithoutInvitesReceivedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  rating?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  refreshTokens?: Prisma.RefreshTokenUpdateManyWithoutUserNestedInput
+  sentFriendRequests?: Prisma.FriendRequestUpdateManyWithoutSenderNestedInput
+  receivedFriendRequests?: Prisma.FriendRequestUpdateManyWithoutReceiverNestedInput
+  friendshipsAsUser?: Prisma.FriendshipUpdateManyWithoutUserNestedInput
+  friendshipsAsFriend?: Prisma.FriendshipUpdateManyWithoutFriendNestedInput
+  gamesAsWhite?: Prisma.GameSessionUpdateManyWithoutWhitePlayerNestedInput
+  gamesAsBlack?: Prisma.GameSessionUpdateManyWithoutBlackPlayerNestedInput
+  invitesCreated?: Prisma.InviteUpdateManyWithoutCreatedByNestedInput
+}
+
+export type UserUncheckedUpdateWithoutInvitesReceivedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  rating?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  refreshTokens?: Prisma.RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
+  sentFriendRequests?: Prisma.FriendRequestUncheckedUpdateManyWithoutSenderNestedInput
+  receivedFriendRequests?: Prisma.FriendRequestUncheckedUpdateManyWithoutReceiverNestedInput
+  friendshipsAsUser?: Prisma.FriendshipUncheckedUpdateManyWithoutUserNestedInput
+  friendshipsAsFriend?: Prisma.FriendshipUncheckedUpdateManyWithoutFriendNestedInput
+  gamesAsWhite?: Prisma.GameSessionUncheckedUpdateManyWithoutWhitePlayerNestedInput
+  gamesAsBlack?: Prisma.GameSessionUncheckedUpdateManyWithoutBlackPlayerNestedInput
+  invitesCreated?: Prisma.InviteUncheckedUpdateManyWithoutCreatedByNestedInput
 }
 
 
@@ -498,10 +1413,26 @@ export type UserUncheckedUpdateWithoutRefreshTokensInput = {
 
 export type UserCountOutputType = {
   refreshTokens: number
+  sentFriendRequests: number
+  receivedFriendRequests: number
+  friendshipsAsUser: number
+  friendshipsAsFriend: number
+  gamesAsWhite: number
+  gamesAsBlack: number
+  invitesCreated: number
+  invitesReceived: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   refreshTokens?: boolean | UserCountOutputTypeCountRefreshTokensArgs
+  sentFriendRequests?: boolean | UserCountOutputTypeCountSentFriendRequestsArgs
+  receivedFriendRequests?: boolean | UserCountOutputTypeCountReceivedFriendRequestsArgs
+  friendshipsAsUser?: boolean | UserCountOutputTypeCountFriendshipsAsUserArgs
+  friendshipsAsFriend?: boolean | UserCountOutputTypeCountFriendshipsAsFriendArgs
+  gamesAsWhite?: boolean | UserCountOutputTypeCountGamesAsWhiteArgs
+  gamesAsBlack?: boolean | UserCountOutputTypeCountGamesAsBlackArgs
+  invitesCreated?: boolean | UserCountOutputTypeCountInvitesCreatedArgs
+  invitesReceived?: boolean | UserCountOutputTypeCountInvitesReceivedArgs
 }
 
 /**
@@ -521,6 +1452,62 @@ export type UserCountOutputTypeCountRefreshTokensArgs<ExtArgs extends runtime.Ty
   where?: Prisma.RefreshTokenWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountSentFriendRequestsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.FriendRequestWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountReceivedFriendRequestsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.FriendRequestWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountFriendshipsAsUserArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.FriendshipWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountFriendshipsAsFriendArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.FriendshipWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountGamesAsWhiteArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.GameSessionWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountGamesAsBlackArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.GameSessionWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountInvitesCreatedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.InviteWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountInvitesReceivedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.InviteWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -531,6 +1518,14 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   createdAt?: boolean
   updatedAt?: boolean
   refreshTokens?: boolean | Prisma.User$refreshTokensArgs<ExtArgs>
+  sentFriendRequests?: boolean | Prisma.User$sentFriendRequestsArgs<ExtArgs>
+  receivedFriendRequests?: boolean | Prisma.User$receivedFriendRequestsArgs<ExtArgs>
+  friendshipsAsUser?: boolean | Prisma.User$friendshipsAsUserArgs<ExtArgs>
+  friendshipsAsFriend?: boolean | Prisma.User$friendshipsAsFriendArgs<ExtArgs>
+  gamesAsWhite?: boolean | Prisma.User$gamesAsWhiteArgs<ExtArgs>
+  gamesAsBlack?: boolean | Prisma.User$gamesAsBlackArgs<ExtArgs>
+  invitesCreated?: boolean | Prisma.User$invitesCreatedArgs<ExtArgs>
+  invitesReceived?: boolean | Prisma.User$invitesReceivedArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -567,6 +1562,14 @@ export type UserSelectScalar = {
 export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "username" | "email" | "passwordHash" | "rating" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   refreshTokens?: boolean | Prisma.User$refreshTokensArgs<ExtArgs>
+  sentFriendRequests?: boolean | Prisma.User$sentFriendRequestsArgs<ExtArgs>
+  receivedFriendRequests?: boolean | Prisma.User$receivedFriendRequestsArgs<ExtArgs>
+  friendshipsAsUser?: boolean | Prisma.User$friendshipsAsUserArgs<ExtArgs>
+  friendshipsAsFriend?: boolean | Prisma.User$friendshipsAsFriendArgs<ExtArgs>
+  gamesAsWhite?: boolean | Prisma.User$gamesAsWhiteArgs<ExtArgs>
+  gamesAsBlack?: boolean | Prisma.User$gamesAsBlackArgs<ExtArgs>
+  invitesCreated?: boolean | Prisma.User$invitesCreatedArgs<ExtArgs>
+  invitesReceived?: boolean | Prisma.User$invitesReceivedArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -576,6 +1579,14 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   name: "User"
   objects: {
     refreshTokens: Prisma.$RefreshTokenPayload<ExtArgs>[]
+    sentFriendRequests: Prisma.$FriendRequestPayload<ExtArgs>[]
+    receivedFriendRequests: Prisma.$FriendRequestPayload<ExtArgs>[]
+    friendshipsAsUser: Prisma.$FriendshipPayload<ExtArgs>[]
+    friendshipsAsFriend: Prisma.$FriendshipPayload<ExtArgs>[]
+    gamesAsWhite: Prisma.$GameSessionPayload<ExtArgs>[]
+    gamesAsBlack: Prisma.$GameSessionPayload<ExtArgs>[]
+    invitesCreated: Prisma.$InvitePayload<ExtArgs>[]
+    invitesReceived: Prisma.$InvitePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -980,6 +1991,14 @@ readonly fields: UserFieldRefs;
 export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   refreshTokens<T extends Prisma.User$refreshTokensArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$refreshTokensArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RefreshTokenPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  sentFriendRequests<T extends Prisma.User$sentFriendRequestsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$sentFriendRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FriendRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  receivedFriendRequests<T extends Prisma.User$receivedFriendRequestsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$receivedFriendRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FriendRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  friendshipsAsUser<T extends Prisma.User$friendshipsAsUserArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$friendshipsAsUserArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FriendshipPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  friendshipsAsFriend<T extends Prisma.User$friendshipsAsFriendArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$friendshipsAsFriendArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FriendshipPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  gamesAsWhite<T extends Prisma.User$gamesAsWhiteArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$gamesAsWhiteArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$GameSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  gamesAsBlack<T extends Prisma.User$gamesAsBlackArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$gamesAsBlackArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$GameSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  invitesCreated<T extends Prisma.User$invitesCreatedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$invitesCreatedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$InvitePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  invitesReceived<T extends Prisma.User$invitesReceivedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$invitesReceivedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$InvitePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1425,6 +2444,198 @@ export type User$refreshTokensArgs<ExtArgs extends runtime.Types.Extensions.Inte
   take?: number
   skip?: number
   distinct?: Prisma.RefreshTokenScalarFieldEnum | Prisma.RefreshTokenScalarFieldEnum[]
+}
+
+/**
+ * User.sentFriendRequests
+ */
+export type User$sentFriendRequestsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the FriendRequest
+   */
+  select?: Prisma.FriendRequestSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the FriendRequest
+   */
+  omit?: Prisma.FriendRequestOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.FriendRequestInclude<ExtArgs> | null
+  where?: Prisma.FriendRequestWhereInput
+  orderBy?: Prisma.FriendRequestOrderByWithRelationInput | Prisma.FriendRequestOrderByWithRelationInput[]
+  cursor?: Prisma.FriendRequestWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.FriendRequestScalarFieldEnum | Prisma.FriendRequestScalarFieldEnum[]
+}
+
+/**
+ * User.receivedFriendRequests
+ */
+export type User$receivedFriendRequestsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the FriendRequest
+   */
+  select?: Prisma.FriendRequestSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the FriendRequest
+   */
+  omit?: Prisma.FriendRequestOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.FriendRequestInclude<ExtArgs> | null
+  where?: Prisma.FriendRequestWhereInput
+  orderBy?: Prisma.FriendRequestOrderByWithRelationInput | Prisma.FriendRequestOrderByWithRelationInput[]
+  cursor?: Prisma.FriendRequestWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.FriendRequestScalarFieldEnum | Prisma.FriendRequestScalarFieldEnum[]
+}
+
+/**
+ * User.friendshipsAsUser
+ */
+export type User$friendshipsAsUserArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Friendship
+   */
+  select?: Prisma.FriendshipSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Friendship
+   */
+  omit?: Prisma.FriendshipOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.FriendshipInclude<ExtArgs> | null
+  where?: Prisma.FriendshipWhereInput
+  orderBy?: Prisma.FriendshipOrderByWithRelationInput | Prisma.FriendshipOrderByWithRelationInput[]
+  cursor?: Prisma.FriendshipWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.FriendshipScalarFieldEnum | Prisma.FriendshipScalarFieldEnum[]
+}
+
+/**
+ * User.friendshipsAsFriend
+ */
+export type User$friendshipsAsFriendArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Friendship
+   */
+  select?: Prisma.FriendshipSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Friendship
+   */
+  omit?: Prisma.FriendshipOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.FriendshipInclude<ExtArgs> | null
+  where?: Prisma.FriendshipWhereInput
+  orderBy?: Prisma.FriendshipOrderByWithRelationInput | Prisma.FriendshipOrderByWithRelationInput[]
+  cursor?: Prisma.FriendshipWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.FriendshipScalarFieldEnum | Prisma.FriendshipScalarFieldEnum[]
+}
+
+/**
+ * User.gamesAsWhite
+ */
+export type User$gamesAsWhiteArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the GameSession
+   */
+  select?: Prisma.GameSessionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the GameSession
+   */
+  omit?: Prisma.GameSessionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.GameSessionInclude<ExtArgs> | null
+  where?: Prisma.GameSessionWhereInput
+  orderBy?: Prisma.GameSessionOrderByWithRelationInput | Prisma.GameSessionOrderByWithRelationInput[]
+  cursor?: Prisma.GameSessionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.GameSessionScalarFieldEnum | Prisma.GameSessionScalarFieldEnum[]
+}
+
+/**
+ * User.gamesAsBlack
+ */
+export type User$gamesAsBlackArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the GameSession
+   */
+  select?: Prisma.GameSessionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the GameSession
+   */
+  omit?: Prisma.GameSessionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.GameSessionInclude<ExtArgs> | null
+  where?: Prisma.GameSessionWhereInput
+  orderBy?: Prisma.GameSessionOrderByWithRelationInput | Prisma.GameSessionOrderByWithRelationInput[]
+  cursor?: Prisma.GameSessionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.GameSessionScalarFieldEnum | Prisma.GameSessionScalarFieldEnum[]
+}
+
+/**
+ * User.invitesCreated
+ */
+export type User$invitesCreatedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Invite
+   */
+  select?: Prisma.InviteSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Invite
+   */
+  omit?: Prisma.InviteOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.InviteInclude<ExtArgs> | null
+  where?: Prisma.InviteWhereInput
+  orderBy?: Prisma.InviteOrderByWithRelationInput | Prisma.InviteOrderByWithRelationInput[]
+  cursor?: Prisma.InviteWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.InviteScalarFieldEnum | Prisma.InviteScalarFieldEnum[]
+}
+
+/**
+ * User.invitesReceived
+ */
+export type User$invitesReceivedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Invite
+   */
+  select?: Prisma.InviteSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Invite
+   */
+  omit?: Prisma.InviteOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.InviteInclude<ExtArgs> | null
+  where?: Prisma.InviteWhereInput
+  orderBy?: Prisma.InviteOrderByWithRelationInput | Prisma.InviteOrderByWithRelationInput[]
+  cursor?: Prisma.InviteWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.InviteScalarFieldEnum | Prisma.InviteScalarFieldEnum[]
 }
 
 /**

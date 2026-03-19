@@ -10,4 +10,8 @@
  */
 export type * from './models/User'
 export type * from './models/RefreshToken'
+export type * from './models/FriendRequest'
+export type * from './models/Friendship'
+export type * from './models/GameSession'
+export type * from './models/Invite'
 export type * from './commonInputTypes'

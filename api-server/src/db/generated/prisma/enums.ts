@@ -9,7 +9,29 @@
 * 🟢 You can import this file directly.
 */
 
+export const FriendRequestStatus = {
+  pending: 'pending',
+  accepted: 'accepted',
+  rejected: 'rejected',
+  cancelled: 'cancelled'
+} as const
+
+export type FriendRequestStatus = (typeof FriendRequestStatus)[keyof typeof FriendRequestStatus]
 
 
-// This file is empty because there are no enums in the schema.
-export {}
+export const GameStatus = {
+  waiting: 'waiting',
+  active: 'active',
+  finished: 'finished',
+  cancelled: 'cancelled'
+} as const
+
+export type GameStatus = (typeof GameStatus)[keyof typeof GameStatus]
+
+
+export const PieceColor = {
+  white: 'white',
+  black: 'black'
+} as const
+
+export type PieceColor = (typeof PieceColor)[keyof typeof PieceColor]

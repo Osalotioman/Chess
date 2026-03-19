@@ -1,6 +1,6 @@
 import type { WebSocket } from "ws";
 
-import type { Json } from "../protocol.js";
+import type { Json, PlayerIdentity } from "../protocol.js";
 import { RoomRegistry } from "../rooms/roomRegistry.js";
 import { broadcast, broadcastRaw, send } from "./socketMessaging.js";
 
@@ -29,6 +29,27 @@ function normalizeMoveField(value: unknown): string | null {
   return normalizedValue;
 }
 
+function normalizePlayerIdentity(value: unknown): PlayerIdentity {
+  if (!isRecord(value)) {
+    return { mode: "guest" };
+  }
+
+  const mode = value.mode === "account" ? "account" : "guest";
+  const guestId = typeof value.guestId === "string" ? value.guestId.trim().slice(0, 64) : undefined;
+  const guestName =
+    typeof value.guestName === "string" ? value.guestName.trim().slice(0, 32) : undefined;
+  const userId = typeof value.userId === "string" ? value.userId.trim().slice(0, 64) : undefined;
+  const username = typeof value.username === "string" ? value.username.trim().slice(0, 32) : undefined;
+
+  return {
+    mode,
+    guestId: guestId && guestId.length > 0 ? guestId : undefined,
+    guestName: guestName && guestName.length > 0 ? guestName : undefined,
+    userId: userId && userId.length > 0 ? userId : undefined,
+    username: username && username.length > 0 ? username : undefined,
+  };
+}
+
 function handleJsonMessage(roomRegistry: RoomRegistry, ws: WebSocket, obj: unknown) {
   if (!isRecord(obj)) {
     // eslint-disable-next-line no-console
@@ -49,6 +70,7 @@ function handleJsonMessage(roomRegistry: RoomRegistry, ws: WebSocket, obj: unkno
     }
 
     const normalizedRoom = room.trim();
+    const player = normalizePlayerIdentity(obj.player);
     const joinedRoom = roomRegistry.join(ws, normalizedRoom);
     if (!joinedRoom.joined) {
       return;
@@ -61,8 +83,12 @@ function handleJsonMessage(roomRegistry: RoomRegistry, ws: WebSocket, obj: unkno
       });
     }
 
-    send(ws, { type: "joined", room: normalizedRoom, peers: joinedRoom.peers });
-    broadcast(roomRegistry, normalizedRoom, ws, { type: "peer_joined", peers: joinedRoom.peers });
+    send(ws, { type: "joined", room: normalizedRoom, peers: joinedRoom.peers, player });
+    broadcast(roomRegistry, normalizedRoom, ws, {
+      type: "peer_joined",
+      peers: joinedRoom.peers,
+      player,
+    });
     return;
   }
 

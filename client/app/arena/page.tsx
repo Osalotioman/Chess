@@ -2,15 +2,52 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { ChessBoard } from "../components/ChessBoard";
+import { apiGet, apiPost } from "../lib/api";
+import { getAccessToken } from "../lib/session";
 import { useSettings } from "../lib/useSettings";
+import { usePlayerIdentity } from "../lib/usePlayerIdentity";
 import type { Square } from "chess.js";
+
+type InviteLookupResponse = {
+  invite: {
+    code: string;
+    roomCode: string;
+    status: string;
+    active: boolean;
+    expiresAt: string;
+  };
+};
+
+type InviteCreateResponse = {
+  invite: {
+    code: string;
+    roomCode: string;
+    expiresAt: string;
+  };
+};
+
+type InviteAcceptResponse = {
+  invite: {
+    code: string;
+    roomCode: string;
+    seat: "white" | "black" | "spectator";
+  };
+};
 
 export default function ArenaPage() {
   const { settings, mounted } = useSettings();
+  const { mode, setMode, guestProfile, setGuestDisplayName, ensureGuestProfile } = usePlayerIdentity();
   const [orientation, setOrientation] = useState<"white" | "black">("white");
   const [room, setRoom] = useState("championship-1");
   const [connected, setConnected] = useState(false);
   const [status, setStatus] = useState("Disconnected");
+  const [lastWsError, setLastWsError] = useState<string | null>(null);
+  const [peersInRoom, setPeersInRoom] = useState(0);
+  const [inviteLink, setInviteLink] = useState("");
+  const [inviteCode, setInviteCode] = useState<string | null>(null);
+  const [inviteInfo, setInviteInfo] = useState<string | null>(null);
+  const [inviteBusy, setInviteBusy] = useState(false);
+  const [copyStatus, setCopyStatus] = useState<"idle" | "copied" | "failed">("idle");
   const socketRef = useRef<WebSocket | null>(null);
   const retryTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const retryAttemptRef = useRef(0);
@@ -43,17 +80,29 @@ export default function ArenaPage() {
     const socket = new WebSocket(wsUrl);
     socketRef.current = socket;
     setStatus("Connecting...");
+    setLastWsError(null);
 
     socket.onopen = () => {
       setConnected(true);
       setStatus("Connected");
       retryAttemptRef.current = 0;
-      socket.send(JSON.stringify({ type: "join", room }));
+      socket.send(
+        JSON.stringify({
+          type: "join",
+          room,
+          player: {
+            mode,
+            guestId: guestProfile.id,
+            guestName: guestProfile.displayName,
+          },
+        })
+      );
     };
 
     socket.onclose = () => {
       setConnected(false);
       setStatus("Disconnected");
+      setPeersInRoom(0);
       socketRef.current = null;
 
       if (canAttemptConnect) {
@@ -63,6 +112,7 @@ export default function ArenaPage() {
 
     socket.onerror = () => {
       setStatus("Connection error");
+      setLastWsError("WebSocket transport error");
     };
 
     socket.onmessage = (event) => {
@@ -72,13 +122,29 @@ export default function ArenaPage() {
         const message = JSON.parse(raw) as {
           type?: string;
           room?: string;
+          peers?: number;
+          message?: string;
           from?: Square;
           to?: Square;
           promotion?: "q" | "r" | "b" | "n";
         };
 
-        if (message.type === "join" && message.room) {
-          setStatus(`Connected (room: ${message.room})`);
+        if (message.type === "joined" && message.room) {
+          setPeersInRoom(typeof message.peers === "number" ? message.peers : 0);
+          setStatus(`Connected (${mode} mode, room: ${message.room})`);
+          return;
+        }
+
+        if (message.type === "peer_joined" || message.type === "peer_left") {
+          if (typeof message.peers === "number") {
+            setPeersInRoom(message.peers);
+          }
+          return;
+        }
+
+        if (message.type === "error" && message.message) {
+          setLastWsError(message.message);
+          setStatus(message.message);
           return;
         }
 
@@ -139,6 +205,119 @@ export default function ArenaPage() {
   }
 
   useEffect(() => {
+    ensureGuestProfile();
+    if (typeof window === "undefined") return;
+
+    const params = new URLSearchParams(window.location.search);
+    const inviteFromQuery = params.get("invite");
+    const roomFromQuery = params.get("room");
+
+    if (inviteFromQuery && inviteFromQuery.trim()) {
+      setInviteCode(inviteFromQuery.trim());
+    }
+
+    if (roomFromQuery && roomFromQuery.trim()) {
+      setRoom(roomFromQuery.trim());
+    }
+  }, [ensureGuestProfile]);
+
+  useEffect(() => {
+    if (!inviteCode) return;
+
+    let active = true;
+    setInviteBusy(true);
+    setInviteInfo("Resolving invite...");
+
+    apiGet<InviteLookupResponse>(`/invites/${encodeURIComponent(inviteCode)}`)
+      .then((response) => {
+        if (!active) return;
+        setRoom(response.invite.roomCode);
+        setInviteInfo(response.invite.active ? "Invite ready to join" : "Invite is no longer active");
+      })
+      .catch(() => {
+        if (!active) return;
+        setInviteInfo("Unable to resolve invite link");
+      })
+      .finally(() => {
+        if (active) setInviteBusy(false);
+      });
+
+    return () => {
+      active = false;
+    };
+  }, [inviteCode]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const origin = window.location.origin;
+    const link = inviteCode
+      ? `${origin}/arena?invite=${encodeURIComponent(inviteCode)}`
+      : `${origin}/arena?room=${encodeURIComponent(room.trim() || "championship-1")}`;
+    setInviteLink(link);
+    setCopyStatus("idle");
+  }, [room, inviteCode]);
+
+  async function createSignedInvite() {
+    const token = getAccessToken();
+    if (!token) {
+      setInviteInfo("Log in to create signed invites. Using room link mode.");
+      return;
+    }
+
+    setInviteBusy(true);
+    try {
+      const response = await apiPost<InviteCreateResponse>(
+        "/invites",
+        {
+          roomCode: room.trim() || "championship-1",
+        },
+        { token }
+      );
+      setInviteCode(response.invite.code);
+      setRoom(response.invite.roomCode);
+      setInviteInfo("Signed invite created");
+    } catch {
+      setInviteInfo("Unable to create signed invite");
+    } finally {
+      setInviteBusy(false);
+    }
+  }
+
+  async function acceptInvite() {
+    if (!inviteCode) return;
+
+    const token = getAccessToken();
+    if (!token) {
+      setInviteInfo("Log in to accept invite links");
+      return;
+    }
+
+    setInviteBusy(true);
+    try {
+      const response = await apiPost<InviteAcceptResponse>(
+        `/invites/${encodeURIComponent(inviteCode)}/accept`,
+        undefined,
+        { token }
+      );
+      setRoom(response.invite.roomCode);
+      setInviteInfo(`Invite accepted as ${response.invite.seat}`);
+    } catch {
+      setInviteInfo("Unable to accept invite");
+    } finally {
+      setInviteBusy(false);
+    }
+  }
+
+  async function copyInviteLink() {
+    try {
+      await navigator.clipboard.writeText(inviteLink);
+      setCopyStatus("copied");
+    } catch {
+      setCopyStatus("failed");
+    }
+  }
+
+  useEffect(() => {
     if (!mounted) return;
     setOrientation(settings.boardOrientation);
   }, [mounted, settings.boardOrientation]);
@@ -168,12 +347,12 @@ export default function ArenaPage() {
 
   return (
     <main className="page-shell">
-      <header className="topbar">
+      <header className="topbar shell-card">
         <h1>Chess Championship Arena</h1>
-        <p>Compete in real-time chess tournaments</p>
+        <p>Live competitive board with direct WebSocket play.</p>
       </header>
 
-      <section className="panel arena-status">
+      <section className="panel arena-status shell-card">
         <div className="arena-status-row">
           <div className="arena-status-left">
             <div className={`pill ${connected ? "ok" : "warn"}`}>{connected ? "Live" : "Offline"}</div>
@@ -203,9 +382,61 @@ export default function ArenaPage() {
               onChange={(e) => setRoom(e.target.value)}
               placeholder="championship-1"
             />
+            <select
+              aria-label="Play mode"
+              value={mode}
+              onChange={(e) => setMode(e.target.value as "guest" | "account")}
+            >
+              <option value="guest">Play as Guest</option>
+              <option value="account">Play with Account (coming soon)</option>
+            </select>
+            {mode === "guest" ? (
+              <input
+                aria-label="Guest display name"
+                value={guestProfile.displayName}
+                onChange={(e) => setGuestDisplayName(e.target.value)}
+                placeholder="Guest display name"
+              />
+            ) : null}
             <div className="arena-autoconnect">
               Auto-connect: <strong>{autoConnectEnabled ? "On" : "Off"}</strong>
             </div>
+            <div className="arena-meta-grid">
+              <div>
+                Peers in room: <strong>{peersInRoom}</strong>
+              </div>
+              <div>
+                Mode: <strong>{mode === "guest" ? "Guest" : "Account"}</strong>
+              </div>
+              <div>
+                Guest ID: <strong>{guestProfile.id}</strong>
+              </div>
+              <div>
+                WS endpoint: <code>{wsUrl}</code>
+              </div>
+              <div>
+                Last WS error: <strong>{lastWsError ?? "None"}</strong>
+              </div>
+            </div>
+
+            <div className="invite-strip">
+              <input readOnly value={inviteLink} aria-label="Invite link" />
+              <button onClick={copyInviteLink} className="control-btn" type="button">
+                Copy Invite Link
+              </button>
+              <button onClick={createSignedInvite} className="control-btn" type="button" disabled={inviteBusy}>
+                Create Signed Invite
+              </button>
+              {inviteCode ? (
+                <button onClick={acceptInvite} className="control-btn" type="button" disabled={inviteBusy}>
+                  Accept Invite
+                </button>
+              ) : null}
+              <span className="invite-copy-state">
+                {copyStatus === "copied" ? "Copied" : copyStatus === "failed" ? "Copy failed" : ""}
+              </span>
+            </div>
+            {inviteInfo ? <div className="lobby-note">{inviteInfo}</div> : null}
           </div>
         </details>
       </section>

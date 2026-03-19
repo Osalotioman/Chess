@@ -7,15 +7,42 @@ datasource db {
   provider = "postgresql"
 }
 
+enum FriendRequestStatus {
+  pending
+  accepted
+  rejected
+  cancelled
+}
+
+enum GameStatus {
+  waiting
+  active
+  finished
+  cancelled
+}
+
+enum PieceColor {
+  white
+  black
+}
+
 model User {
-  id           String         @id @default(cuid())
-  username     String         @unique
-  email        String         @unique
-  passwordHash String
-  rating       Int            @default(1200)
-  createdAt    DateTime       @default(now())
-  updatedAt    DateTime       @updatedAt
-  refreshTokens RefreshToken[]
+  id                     String          @id @default(cuid())
+  username               String          @unique
+  email                  String          @unique
+  passwordHash           String
+  rating                 Int             @default(1200)
+  createdAt              DateTime        @default(now())
+  updatedAt              DateTime        @updatedAt
+  refreshTokens          RefreshToken[]
+  sentFriendRequests     FriendRequest[] @relation("FriendRequestSender")
+  receivedFriendRequests FriendRequest[] @relation("FriendRequestReceiver")
+  friendshipsAsUser      Friendship[]    @relation("FriendshipUser")
+  friendshipsAsFriend    Friendship[]    @relation("FriendshipFriend")
+  gamesAsWhite           GameSession[]   @relation("GameWhitePlayer")
+  gamesAsBlack           GameSession[]   @relation("GameBlackPlayer")
+  invitesCreated         Invite[]        @relation("InviteCreator")
+  invitesReceived        Invite[]        @relation("InviteReceiver")
 
   @@map("users")
 }
@@ -33,4 +60,80 @@ model RefreshToken {
   @@index([userId])
   @@index([expiresAt])
   @@map("refresh_tokens")
+}
+
+model FriendRequest {
+  id         String              @id @default(cuid())
+  senderId   String
+  receiverId String
+  status     FriendRequestStatus @default(pending)
+  createdAt  DateTime            @default(now())
+  updatedAt  DateTime            @updatedAt
+  respondedAt DateTime?
+
+  sender   User @relation("FriendRequestSender", fields: [senderId], references: [id], onDelete: Cascade)
+  receiver User @relation("FriendRequestReceiver", fields: [receiverId], references: [id], onDelete: Cascade)
+
+  @@index([senderId])
+  @@index([receiverId])
+  @@index([status])
+  @@map("friend_requests")
+}
+
+model Friendship {
+  id        String   @id @default(cuid())
+  userId    String
+  friendId  String
+  createdAt DateTime @default(now())
+
+  user   User @relation("FriendshipUser", fields: [userId], references: [id], onDelete: Cascade)
+  friend User @relation("FriendshipFriend", fields: [friendId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, friendId])
+  @@index([userId])
+  @@index([friendId])
+  @@map("friendships")
+}
+
+model GameSession {
+  id            String     @id @default(cuid())
+  roomCode      String     @unique
+  status        GameStatus @default(waiting)
+  whitePlayerId String?
+  blackPlayerId String?
+  turnColor     PieceColor @default(white)
+  fen           String
+  moveCount     Int        @default(0)
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+
+  whitePlayer User?   @relation("GameWhitePlayer", fields: [whitePlayerId], references: [id], onDelete: SetNull)
+  blackPlayer User?   @relation("GameBlackPlayer", fields: [blackPlayerId], references: [id], onDelete: SetNull)
+  invites     Invite[]
+
+  @@index([status])
+  @@index([whitePlayerId])
+  @@index([blackPlayerId])
+  @@map("game_sessions")
+}
+
+model Invite {
+  id            String     @id @default(cuid())
+  code          String     @unique
+  gameSessionId String
+  createdById   String
+  receiverId    String?
+  status        GameStatus @default(waiting)
+  expiresAt     DateTime
+  createdAt     DateTime   @default(now())
+
+  gameSession GameSession @relation(fields: [gameSessionId], references: [id], onDelete: Cascade)
+  createdBy   User        @relation("InviteCreator", fields: [createdById], references: [id], onDelete: Cascade)
+  receiver    User?       @relation("InviteReceiver", fields: [receiverId], references: [id], onDelete: SetNull)
+
+  @@index([gameSessionId])
+  @@index([createdById])
+  @@index([receiverId])
+  @@index([expiresAt])
+  @@map("invites")
 }
