@@ -1,7 +1,9 @@
 import type { WebSocket } from "ws";
 
 import type { Json, PlayerIdentity } from "../protocol.js";
+import { apiServerOrigin, internalWsSharedSecret } from "../config.js";
 import { RoomRegistry } from "../rooms/roomRegistry.js";
+import { authorizeAndAdvanceMove } from "../services/internalApi.js";
 import { broadcast, broadcastRaw, send } from "./socketMessaging.js";
 
 function safeJsonParse(raw: string): Json | undefined {
@@ -50,7 +52,7 @@ function normalizePlayerIdentity(value: unknown): PlayerIdentity {
   };
 }
 
-function handleJsonMessage(roomRegistry: RoomRegistry, ws: WebSocket, obj: unknown) {
+async function handleJsonMessage(roomRegistry: RoomRegistry, ws: WebSocket, obj: unknown) {
   if (!isRecord(obj)) {
     // eslint-disable-next-line no-console
     console.log("This message is not a record:", obj);
@@ -71,7 +73,7 @@ function handleJsonMessage(roomRegistry: RoomRegistry, ws: WebSocket, obj: unkno
 
     const normalizedRoom = room.trim();
     const player = normalizePlayerIdentity(obj.player);
-    const joinedRoom = roomRegistry.join(ws, normalizedRoom);
+    const joinedRoom = roomRegistry.join(ws, normalizedRoom, player);
     if (!joinedRoom.joined) {
       return;
     }
@@ -99,12 +101,36 @@ function handleJsonMessage(roomRegistry: RoomRegistry, ws: WebSocket, obj: unkno
       return;
     }
 
+    if (!internalWsSharedSecret) {
+      send(ws, { type: "error", message: "Move verification unavailable on server" });
+      return;
+    }
+
     const from = normalizeMoveField(obj.from);
     const to = normalizeMoveField(obj.to);
     const promotion = typeof obj.promotion === "string" ? obj.promotion : undefined;
 
     if (!from || !to) {
       send(ws, { type: "error", message: "Invalid move" });
+      return;
+    }
+
+    const player = roomRegistry.getPlayer(ws);
+    let authorization;
+    try {
+      authorization = await authorizeAndAdvanceMove(
+        apiServerOrigin,
+        internalWsSharedSecret,
+        room,
+        player
+      );
+    } catch {
+      send(ws, { type: "error", message: "Move verification request failed" });
+      return;
+    }
+
+    if (!authorization.ok) {
+      send(ws, { type: "error", message: authorization.reason ?? "Move not authorized" });
       return;
     }
 
@@ -126,10 +152,10 @@ function handleLegacyMessage(roomRegistry: RoomRegistry, ws: WebSocket, raw: str
   broadcastRaw(roomRegistry, room, ws, raw);
 }
 
-export function handleIncomingMessage(roomRegistry: RoomRegistry, ws: WebSocket, raw: string) {
+export async function handleIncomingMessage(roomRegistry: RoomRegistry, ws: WebSocket, raw: string) {
   const parsed = safeJsonParse(raw);
   if (parsed !== undefined) {
-    handleJsonMessage(roomRegistry, ws, parsed);
+    await handleJsonMessage(roomRegistry, ws, parsed);
     return;
   }
 

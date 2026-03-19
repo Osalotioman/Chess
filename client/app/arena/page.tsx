@@ -1,12 +1,12 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { ChessBoard } from "../components/ChessBoard";
+import { ChessBoard } from "@components/ChessBoard";
+import { apiGet, apiPost } from "@lib/api";
+import { getAccessToken, getStoredSession } from "@lib/session";
+import { usePlayerIdentity } from "@lib/usePlayerIdentity";
+import { useSettings } from "@lib/useSettings";
 import { ArenaSidebar } from "./ArenaSidebar";
-import { apiGet, apiPost } from "../lib/api";
-import { getAccessToken } from "../lib/session";
-import { useSettings } from "../lib/useSettings";
-import { usePlayerIdentity } from "../lib/usePlayerIdentity";
 import type { InviteAcceptResponse, InviteCreateResponse, InviteLookupResponse } from "./types";
 import { useArenaRealtime } from "./useArenaRealtime";
 
@@ -37,6 +37,7 @@ export default function ArenaPage() {
       room,
       mode,
       guestProfile,
+      accountProfile: getStoredSession()?.user ?? null,
       canAttemptConnect,
     });
 

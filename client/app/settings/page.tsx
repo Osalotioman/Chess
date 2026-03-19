@@ -90,19 +90,18 @@ export default function SettingsPage() {
           </select>
         </div>
 
-        <button
-          onClick={() => setSettings(defaultSettings)}
-          className="btn btn-secondary"
-        >
-          Reset to Defaults
-        </button>
+        <div className="settings-action-row">
+          <button onClick={() => setSettings(defaultSettings)} className="control-btn settings-btn" type="button">
+            Reset to Defaults
+          </button>
+        </div>
       </section>
 
       <div className="settings-footer">
-        <Link href="/" className="btn btn-secondary">
+        <Link href="/" className="control-btn settings-btn">
           Back to Home
         </Link>
-        <Link href="/arena" className="btn btn-primary">
+        <Link href="/arena" className="control-btn settings-btn">
           Go to Arena
         </Link>
       </div>

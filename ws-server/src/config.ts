@@ -15,6 +15,10 @@ export const corsAllowCredentials = (process.env.CORS_ALLOW_CREDENTIALS ?? "true
 
 export const corsAllowNoOrigin = (process.env.CORS_ALLOW_NO_ORIGIN ?? "true") === "true";
 
+export const apiServerOrigin = process.env.API_SERVER_ORIGIN ?? "http://localhost:4000";
+
+export const internalWsSharedSecret = process.env.INTERNAL_WS_SHARED_SECRET ?? "";
+
 export function isOriginAllowed(origin: string | undefined): boolean {
 	if (!origin) {
 		return corsAllowNoOrigin;

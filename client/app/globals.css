@@ -35,6 +35,52 @@ body {
     linear-gradient(180deg, #0b1217 0%, #0d141a 100%);
 }
 
+.app-nav {
+  position: sticky;
+  top: 0;
+  z-index: 60;
+  padding: 0.55rem 1rem;
+  backdrop-filter: blur(10px);
+  background: color-mix(in srgb, #0b1217 82%, transparent);
+  border-bottom: 1px solid rgba(47, 78, 93, 0.65);
+}
+
+.app-nav-inner {
+  max-width: 1120px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  flex-wrap: wrap;
+}
+
+.app-nav-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 34px;
+  padding: 0 0.8rem;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 0.88rem;
+  font-weight: 600;
+  transition: border-color 0.2s ease, color 0.2s ease, background-color 0.2s ease;
+}
+
+.app-nav-link:hover {
+  color: var(--foreground);
+  border-color: rgba(107, 216, 166, 0.45);
+  background: rgba(17, 39, 49, 0.78);
+}
+
+.app-nav-link.is-active {
+  color: #092319;
+  border-color: rgba(107, 216, 166, 0.75);
+  background: linear-gradient(130deg, rgba(107, 216, 166, 0.95), rgba(188, 241, 221, 0.95));
+}
+
 .page-shell {
   min-height: 100svh;
   display: grid;
@@ -250,7 +296,8 @@ body {
   gap: 0.85rem;
   align-content: start;
   max-height: calc(100svh - 2rem);
-  overflow: auto;
+  overflow-x: clip;
+  overflow-y: auto;
   position: sticky;
   top: 1rem;
   z-index: 12;
@@ -342,12 +389,14 @@ body {
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  min-width: min(100%, 520px);
+  min-width: 0;
+  flex: 1 1 auto;
 }
 
 .arena-status-text {
   display: grid;
   gap: 0.15rem;
+  min-width: 0;
 }
 
 .arena-status-title {
@@ -357,6 +406,7 @@ body {
 .arena-status-sub {
   color: var(--muted);
   font-size: 0.92rem;
+  overflow-wrap: anywhere;
 }
 
 .pill {
@@ -381,17 +431,41 @@ body {
 
 .arena-details {
   margin-top: 0.75rem;
+  border: 1px solid rgba(73, 111, 129, 0.35);
+  border-radius: 10px;
+  background: rgba(9, 22, 30, 0.45);
+  overflow: hidden;
 }
 
 .arena-details summary {
   cursor: pointer;
   color: var(--muted);
   user-select: none;
+  padding: 0.65rem 0.75rem;
+  font-weight: 600;
+  list-style: none;
+}
+
+.arena-details summary::-webkit-details-marker {
+  display: none;
+}
+
+.arena-details[open] summary {
+  border-bottom: 1px solid rgba(73, 111, 129, 0.35);
 }
 
 .arena-controls {
-  margin-top: 0.65rem;
-  grid-template-columns: 1fr 1fr;
+  margin-top: 0;
+  padding: 0.75rem;
+  grid-template-columns: 1fr;
+  gap: 0.6rem;
+}
+
+.arena-controls input,
+.arena-controls select,
+.arena-controls button {
+  width: 100%;
+  min-width: 0;
 }
 
 .arena-autoconnect {
@@ -414,6 +488,7 @@ body {
   border-radius: 8px;
   padding: 0.45rem 0.55rem;
   background: rgba(9, 22, 30, 0.5);
+  overflow: hidden;
 }
 
 .arena-meta-grid code {
@@ -435,13 +510,17 @@ body {
 }
 
 .invite-strip input {
-  flex: 1 1 240px;
+  flex: 1 1 100%;
   border: 1px solid #34445f;
   border-radius: 8px;
   background: #0f141d;
   color: var(--foreground);
   min-height: 38px;
   padding: 0 0.7rem;
+}
+
+.invite-strip .control-btn {
+  flex: 1 1 180px;
 }
 
 .invite-copy-state {
@@ -708,6 +787,9 @@ body {
 }
 
 .control-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   border: 1px solid #34445f;
   border-radius: 8px;
   background: #22314a;
@@ -716,6 +798,7 @@ body {
   padding: 0 1rem;
   cursor: pointer;
   font-size: 0.9rem;
+  text-decoration: none;
   transition: background-color 0.2s ease;
 }
 
@@ -796,6 +879,16 @@ body {
   justify-content: center;
   margin-top: 2rem;
   flex-wrap: wrap;
+}
+
+.settings-action-row {
+  margin-top: 0.25rem;
+}
+
+.settings-btn {
+  min-height: 38px;
+  padding: 0 1rem;
+  font-size: 0.9rem;
 }
 
 .promotion-modal {

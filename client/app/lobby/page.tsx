@@ -13,14 +13,6 @@ type Player = {
   isFriend?: boolean;
 };
 
-const seedPlayers: Player[] = [
-  { id: "u-1001", username: "KnightTempo", rating: 1520, online: true, isFriend: false },
-  { id: "u-1002", username: "ForkMaster", rating: 1645, online: true, isFriend: true },
-  { id: "u-1003", username: "BishopArc", rating: 1470, online: false, isFriend: false },
-  { id: "u-1004", username: "RookStorm", rating: 1712, online: true, isFriend: true },
-  { id: "u-1005", username: "EndgameLab", rating: 1588, online: true, isFriend: false },
-];
-
 type PlayersResponse = {
   players: Array<{
     id: string;
@@ -71,8 +63,8 @@ type InviteCreateResponse = {
 export default function LobbyPage() {
   const [query, setQuery] = useState("");
   const [pendingRequests, setPendingRequests] = useState<string[]>([]);
-  const [players, setPlayers] = useState<Player[]>(seedPlayers);
-  const [friends, setFriends] = useState<Player[]>(seedPlayers.filter((player) => player.isFriend));
+  const [players, setPlayers] = useState<Player[]>([]);
+  const [friends, setFriends] = useState<Player[]>([]);
   const [incomingRequests, setIncomingRequests] = useState<IncomingRequest[]>([]);
   const [outgoingRequests, setOutgoingRequests] = useState<OutgoingRequest[]>([]);
   const [lastInviteLink, setLastInviteLink] = useState<string | null>(null);
@@ -102,8 +94,8 @@ export default function LobbyPage() {
         );
       } catch {
         if (!active) return;
-        setLoadError("Using local demo player data. Backend player directory unavailable.");
-        setPlayers(seedPlayers);
+        setLoadError("Unable to load player directory right now.");
+        setPlayers([]);
       } finally {
         if (active) setIsLoading(false);
       }
@@ -122,7 +114,7 @@ export default function LobbyPage() {
     async function loadFriends() {
       const token = getAccessToken();
       if (!token) {
-        setFriends(seedPlayers.filter((player) => player.isFriend));
+        setFriends([]);
         setIncomingRequests([]);
         setOutgoingRequests([]);
         return;
@@ -140,7 +132,8 @@ export default function LobbyPage() {
         setOutgoingRequests(requestsResponse.outgoing);
       } catch {
         if (!active) return;
-        setFriends(seedPlayers.filter((player) => player.isFriend));
+        setLoadError("Unable to load your social graph right now.");
+        setFriends([]);
         setIncomingRequests([]);
         setOutgoingRequests([]);
       }
@@ -163,8 +156,7 @@ export default function LobbyPage() {
 
     const token = getAccessToken();
     if (!token) {
-      setLoadError("Log in to send real friend requests. Demo mode request queued locally.");
-      setPendingRequests((current) => [...current, playerId]);
+      setLoadError("Log in to send friend requests.");
       return;
     }
 
@@ -291,8 +283,9 @@ export default function LobbyPage() {
       <section className="lobby-grid">
         <article className="panel shell-card">
           <h2>Players on Platform</h2>
-          <p className="lobby-sub">This is the initial shell for player discovery and friend actions.</p>
+          <p className="lobby-sub">Browse real player accounts and add friends directly.</p>
           <div className="player-list">
+            {filtered.length === 0 ? <div className="lobby-note">No players found.</div> : null}
             {filtered.map((player) => {
               const pending = pendingRequests.includes(player.id);
               return (
@@ -324,7 +317,7 @@ export default function LobbyPage() {
 
         <article className="panel shell-card">
           <h2>Friends and Invites</h2>
-          <p className="lobby-sub">Manage requests now, then send direct in-platform invites next.</p>
+          <p className="lobby-sub">Manage live friend requests and invite friends to active games.</p>
 
           {incomingRequests.length > 0 ? (
             <div className="player-list">
@@ -368,6 +361,7 @@ export default function LobbyPage() {
           ) : null}
 
           <ul className="friend-list">
+            {friends.length === 0 ? <li>No friends yet. Send a request from the player list.</li> : null}
             {friends.map((friend) => (
               <li key={friend.id}>
                 <span>{friend.username}</span>
@@ -391,7 +385,7 @@ export default function LobbyPage() {
           <div className="lobby-note">
             {lastInviteLink
               ? `Latest invite link: ${lastInviteLink}`
-              : "Next milestone: establish game session seat assignment in ws-server on invite acceptance."}
+              : "Create an invite from an online friend to start a match."}
           </div>
         </article>
       </section>

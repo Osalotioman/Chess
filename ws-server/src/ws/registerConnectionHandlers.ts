@@ -1,7 +1,7 @@
 import { type WebSocketServer } from "ws";
 
 import { RoomRegistry } from "../rooms/roomRegistry.js";
-import { broadcast } from "./socketMessaging.js";
+import { broadcast, send } from "./socketMessaging.js";
 import { handleIncomingMessage } from "./messageHandlers.js";
 
 export function registerConnectionHandlers(wss: WebSocketServer, roomRegistry: RoomRegistry) {
@@ -14,7 +14,14 @@ export function registerConnectionHandlers(wss: WebSocketServer, roomRegistry: R
       // eslint-disable-next-line no-console
       console.log("Message:", data.toString("utf8"));
       const raw = typeof data === "string" ? data : data.toString("utf8");
-      handleIncomingMessage(roomRegistry, ws, raw);
+      void handleIncomingMessage(roomRegistry, ws, raw).catch((error) => {
+        // eslint-disable-next-line no-console
+        console.warn("message handling failed", error);
+        send(ws, {
+          type: "error",
+          message: "Internal message handling failure",
+        });
+      });
     });
 
     ws.on("close", () => {

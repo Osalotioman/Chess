@@ -8,6 +8,11 @@ type GuestProfile = {
   displayName: string;
 };
 
+type AccountProfile = {
+  id: string;
+  username: string;
+};
+
 type RemoteMove = {
   from: Square;
   to: Square;
@@ -31,12 +36,14 @@ export function useArenaRealtime({
   room,
   mode,
   guestProfile,
+  accountProfile,
   canAttemptConnect,
 }: {
   wsUrl: string;
   room: string;
   mode: PlayerMode;
   guestProfile: GuestProfile;
+  accountProfile: AccountProfile | null;
   canAttemptConnect: boolean;
 }): RealtimeState {
   const [connected, setConnected] = useState(false);
@@ -77,6 +84,8 @@ export function useArenaRealtime({
             mode,
             guestId: guestProfile.id,
             guestName: guestProfile.displayName,
+            userId: accountProfile?.id,
+            username: accountProfile?.username,
           },
         })
       );
@@ -170,7 +179,16 @@ export function useArenaRealtime({
         remotePendingFrom.current = null;
       }
     };
-  }, [canAttemptConnect, guestProfile.displayName, guestProfile.id, mode, room, wsUrl]);
+  }, [
+    accountProfile?.id,
+    accountProfile?.username,
+    canAttemptConnect,
+    guestProfile.displayName,
+    guestProfile.id,
+    mode,
+    room,
+    wsUrl,
+  ]);
 
   const disconnect = useCallback(() => {
     if (retryTimerRef.current) {

@@ -1,6 +1,6 @@
 import http from "node:http";
 
-import { applyCors, handleCorsPreflight } from "./cors";
+import { applyCors, handleCorsPreflight } from "./cors.js";
 
 type HealthStats = {
   rooms: number;

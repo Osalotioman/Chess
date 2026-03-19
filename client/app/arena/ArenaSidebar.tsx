@@ -1,4 +1,4 @@
-import type { PlayerMode } from "../lib/usePlayerIdentity";
+import type { PlayerMode } from "@lib/usePlayerIdentity";
 
 type ArenaSidebarProps = {
   isOpen: boolean;
@@ -82,7 +82,7 @@ export function ArenaSidebar({
           )}
         </div>
 
-        <details className="arena-details" open>
+        <details className="arena-details">
           <summary>Connection settings</summary>
           <div className="controls-row arena-controls">
             <input

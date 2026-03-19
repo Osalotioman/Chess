@@ -1,11 +1,13 @@
 import type { WebSocket } from "ws";
 
-import type { RoomId } from "../protocol.js";
+import type { PlayerIdentity, RoomId } from "../protocol.js";
 
 export class RoomRegistry {
   private readonly rooms = new Map<RoomId, Set<WebSocket>>();
 
   private readonly socketRoom = new WeakMap<WebSocket, RoomId>();
+
+  private readonly socketPlayer = new WeakMap<WebSocket, PlayerIdentity>();
 
   public roomCount(): number {
     return this.rooms.size;
@@ -15,13 +17,19 @@ export class RoomRegistry {
     return this.socketRoom.get(ws);
   }
 
+  public getPlayer(ws: WebSocket): PlayerIdentity {
+    return this.socketPlayer.get(ws) ?? { mode: "guest" };
+  }
+
   public join(
     ws: WebSocket,
-    room: RoomId
+    room: RoomId,
+    player: PlayerIdentity
   ): { joined: boolean; peers: number; left: { room: RoomId; peers: number } | null } {
     const previousRoom = this.socketRoom.get(ws);
     if (previousRoom) {
       if (previousRoom === room) {
+        this.socketPlayer.set(ws, player);
         return { joined: false, peers: this.rooms.get(room)?.size ?? 0, left: null };
       }
       const left = this.leaveFromRoom(ws, previousRoom);
@@ -30,6 +38,7 @@ export class RoomRegistry {
       peers.add(ws);
       this.rooms.set(room, peers);
       this.socketRoom.set(ws, room);
+      this.socketPlayer.set(ws, player);
 
       return { joined: true, peers: peers.size, left };
     }
@@ -38,6 +47,7 @@ export class RoomRegistry {
     peers.add(ws);
     this.rooms.set(room, peers);
     this.socketRoom.set(ws, room);
+    this.socketPlayer.set(ws, player);
 
     return { joined: true, peers: peers.size, left: null };
   }
@@ -57,6 +67,7 @@ export class RoomRegistry {
     const peers = this.rooms.get(room) ?? new Set<WebSocket>();
     peers.delete(ws);
     this.socketRoom.delete(ws);
+    this.socketPlayer.delete(ws);
 
     if (peers.size === 0) {
       this.rooms.delete(room);

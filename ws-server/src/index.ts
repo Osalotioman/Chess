@@ -1,7 +1,7 @@
 import { WebSocketServer, type VerifyClientCallbackSync } from "ws";
 
-import { host, isOriginAllowed, port } from "./config";
-import { createHttpServer } from "./http/createHttpServer";
+import { host, isOriginAllowed, port } from "./config.js";
+import { createHttpServer } from "./http/createHttpServer.js";
 import { RoomRegistry } from "./rooms/roomRegistry.js";
 import { registerConnectionHandlers } from "./ws/registerConnectionHandlers.js";
 
