@@ -42,6 +42,8 @@ COPY package.json pnpm-lock.yaml ./
 RUN pnpm install --prod --frozen-lockfile
 
 COPY --from=builder /app/dist ./dist
+COPY prisma ./prisma
+COPY prisma.config.ts ./prisma.config.ts
 
 ARG APP_UID=10001
 ARG APP_GID=10001
@@ -57,4 +59,4 @@ ENV PORT=4000
 
 USER appuser
 
-CMD ["pnpm", "start"]
+CMD ["sh", "-c", "until pnpm prisma:migrate:deploy; do echo 'Waiting for database...'; sleep 2; done; pnpm start"]
