@@ -6,7 +6,7 @@ import { z } from "zod";
 import { env } from "../../config/env";
 import type { UserRepositoryPort } from "../user/userRepository.port";
 import type { UserPublic } from "../user/user.types";
-import type { LoginInput, RefreshInput, SignupInput } from "./schemas";
+import { signupSchema, type LoginInput, type RefreshInput, type SignupInput } from "./schemas";
 
 const tokenPayloadSchema = z.object({
   sub: z.string().min(1),
@@ -43,20 +43,27 @@ export class AuthService {
   }
 
   async signup(input: SignupInput): Promise<AuthSession> {
-    const emailExists = await this.userRepository.findByEmail(input.email);
+    const parsed = signupSchema.safeParse(input);
+    if (!parsed.success) {
+      throw new AuthError(parsed.error.issues[0]?.message ?? "Invalid signup input", 400);
+    }
+
+    const signupInput = parsed.data;
+
+    const emailExists = await this.userRepository.findByEmail(signupInput.email);
     if (emailExists) {
       throw new AuthError("Email already in use", 409);
     }
 
-    const usernameExists = await this.userRepository.findByUsername(input.username);
+    const usernameExists = await this.userRepository.findByUsername(signupInput.username);
     if (usernameExists) {
       throw new AuthError("Username already in use", 409);
     }
 
-    const passwordHash = await bcrypt.hash(input.password, 10);
+    const passwordHash = await bcrypt.hash(signupInput.password, 10);
     const user = await this.userRepository.create({
-      username: input.username,
-      email: input.email,
+      username: signupInput.username,
+      email: signupInput.email,
       passwordHash,
     });
 

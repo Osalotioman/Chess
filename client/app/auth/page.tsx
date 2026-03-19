@@ -10,6 +10,7 @@ import { Button } from "@components/ui/button";
 import { Input } from "@components/ui/input";
 
 type AuthMode = "signin" | "signup";
+const USERNAME_REGEX = /^[a-zA-Z0-9_-]{3,32}$/;
 
 export default function AuthPage() {
   const [mode, setMode] = useState<AuthMode>("signin");
@@ -44,8 +45,14 @@ export default function AuthPage() {
         setSessionState(session);
         setMessage(`Signed in as ${session.user.username}`);
       } else {
+        const normalizedUsername = username.trim();
+        if (!USERNAME_REGEX.test(normalizedUsername)) {
+          setError("Username must be 3-32 chars and contain only letters, numbers, _ or - (no spaces)");
+          return;
+        }
+
         const session = await signup({
-          username: username.trim(),
+          username: normalizedUsername,
           email: email.trim(),
           password,
         });
@@ -115,6 +122,8 @@ export default function AuthPage() {
                     value={username}
                     onChange={(event) => setUsername(event.target.value)}
                     placeholder="chessmaster"
+                    pattern="[A-Za-z0-9_-]{3,32}"
+                    title="3-32 chars, letters/numbers/_/- only, no spaces"
                   />
                 </label>
               ) : (
