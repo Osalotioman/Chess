@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { Chess, type PieceSymbol, type Square } from "chess.js";
 import { useSound } from "../lib/useSound";
+import { Button } from "@components/ui/button";
 
 type PromotionPiece = "q" | "r" | "b" | "n";
 
@@ -23,9 +24,6 @@ const pieceImage: Record<`w${PieceSymbol}` | `b${PieceSymbol}`, string> = {
   bq: "/pieces/b_queen.png",
   bk: "/pieces/b_king.png",
 };
-
-const controlBtn =
-  "inline-flex min-h-10 items-center justify-center rounded-lg border border-slate-600 bg-slate-800 px-4 text-sm font-medium text-slate-100 transition hover:border-emerald-300/70 hover:bg-slate-700";
 
 interface ChessBoardProps {
   orientation?: "white" | "black";
@@ -50,7 +48,6 @@ export function ChessBoard({
   historySnapshot,
 }: ChessBoardProps) {
   const [chess, setChess] = useState<Chess | null>(null);
-  const [fen, setFen] = useState("");
   const [selected, setSelected] = useState<Square | null>(null);
   const [legalTargets, setLegalTargets] = useState<Square[]>([]);
   const [lastMove, setLastMove] = useState<[Square, Square] | null>(null);
@@ -64,14 +61,12 @@ export function ChessBoard({
   useEffect(() => {
     const instance = new Chess();
     setChess(instance);
-    setFen(instance.fen());
   }, []);
 
   // Reset board when switching rooms so state does not leak across sessions.
   useEffect(() => {
     const instance = new Chess();
     setChess(instance);
-    setFen(instance.fen());
     setSelected(null);
     setLegalTargets([]);
     setLastMove(null);
@@ -100,17 +95,15 @@ export function ChessBoard({
     }
 
     setChess(instance);
-    setFen(instance.fen());
     setSelected(null);
     setLegalTargets([]);
     setPendingPromotion(null);
     setLastMove(latestMove);
-  }, [historySnapshot?.nonce]);
+  }, [historySnapshot]);
 
   const game = chess;
 
-  function refreshBoard(current: Chess) {
-    setFen(current.fen());
+  function refreshBoard() {
     setLegalTargets([]);
     setSelected(null);
   }
@@ -139,7 +132,7 @@ export function ChessBoard({
     if (!move) return false;
 
     setLastMove([from, to]);
-    refreshBoard(current);
+    refreshBoard();
 
     // Play sounds
     const anyChess = current as unknown as {
@@ -238,14 +231,13 @@ export function ChessBoard({
   function resetGame() {
     if (!game) return;
     game.reset();
-    setFen(game.fen());
     setSelected(null);
     setLegalTargets([]);
     setLastMove(null);
   }
 
   if (!game) {
-    return <div className="aspect-square w-[min(94vw,78svh,880px)] rounded-xl border-2 border-slate-500 bg-slate-700/40" />;
+    return <div className="aspect-square w-[min(95vw,72svh,880px)] rounded-xl border-2 border-slate-500 bg-slate-700/40 sm:w-[min(94vw,78svh,880px)]" />;
   }
 
   const board = game.board();
@@ -272,7 +264,7 @@ export function ChessBoard({
 
   return (
     <>
-      <div className="grid aspect-square w-[min(94vw,78svh,880px)] grid-cols-8 grid-rows-8 overflow-hidden rounded-xl border-2 border-slate-500">
+      <div className="grid aspect-square w-[min(95vw,72svh,880px)] grid-cols-8 grid-rows-8 overflow-hidden rounded-xl border-2 border-slate-500 sm:w-[min(94vw,78svh,880px)]">
         {renderedRanks.map((rank, rowIndex) =>
           renderedFiles.map((file, colIndex) => {
             const square = `${file}${rank}` as Square;
@@ -319,15 +311,15 @@ export function ChessBoard({
       </div>
 
       <div className="mt-4 flex flex-wrap justify-center gap-2">
-        <button onClick={resetGame} className={controlBtn} disabled={readOnly}>
+        <Button onClick={resetGame} variant="secondary" disabled={readOnly}>
           New Game
-        </button>
-        <button
+        </Button>
+        <Button
           onClick={() => onOrientationChange?.(orientation === "white" ? "black" : "white")}
-          className={controlBtn}
+          variant="secondary"
         >
           Flip Board
-        </button>
+        </Button>
       </div>
 
       {pendingPromotion ? (

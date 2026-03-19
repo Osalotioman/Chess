@@ -20,6 +20,9 @@ importers:
       bcryptjs:
         specifier: ^2.4.3
         version: 2.4.3
+      chess.js:
+        specifier: ^1.4.0
+        version: 1.4.0
       dotenv:
         specifier: ^17.3.1
         version: 17.3.1
@@ -549,6 +552,9 @@ packages:
     peerDependenciesMeta:
       magicast:
         optional: true
+
+  chess.js@1.4.0:
+    resolution: {integrity: sha512-BBJgrrtKQOzFLonR0l+k64A98NLemPwNsCskwb+29bRwobUa4iTm51E1kwGPbWXAcfdDa18nad6vpPPKPWarqw==}
 
   chevrotain@10.5.0:
     resolution: {integrity: sha512-Pkv5rBY3+CsHOYfV5g/Vs5JY9WTHHDEKOlohI2XeygaZhUeqhAlldZ8Hz9cRmxu709bvS08YzxHdTPHhffc13A==}
@@ -1746,6 +1752,8 @@ snapshots:
       perfect-debounce: 1.0.0
       pkg-types: 2.3.0
       rc9: 2.1.2
+
+  chess.js@1.4.0: {}
 
   chevrotain@10.5.0:
     dependencies:

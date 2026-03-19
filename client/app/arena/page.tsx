@@ -7,6 +7,7 @@ import { getAccessToken, getStoredSession } from "@lib/session";
 import { usePlayerIdentity } from "@lib/usePlayerIdentity";
 import { createRoomId } from "@lib/roomId";
 import { useSettings } from "@lib/useSettings";
+import { Button } from "@components/ui/button";
 import { ArenaSidebar } from "./ArenaSidebar";
 import type { InviteAcceptResponse, InviteCreateResponse, InviteLookupResponse } from "./types";
 import { useArenaRealtime } from "./useArenaRealtime";
@@ -304,7 +305,7 @@ export default function ArenaPage() {
   }, [isSidebarOpen]);
 
   return (
-    <main className="grid min-h-[calc(100svh-52px)] gap-4 p-4 lg:grid-cols-[minmax(300px,380px)_1fr]">
+    <main className="grid min-h-[calc(100svh-52px)] gap-3 p-3 sm:gap-4 sm:p-4 lg:grid-cols-[minmax(300px,380px)_1fr]">
       <ArenaSidebar
         isOpen={isSidebarOpen}
         connected={connected}
@@ -352,12 +353,13 @@ export default function ArenaPage() {
       ) : null}
 
       <section
-        className="grid min-h-[calc(100svh-6rem)] grid-rows-[auto_1fr] gap-3 rounded-2xl border border-slate-700 bg-gradient-to-br from-slate-900/95 to-slate-800/70 p-3 shadow-2xl"
+        className="grid min-h-[calc(100svh-6.5rem)] grid-rows-[auto_1fr] gap-3 rounded-2xl border border-slate-700 bg-gradient-to-br from-slate-900/95 to-slate-800/70 p-3 shadow-2xl sm:min-h-[calc(100svh-6rem)]"
         aria-label="Arena board stage"
       >
         <div className="flex items-center justify-between gap-3">
-          <button
-            className="inline-flex min-h-10 items-center gap-2 rounded-lg border border-slate-600 bg-slate-800 px-3 text-sm font-medium text-slate-100 lg:hidden"
+          <Button
+            variant="secondary"
+            className="lg:hidden"
             type="button"
             aria-label="Open arena menu"
             aria-expanded={isSidebarOpen}
@@ -369,9 +371,9 @@ export default function ArenaPage() {
               <span className="block h-0.5 w-4 rounded bg-slate-100" />
             </span>
             Menu
-          </button>
+          </Button>
 
-          <div className="inline-flex flex-wrap items-center gap-2 rounded-full border border-slate-700 bg-slate-900/60 px-3 py-1 text-xs text-slate-300">
+          <div className="inline-flex max-w-full flex-wrap items-center gap-2 rounded-2xl border border-slate-700 bg-slate-900/60 px-3 py-1 text-xs text-slate-300 sm:rounded-full">
             <span
               className={`rounded-full border px-2 py-1 text-[11px] font-semibold ${
                 connected
@@ -382,7 +384,7 @@ export default function ArenaPage() {
               {connected ? "Live" : "Offline"}
             </span>
             {seat ? <span className="rounded-full border border-slate-600 px-2 py-1">Seat: {seat}</span> : null}
-            <span className="truncate">
+            <span className="max-w-[180px] truncate sm:max-w-none">
               Room <strong>{room}</strong>
             </span>
           </div>

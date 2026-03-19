@@ -1,5 +1,6 @@
 import type { FastifyInstance } from "fastify";
 import { z } from "zod";
+import { Chess } from "chess.js";
 
 import { env } from "../../config/env";
 import type { PrismaClient } from "../../db/generated/prisma/client";
@@ -43,7 +44,7 @@ export function registerInternalWsRoutes(app: FastifyInstance, prismaClient: Pri
     const { roomCode } = parsedParams.data;
     const { userId } = parsedBody.data.player;
 
-    const result = await prismaClient.$transaction(async (tx) => {
+      const result = await prismaClient.$transaction(async (tx) => {
       const game = await tx.gameSession.findUnique({
         where: { roomCode },
         select: {
@@ -53,6 +54,7 @@ export function registerInternalWsRoutes(app: FastifyInstance, prismaClient: Pri
           blackPlayerId: true,
           turnColor: true,
           moveCount: true,
+            fen: true,
         },
       });
 
@@ -99,7 +101,69 @@ export function registerInternalWsRoutes(app: FastifyInstance, prismaClient: Pri
         };
       }
 
-      const nextTurn = seat === "white" ? "black" : "white";
+      let nextTurn = game.turnColor;
+      let nextFen = game.fen;
+      const hasMove = Boolean(parsedBody.data.move);
+
+      if (hasMove && parsedBody.data.move) {
+        const historyMoves = await tx.gameMove.findMany({
+          where: { gameSessionId: game.id },
+          orderBy: { ply: "asc" },
+          select: {
+            fromSquare: true,
+            toSquare: true,
+            promotion: true,
+          },
+        });
+
+        const chess = new Chess();
+
+        for (const historyMove of historyMoves) {
+          const applied = chess.move({
+            from: historyMove.fromSquare.toLowerCase(),
+            to: historyMove.toSquare.toLowerCase(),
+            ...(historyMove.promotion ? { promotion: historyMove.promotion.toLowerCase() } : {}),
+          });
+
+          if (!applied) {
+            return {
+              ok: false,
+              enforced: true,
+              seat,
+              reason: "Stored game history is invalid",
+            };
+          }
+        }
+
+        const replayTurn = chess.turn() === "w" ? "white" : "black";
+        if (replayTurn !== game.turnColor) {
+          return {
+            ok: false,
+            enforced: true,
+            seat,
+            reason: "Game state drift detected. Please reconnect.",
+          };
+        }
+
+        const promotion = parsedBody.data.move.promotion?.toLowerCase();
+        const attempted = chess.move({
+          from: parsedBody.data.move.from.toLowerCase(),
+          to: parsedBody.data.move.to.toLowerCase(),
+          ...(promotion ? { promotion } : {}),
+        });
+
+        if (!attempted) {
+          return {
+            ok: false,
+            enforced: true,
+            seat,
+            reason: "Illegal move for current board state",
+          };
+        }
+
+        nextFen = chess.fen();
+        nextTurn = chess.turn() === "w" ? "white" : "black";
+      }
 
       const updated = await tx.gameSession.updateMany({
         where: {
@@ -109,7 +173,8 @@ export function registerInternalWsRoutes(app: FastifyInstance, prismaClient: Pri
         data: {
           status: "active",
           turnColor: nextTurn,
-          moveCount: { increment: 1 },
+          fen: nextFen,
+          ...(hasMove ? { moveCount: { increment: 1 } } : {}),
         },
       });
 
@@ -122,7 +187,7 @@ export function registerInternalWsRoutes(app: FastifyInstance, prismaClient: Pri
         };
       }
 
-      if (parsedBody.data.move) {
+      if (hasMove && parsedBody.data.move) {
         await tx.gameMove.create({
           data: {
             gameSessionId: game.id,

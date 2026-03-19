@@ -39,5 +39,13 @@ jobs:
       - name: api-server typecheck
         run: pnpm -C api-server typecheck
 
+      - name: api-server test
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/chess_ci
+          JWT_ACCESS_SECRET: ci-access-secret-1234567890
+          JWT_REFRESH_SECRET: ci-refresh-secret-1234567890
+          INTERNAL_WS_SHARED_SECRET: ci-internal-secret-1234567890
+        run: pnpm -C api-server test
+
       - name: api-server build
         run: pnpm -C api-server build

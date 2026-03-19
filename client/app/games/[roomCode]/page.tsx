@@ -6,6 +6,8 @@ import type { Square } from "chess.js";
 
 import { ChessBoard } from "@components/ChessBoard";
 import { ApiError, apiGet } from "@lib/api";
+import { Button } from "@components/ui/button";
+import { Card, CardContent } from "@components/ui/card";
 
 type GameMove = {
   ply: number;
@@ -47,6 +49,8 @@ export default function GameReplayPage({ params }: { params: Promise<{ roomCode:
     params
       .then((resolved) => {
         if (!active) return;
+        setBusy(true);
+        setError(null);
         setRoomCode(resolved.roomCode);
       })
       .catch(() => {
@@ -64,9 +68,6 @@ export default function GameReplayPage({ params }: { params: Promise<{ roomCode:
   useEffect(() => {
     if (!roomCode) return;
     let active = true;
-
-    setBusy(true);
-    setError(null);
 
     apiGet<{ game: GameDetail }>(`/games/${encodeURIComponent(roomCode)}`)
       .then((response) => {
@@ -98,18 +99,19 @@ export default function GameReplayPage({ params }: { params: Promise<{ roomCode:
         to: move.to as Square,
         promotion: move.promotion as PromotionPiece | undefined,
       })),
-      nonce: Date.now(),
+      nonce: game.moveCount,
     };
   }, [game]);
 
   return (
-    <main className="grid min-h-[calc(100svh-52px)] gap-4 p-4">
+    <main className="grid min-h-[calc(100svh-52px)] gap-3 p-3 sm:gap-4 sm:p-4">
       <header className="rounded-2xl border border-slate-700 bg-gradient-to-br from-slate-900/95 to-slate-800/70 p-4 shadow-xl">
         <h1 className="text-2xl font-semibold text-slate-100">Game Replay</h1>
         <p className="mt-1 text-sm text-slate-300">Read-only replay from persisted move history.</p>
       </header>
 
-      <section className="rounded-2xl border border-slate-700 bg-gradient-to-br from-slate-900/95 to-slate-800/70 p-4 shadow-xl">
+      <Card className="bg-gradient-to-br from-slate-900/95 to-slate-800/70 shadow-xl">
+        <CardContent className="p-4">
         {busy ? <p className="text-sm text-slate-300">Loading replay...</p> : null}
         {error ? <p className="text-sm text-rose-200">{error}</p> : null}
 
@@ -131,16 +133,14 @@ export default function GameReplayPage({ params }: { params: Promise<{ roomCode:
             />
 
             <div className="mt-3">
-              <Link
-                href="/games"
-                className="inline-flex min-h-9 items-center justify-center rounded-lg border border-slate-600 bg-slate-800 px-3 text-xs font-semibold text-slate-100"
-              >
-                Back to Games
-              </Link>
+              <Button asChild variant="secondary" size="sm">
+                <Link href="/games">Back to Games</Link>
+              </Button>
             </div>
           </>
         ) : null}
-      </section>
+        </CardContent>
+      </Card>
     </main>
   );
 }

@@ -1,4 +1,9 @@
 import type { PlayerMode } from "@lib/usePlayerIdentity";
+import { Button } from "@components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@components/ui/card";
+import { Checkbox } from "@components/ui/checkbox";
+import { Input } from "@components/ui/input";
+import { Select } from "@components/ui/select";
 
 type ArenaSidebarProps = {
   isOpen: boolean;
@@ -36,12 +41,6 @@ type ArenaSidebarProps = {
   onAcceptInvite: () => void;
   onAbortGame: () => void;
 };
-
-const controlBtn =
-  "inline-flex min-h-10 items-center justify-center rounded-lg border border-slate-600 bg-slate-800 px-3 text-sm font-medium text-slate-100 transition hover:border-emerald-300/70 hover:bg-slate-700 disabled:cursor-not-allowed disabled:opacity-60";
-
-const inputBase =
-  "w-full min-w-0 rounded-lg border border-slate-600 bg-slate-950 px-3 py-2 text-sm text-slate-100 outline-none transition focus:border-emerald-300/70";
 
 export function ArenaSidebar({
   isOpen,
@@ -81,19 +80,24 @@ export function ArenaSidebar({
 }: ArenaSidebarProps) {
   return (
     <aside
-      className={`z-20 grid max-h-[calc(100svh-1rem)] content-start gap-4 overflow-y-auto rounded-2xl border border-slate-700 bg-gradient-to-br from-slate-900/95 to-slate-800/70 p-4 shadow-2xl lg:sticky lg:top-16 ${
+      className={`z-20 grid max-h-[100svh] content-start gap-4 overflow-y-auto border border-slate-700 bg-gradient-to-br from-slate-900/95 to-slate-800/70 p-4 shadow-2xl lg:sticky lg:top-16 lg:max-h-[calc(100svh-5rem)] lg:rounded-2xl ${
         isOpen ? "translate-x-0" : "-translate-x-[104%] lg:translate-x-0"
-      } fixed inset-y-0 left-0 w-[min(86vw,360px)] transition-transform duration-200 lg:relative lg:w-auto`}
+      } fixed inset-y-0 left-0 w-[min(90vw,360px)] transition-transform duration-200 lg:relative lg:w-auto`}
     >
       <header>
         <p className="mb-2 text-xs tracking-[0.16em] text-slate-400 uppercase">Arena Control</p>
-        <h1 className="text-2xl font-semibold text-slate-100">Chess Championship</h1>
+        <h1 className="text-xl font-semibold text-slate-100 sm:text-2xl">Chess Championship</h1>
         <p className="mt-1 text-sm text-slate-300">
           Connection, identity, and invites live here while the board stays center stage.
         </p>
       </header>
 
-      <section className="rounded-xl border border-slate-700 bg-slate-900/70 p-4">
+      <Card>
+        <CardHeader className="pb-3">
+          <CardTitle className="text-sm">Session</CardTitle>
+          <CardDescription>Realtime room controls and setup state.</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-3">
         <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
           <div className="flex min-w-0 flex-1 items-center gap-3">
             <div
@@ -112,13 +116,13 @@ export function ArenaSidebar({
           </div>
 
           {!connected ? (
-            <button onClick={onConnect} className={controlBtn} type="button" disabled={!setupApplied}>
+            <Button onClick={onConnect} variant="secondary" type="button" disabled={!setupApplied}>
               Connect
-            </button>
+            </Button>
           ) : (
-            <button onClick={onDisconnect} className={controlBtn} type="button">
+            <Button onClick={onDisconnect} variant="secondary" type="button">
               Disconnect
-            </button>
+            </Button>
           )}
         </div>
 
@@ -128,29 +132,26 @@ export function ArenaSidebar({
           </summary>
 
           <div className="grid gap-3 p-3">
-            <button onClick={onCreateRoom} className={controlBtn} type="button">
+            <Button onClick={onCreateRoom} variant="secondary" type="button" className="w-full">
               Create New Game Room
-            </button>
-            <input
+            </Button>
+            <Input
               aria-label="Room"
-              className={inputBase}
               value={room}
               onChange={(event) => onRoomChange(event.target.value)}
               placeholder="UUIDv7 room id"
             />
-            <select
+            <Select
               aria-label="Play mode"
-              className={inputBase}
               value={mode}
               onChange={(event) => onModeChange(event.target.value as PlayerMode)}
             >
               <option value="guest">Play as Guest</option>
               <option value="account">Play with Account</option>
-            </select>
+            </Select>
             {mode === "guest" ? (
-              <input
+              <Input
                 aria-label="Guest display name"
-                className={inputBase}
                 value={guestProfile.displayName}
                 onChange={(event) => onGuestNameChange(event.target.value)}
                 placeholder="Guest display name"
@@ -165,46 +166,40 @@ export function ArenaSidebar({
               <div className="text-xs font-semibold tracking-wide text-slate-300 uppercase">Game Setup</div>
               <label className="grid gap-1 text-xs text-slate-300">
                 Host seat
-                <select
+                <Select
                   aria-label="Host seat"
-                  className={inputBase}
                   value={hostSeat}
                   onChange={(event) => onHostSeatChange(event.target.value as "white" | "black")}
                 >
                   <option value="white">Host as White</option>
                   <option value="black">Host as Black</option>
-                </select>
+                </Select>
               </label>
               <label className="grid gap-1 text-xs text-slate-300">
                 First turn
-                <select
+                <Select
                   aria-label="First turn"
-                  className={inputBase}
                   value={firstTurn}
                   onChange={(event) => onFirstTurnChange(event.target.value as "white" | "black")}
                 >
                   <option value="white">White moves first</option>
                   <option value="black">Black moves first</option>
-                </select>
+                </Select>
               </label>
-              <label className="grid gap-1 text-xs text-slate-300">
-                Invite kind
-                <select
+              <label className="inline-flex items-center gap-2 text-xs text-slate-300">
+                <Checkbox
                   aria-label="Invite kind"
-                  className={inputBase}
-                  value={inviteKind}
-                  onChange={(event) => onInviteKindChange(event.target.value as "player" | "spectator")}
-                >
-                  <option value="player">Player invite</option>
-                  <option value="spectator">Spectator invite</option>
-                </select>
+                  checked={inviteKind === "spectator"}
+                  onChange={(event) => onInviteKindChange(event.target.checked ? "spectator" : "player")}
+                />
+                Create spectator invite instead of player invite
               </label>
               <p className="text-[11px] text-slate-400">
                 Player invites are limited to two seats total. Use spectator invite once both player seats are occupied.
               </p>
-              <button onClick={onApplySetup} className={controlBtn} type="button">
+              <Button onClick={onApplySetup} variant="secondary" type="button" className="w-full">
                 {setupApplied ? "Setup Applied" : "Apply Setup"}
-              </button>
+              </Button>
             </div>
 
             <div className="grid gap-2 sm:grid-cols-2">
@@ -232,32 +227,40 @@ export function ArenaSidebar({
             </div>
 
             <div className="grid gap-2">
-              <input readOnly value={inviteLink} aria-label="Invite link" className={inputBase} />
+              <Input readOnly value={inviteLink} aria-label="Invite link" />
               <div className="grid gap-2 sm:grid-cols-2">
-                <button onClick={onCopyInvite} className={controlBtn} type="button">
+                <Button onClick={onCopyInvite} variant="secondary" type="button" className="w-full">
                   Copy Invite Link
-                </button>
-                <button onClick={onCreateSignedInvite} className={controlBtn} type="button" disabled={inviteBusy}>
+                </Button>
+                <Button
+                  onClick={onCreateSignedInvite}
+                  variant="secondary"
+                  type="button"
+                  className="w-full"
+                  disabled={inviteBusy}
+                >
                   Create Signed Invite
-                </button>
+                </Button>
                 {inviteCode ? (
-                  <button
+                  <Button
                     onClick={onAcceptInvite}
-                    className={`${controlBtn} sm:col-span-2`}
+                    variant="secondary"
+                    className="w-full sm:col-span-2"
                     type="button"
                     disabled={inviteBusy}
                   >
                     Accept Invite
-                  </button>
+                  </Button>
                 ) : null}
-                <button
+                <Button
                   onClick={onAbortGame}
-                  className={`${controlBtn} sm:col-span-2`}
+                  variant="secondary"
+                  className="w-full sm:col-span-2"
                   type="button"
                   disabled={inviteBusy || !seat || seat === "spectator"}
                 >
                   Abort Current Game
-                </button>
+                </Button>
               </div>
               <span className="text-xs text-slate-300">
                 {copyStatus === "copied" ? "Copied" : copyStatus === "failed" ? "Copy failed" : ""}
@@ -267,7 +270,8 @@ export function ArenaSidebar({
             {inviteInfo ? <div className="border-t border-dashed border-slate-600 pt-2 text-xs text-slate-300">{inviteInfo}</div> : null}
           </div>
         </details>
-      </section>
+        </CardContent>
+      </Card>
     </aside>
   );
 }
