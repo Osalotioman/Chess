@@ -40,17 +40,26 @@ interface RequestOptions {
 export async function apiRequest<T>(path: string, options: RequestOptions = {}): Promise<T> {
   const { method = "GET", token, body, headers, signal } = options;
 
-  const response = await fetch(normalizePath(path), {
-    method,
-    headers: {
-      "Content-Type": "application/json",
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
-      ...headers,
-    },
-    body: body === undefined ? undefined : JSON.stringify(body),
-    signal,
-    cache: "no-store",
-  });
+  let response: Response;
+  try {
+    response = await fetch(normalizePath(path), {
+      method,
+      headers: {
+        "Content-Type": "application/json",
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        ...headers,
+      },
+      body: body === undefined ? undefined : JSON.stringify(body),
+      signal,
+      cache: "no-store",
+    });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Network request failed";
+    throw new ApiError(`Request failed before reaching API: ${message}`, 0, {
+      message,
+      reason: "network_error",
+    });
+  }
 
   const payload = await parseBody(response);
 

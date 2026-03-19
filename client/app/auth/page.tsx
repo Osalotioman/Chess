@@ -1,8 +1,9 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 
+import { ApiError } from "@lib/api";
 import { login, logout, signup } from "@lib/auth";
 import { clearStoredSession, getStoredSession, setStoredSession } from "@lib/session";
 import { Button } from "@components/ui/button";
@@ -19,9 +20,15 @@ export default function AuthPage() {
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [sessionState, setSessionState] = useState(() => getStoredSession());
+  const [sessionState, setSessionState] = useState<ReturnType<typeof getStoredSession> | null>(null);
+  const [hydrated, setHydrated] = useState(false);
 
-  const isLoggedIn = Boolean(sessionState?.tokens.accessToken);
+  useEffect(() => {
+    setSessionState(getStoredSession());
+    setHydrated(true);
+  }, []);
+
+  const isLoggedIn = hydrated && Boolean(sessionState?.tokens.accessToken);
 
   const heading = useMemo(() => (mode === "signin" ? "Sign In" : "Create Account"), [mode]);
 
@@ -46,8 +53,12 @@ export default function AuthPage() {
         setSessionState(session);
         setMessage(`Account created for ${session.user.username}`);
       }
-    } catch {
-      setError("Authentication failed. Check your input and backend status.");
+    } catch (error) {
+      if (error instanceof ApiError) {
+        setError(error.message);
+      } else {
+        setError("Authentication failed. Check your input and backend status.");
+      }
     } finally {
       setBusy(false);
     }
@@ -81,7 +92,9 @@ export default function AuthPage() {
       </header>
 
       <section className="mx-auto w-full max-w-xl rounded-2xl border border-slate-700 bg-gradient-to-br from-slate-900/95 to-slate-800/70 p-4 shadow-xl">
-        {!isLoggedIn ? (
+        {!hydrated ? (
+          <p className="text-sm text-slate-300">Loading session...</p>
+        ) : !isLoggedIn ? (
           <>
             <div className="mb-3 flex flex-wrap gap-2" role="tablist" aria-label="Auth mode">
               <Button type="button" variant={mode === "signin" ? "default" : "secondary"} onClick={() => setMode("signin")}>

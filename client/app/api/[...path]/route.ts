@@ -11,6 +11,8 @@ const hopByHopHeaders = new Set([
   "upgrade",
   "host",
   "content-length",
+  "content-encoding",
+  "accept-encoding",
 ]);
 
 function getBackendOrigin(): string {
@@ -60,12 +62,21 @@ async function proxy(req: NextRequest, pathSegments: string[]): Promise<Response
   const hasBody = req.method !== "GET" && req.method !== "HEAD";
   const body = hasBody ? await req.arrayBuffer() : undefined;
 
-  const upstreamResponse = await fetch(targetUrl, {
-    method: req.method,
-    headers: copyRequestHeaders(req),
-    body,
-    redirect: "manual",
-  });
+  let upstreamResponse: Response;
+  try {
+    upstreamResponse = await fetch(targetUrl, {
+      method: req.method,
+      headers: copyRequestHeaders(req),
+      body,
+      redirect: "manual",
+    });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Upstream request failed";
+    return Response.json(
+      { message: `REST upstream fetch failed: ${message}` },
+      { status: 502 },
+    );
+  }
 
   return new Response(upstreamResponse.body, {
     status: upstreamResponse.status,
