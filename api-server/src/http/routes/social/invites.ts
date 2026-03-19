@@ -28,6 +28,7 @@ export function registerInviteRoutes(
 
     return runWithTableGuard(app, reply, async () => {
       const roomCode = parsedBody.data.roomCode || generateFallbackRoomCode();
+      const inviteKind = parsedBody.data.inviteKind;
 
       if (parsedBody.data.receiverUserId) {
         const isFriend = await socialPrisma.friendship.findFirst({
@@ -48,12 +49,23 @@ export function registerInviteRoutes(
         update: {},
         create: {
           roomCode,
-          whitePlayerId: currentUserId,
+          whitePlayerId: parsedBody.data.hostSeat === "white" ? currentUserId : null,
+          blackPlayerId: parsedBody.data.hostSeat === "black" ? currentUserId : null,
+          turnColor: parsedBody.data.firstTurn,
           fen: initialFen,
         },
       });
 
-      const code = await generateUniqueInviteCode(socialPrisma);
+      const playersInGame = Number(Boolean(gameSession.whitePlayerId)) + Number(Boolean(gameSession.blackPlayerId));
+      const gameIsFull = playersInGame >= 2;
+
+      if (inviteKind === "player" && gameIsFull) {
+        return reply.status(409).send({
+          message: "Game already has two players. Create a spectator invite instead.",
+        });
+      }
+
+      const code = await generateUniqueInviteCode(socialPrisma, inviteKind === "spectator" ? "sp_" : "pl_");
       const expiresAt = new Date(Date.now() + parsedBody.data.expiresInMinutes * 60_000);
 
       const invite = await socialPrisma.invite.create({
@@ -71,6 +83,7 @@ export function registerInviteRoutes(
         invite: {
           id: invite.id,
           code: invite.code,
+          kind: invite.code.startsWith("sp_") ? "spectator" : "player",
           roomCode,
           expiresAt: invite.expiresAt.toISOString(),
           receiverUserId: invite.receiverId,
@@ -107,13 +120,17 @@ export function registerInviteRoutes(
 
       const expired = invite.expiresAt.getTime() <= Date.now();
       const active = invite.status === "waiting" && !expired;
+      const kind = invite.code.startsWith("sp_") ? "spectator" : "player";
+      const seatsFull = Boolean(invite.gameSession.whitePlayerId && invite.gameSession.blackPlayerId);
 
       return reply.send({
         invite: {
           code: invite.code,
+          kind,
           roomCode: invite.gameSession.roomCode,
           status: invite.status,
           active,
+          seatsFull,
           expiresAt: invite.expiresAt.toISOString(),
           receiverUserId: invite.receiverId,
           seats: {
@@ -167,16 +184,22 @@ export function registerInviteRoutes(
           return { error: "This invite is reserved for another player" as const };
         }
 
+        const inviteKind = invite.code.startsWith("sp_") ? "spectator" : "player";
+
         let seat: "white" | "black" | "spectator" = "spectator";
 
-        if (!invite.gameSession.whitePlayerId) {
-          seat = "white";
-        } else if (!invite.gameSession.blackPlayerId) {
-          seat = "black";
-        } else if (invite.gameSession.whitePlayerId === currentUserId) {
-          seat = "white";
-        } else if (invite.gameSession.blackPlayerId === currentUserId) {
-          seat = "black";
+        if (inviteKind === "player") {
+          if (!invite.gameSession.whitePlayerId) {
+            seat = "white";
+          } else if (!invite.gameSession.blackPlayerId) {
+            seat = "black";
+          } else if (invite.gameSession.whitePlayerId === currentUserId) {
+            seat = "white";
+          } else if (invite.gameSession.blackPlayerId === currentUserId) {
+            seat = "black";
+          } else {
+            return { error: "Game already has two players. Use a spectator invite." as const };
+          }
         }
 
         const updatedGame = await tx.gameSession.update({
@@ -210,6 +233,7 @@ export function registerInviteRoutes(
       return reply.send({
         invite: {
           code: parsedParams.data.code,
+          kind: parsedParams.data.code.startsWith("sp_") ? "spectator" : "player",
           roomCode: result.roomCode,
           seat: result.seat,
         },

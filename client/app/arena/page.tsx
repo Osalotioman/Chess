@@ -20,6 +20,10 @@ export default function ArenaPage() {
   const [inviteCode, setInviteCode] = useState<string | null>(null);
   const [inviteInfo, setInviteInfo] = useState<string | null>(null);
   const [seat, setSeat] = useState<"white" | "black" | "spectator" | null>(null);
+  const [hostSeat, setHostSeat] = useState<"white" | "black">("white");
+  const [firstTurn, setFirstTurn] = useState<"white" | "black">("white");
+  const [inviteKind, setInviteKind] = useState<"player" | "spectator">("player");
+  const [setupApplied, setSetupApplied] = useState(false);
   const [inviteBusy, setInviteBusy] = useState(false);
   const [copyStatus, setCopyStatus] = useState<"idle" | "copied" | "failed">("idle");
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -29,16 +33,29 @@ export default function ArenaPage() {
   const canAttemptConnect = useMemo(() => {
     if (!autoConnectEnabled) return false;
     if (!room.trim()) return false;
+    if (!setupApplied) return false;
     return true;
-  }, [autoConnectEnabled, room]);
+  }, [autoConnectEnabled, room, setupApplied]);
 
-  const { connected, status, lastWsError, peersInRoom, remoteMove, connect, disconnect, sendMove } =
+  const {
+    connected,
+    status,
+    lastWsError,
+    peersInRoom,
+    seat: realtimeSeat,
+    historySnapshot,
+    remoteMove,
+    connect,
+    disconnect,
+    sendMove,
+  } =
     useArenaRealtime({
       wsUrl,
       room,
       mode,
       guestProfile,
       accountProfile: getStoredSession()?.user ?? null,
+      preferredSeat: seat,
       canAttemptConnect,
     });
 
@@ -60,6 +77,11 @@ export default function ArenaPage() {
   }, [ensureGuestProfile]);
 
   useEffect(() => {
+    if (!realtimeSeat) return;
+    setSeat(realtimeSeat);
+  }, [realtimeSeat]);
+
+  useEffect(() => {
     if (!inviteCode) return;
 
     let active = true;
@@ -70,6 +92,7 @@ export default function ArenaPage() {
       .then((response) => {
         if (!active) return;
         setRoom(response.invite.roomCode);
+        setInviteKind(response.invite.kind);
         setInviteInfo(response.invite.active ? "Invite ready to join" : "Invite is no longer active");
       })
       .catch(() => {
@@ -108,12 +131,18 @@ export default function ArenaPage() {
         "/invites",
         {
           roomCode: room.trim() || "championship-1",
+          inviteKind,
+          hostSeat,
+          firstTurn,
         },
         { token }
       );
       setInviteCode(response.invite.code);
+      setInviteKind(response.invite.kind);
       setRoom(response.invite.roomCode);
-      setInviteInfo("Signed invite created");
+      setSetupApplied(true);
+      setSeat(hostSeat);
+      setInviteInfo(`Signed ${response.invite.kind} invite created`);
     } catch {
       setInviteInfo("Unable to create signed invite");
     } finally {
@@ -126,7 +155,16 @@ export default function ArenaPage() {
 
     const token = getAccessToken();
     if (!token) {
-      setInviteInfo("Log in to accept invite links");
+      setMode("guest");
+      setSetupApplied(true);
+      if (inviteKind === "spectator") {
+        setSeat("spectator");
+      } else {
+        setSeat(null);
+      }
+      setInviteInfo(
+        "You are not logged in. Joining as guest; this game will not be linked to an account profile."
+      );
       return;
     }
 
@@ -139,6 +177,8 @@ export default function ArenaPage() {
       );
       setRoom(response.invite.roomCode);
       setSeat(response.invite.seat);
+      setInviteKind(response.invite.kind);
+      setSetupApplied(true);
       setInviteInfo(`Invite accepted as ${response.invite.seat}`);
     } catch {
       setInviteInfo("Unable to accept invite");
@@ -161,7 +201,15 @@ export default function ArenaPage() {
     setRoom(nextRoom);
     setInviteCode(null);
     setSeat(null);
+    setInviteKind("player");
+    setSetupApplied(false);
     setInviteInfo(`Created room ${nextRoom}`);
+  }
+
+  function applySetup() {
+    setSeat(hostSeat);
+    setSetupApplied(true);
+    setInviteInfo(`Setup applied. Host seat: ${hostSeat}, first turn: ${firstTurn}`);
   }
 
   useEffect(() => {
@@ -203,9 +251,17 @@ export default function ArenaPage() {
         copyStatus={copyStatus}
         inviteInfo={inviteInfo}
         seat={seat}
+        hostSeat={hostSeat}
+        firstTurn={firstTurn}
+        inviteKind={inviteKind}
+        setupApplied={setupApplied}
         onRoomChange={setRoom}
         onModeChange={setMode}
         onGuestNameChange={setGuestDisplayName}
+        onHostSeatChange={setHostSeat}
+        onFirstTurnChange={setFirstTurn}
+        onInviteKindChange={setInviteKind}
+        onApplySetup={applySetup}
         onCreateRoom={createGameRoom}
         onConnect={connect}
         onDisconnect={disconnect}
@@ -264,8 +320,14 @@ export default function ArenaPage() {
           <ChessBoard
             orientation={orientation}
             onOrientationChange={setOrientation}
+            syncRoom={room}
+            historySnapshot={historySnapshot}
             remoteMove={remoteMove}
             onLocalMove={(move) => {
+              if (!setupApplied) {
+                setInviteInfo("Apply game setup before making moves.");
+                return;
+              }
               if (seat === "spectator") {
                 setInviteInfo("Spectators cannot make moves in this game session.");
                 return;

@@ -32,6 +32,11 @@ interface ChessBoardProps {
   onOrientationChange?: (o: "white" | "black") => void;
   onLocalMove?: (move: { from: Square; to: Square; promotion?: PromotionPiece }) => void;
   remoteMove?: { from: Square; to: Square; promotion?: PromotionPiece; nonce: number } | null;
+  syncRoom?: string;
+  historySnapshot?: {
+    moves: { from: Square; to: Square; promotion?: PromotionPiece }[];
+    nonce: number;
+  } | null;
 }
 
 export function ChessBoard({
@@ -39,6 +44,8 @@ export function ChessBoard({
   onOrientationChange,
   onLocalMove,
   remoteMove,
+  syncRoom,
+  historySnapshot,
 }: ChessBoardProps) {
   const [chess, setChess] = useState<Chess | null>(null);
   const [fen, setFen] = useState("");
@@ -54,19 +61,49 @@ export function ChessBoard({
   // Initialize chess on client only
   useEffect(() => {
     const instance = new Chess();
-    const stored = window.localStorage.getItem("chess_fen");
-    if (stored) {
-      instance.load(stored);
-    }
     setChess(instance);
     setFen(instance.fen());
   }, []);
 
-  // Persist FEN to localStorage
+  // Reset board when switching rooms so state does not leak across sessions.
   useEffect(() => {
-    if (!chess) return;
-    window.localStorage.setItem("chess_fen", fen);
-  }, [fen, chess]);
+    const instance = new Chess();
+    setChess(instance);
+    setFen(instance.fen());
+    setSelected(null);
+    setLegalTargets([]);
+    setLastMove(null);
+    setPendingPromotion(null);
+  }, [syncRoom]);
+
+  // Apply authoritative room history on join/reconnect to keep peers in sync.
+  useEffect(() => {
+    if (!historySnapshot) return;
+
+    const instance = new Chess();
+    let latestMove: [Square, Square] | null = null;
+
+    for (const move of historySnapshot.moves) {
+      try {
+        const applied = instance.move(
+          move.promotion
+            ? { from: move.from, to: move.to, promotion: move.promotion }
+            : { from: move.from, to: move.to }
+        );
+        if (!applied) break;
+        latestMove = [move.from, move.to];
+      } catch {
+        break;
+      }
+    }
+
+    setChess(instance);
+    setFen(instance.fen());
+    setSelected(null);
+    setLegalTargets([]);
+    setPendingPromotion(null);
+    setLastMove(latestMove);
+  }, [historySnapshot?.nonce]);
 
   const game = chess;
 

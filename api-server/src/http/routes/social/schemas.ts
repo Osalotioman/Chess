@@ -15,6 +15,9 @@ export const friendIdParamsSchema = z.object({
 export const createInviteSchema = z.object({
   roomCode: z.string().trim().min(1).max(64).optional(),
   receiverUserId: z.string().trim().min(1).max(64).optional(),
+  inviteKind: z.enum(["player", "spectator"]).default("player"),
+  hostSeat: z.enum(["white", "black"]).default("white"),
+  firstTurn: z.enum(["white", "black"]).default("white"),
   expiresInMinutes: z.coerce.number().int().min(5).max(60 * 24 * 7).default(120),
 });
 

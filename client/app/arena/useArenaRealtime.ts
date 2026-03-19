@@ -20,11 +20,20 @@ type RemoteMove = {
   nonce: number;
 };
 
+type MoveSnapshot = {
+  from: Square;
+  to: Square;
+  promotion?: "q" | "r" | "b" | "n";
+};
+
 type RealtimeState = {
   connected: boolean;
   status: string;
   lastWsError: string | null;
   peersInRoom: number;
+  seat: "white" | "black" | "spectator" | null;
+  turn: "white" | "black";
+  historySnapshot: { moves: MoveSnapshot[]; nonce: number } | null;
   remoteMove: RemoteMove | null;
   connect: () => void;
   disconnect: () => void;
@@ -37,6 +46,7 @@ export function useArenaRealtime({
   mode,
   guestProfile,
   accountProfile,
+  preferredSeat,
   canAttemptConnect,
 }: {
   wsUrl: string;
@@ -44,12 +54,16 @@ export function useArenaRealtime({
   mode: PlayerMode;
   guestProfile: GuestProfile;
   accountProfile: AccountProfile | null;
+  preferredSeat: "white" | "black" | "spectator" | null;
   canAttemptConnect: boolean;
 }): RealtimeState {
   const [connected, setConnected] = useState(false);
   const [status, setStatus] = useState("Disconnected");
   const [lastWsError, setLastWsError] = useState<string | null>(null);
   const [peersInRoom, setPeersInRoom] = useState(0);
+  const [seat, setSeat] = useState<"white" | "black" | "spectator" | null>(null);
+  const [turn, setTurn] = useState<"white" | "black">("white");
+  const [historySnapshot, setHistorySnapshot] = useState<{ moves: MoveSnapshot[]; nonce: number } | null>(null);
   const [remoteMove, setRemoteMove] = useState<RemoteMove | null>(null);
 
   const socketRef = useRef<WebSocket | null>(null);
@@ -87,6 +101,7 @@ export function useArenaRealtime({
             guestName: guestProfile.displayName,
             userId: accountProfile?.id,
             username: accountProfile?.username,
+            preferredSeat: preferredSeat ?? undefined,
           },
         })
       );
@@ -96,6 +111,7 @@ export function useArenaRealtime({
       setConnected(false);
       setStatus("Disconnected");
       setPeersInRoom(0);
+      setSeat(null);
       socketRef.current = null;
 
       if (canAttemptConnect) {
@@ -126,6 +142,9 @@ export function useArenaRealtime({
           type?: string;
           room?: string;
           peers?: number;
+          seat?: "white" | "black" | "spectator";
+          turn?: "white" | "black";
+          moves?: MoveSnapshot[];
           message?: string;
           from?: Square;
           to?: Square;
@@ -134,6 +153,12 @@ export function useArenaRealtime({
 
         if (message.type === "joined" && message.room) {
           setPeersInRoom(typeof message.peers === "number" ? message.peers : 0);
+          setSeat(message.seat ?? null);
+          setTurn(message.turn === "black" ? "black" : "white");
+          setHistorySnapshot({
+            moves: Array.isArray(message.moves) ? message.moves : [],
+            nonce: Date.now(),
+          });
           setStatus(`Connected (${mode} mode, room: ${message.room})`);
           return;
         }
@@ -152,6 +177,9 @@ export function useArenaRealtime({
         }
 
         if (message.type === "move" && message.from && message.to) {
+          if (message.turn === "white" || message.turn === "black") {
+            setTurn(message.turn);
+          }
           remoteNonceRef.current += 1;
           setRemoteMove({
             from: message.from,
@@ -187,6 +215,7 @@ export function useArenaRealtime({
     guestProfile.displayName,
     guestProfile.id,
     mode,
+    preferredSeat,
     room,
     wsUrl,
   ]);
@@ -245,6 +274,9 @@ export function useArenaRealtime({
     status,
     lastWsError,
     peersInRoom,
+    seat,
+    turn,
+    historySnapshot,
     remoteMove,
     connect,
     disconnect,

@@ -17,9 +17,17 @@ type ArenaSidebarProps = {
   copyStatus: "idle" | "copied" | "failed";
   inviteInfo: string | null;
   seat: "white" | "black" | "spectator" | null;
+  hostSeat: "white" | "black";
+  firstTurn: "white" | "black";
+  inviteKind: "player" | "spectator";
+  setupApplied: boolean;
   onRoomChange: (value: string) => void;
   onModeChange: (value: PlayerMode) => void;
   onGuestNameChange: (value: string) => void;
+  onHostSeatChange: (value: "white" | "black") => void;
+  onFirstTurnChange: (value: "white" | "black") => void;
+  onInviteKindChange: (value: "player" | "spectator") => void;
+  onApplySetup: () => void;
   onCreateRoom: () => void;
   onConnect: () => void;
   onDisconnect: () => void;
@@ -51,9 +59,17 @@ export function ArenaSidebar({
   copyStatus,
   inviteInfo,
   seat,
+  hostSeat,
+  firstTurn,
+  inviteKind,
+  setupApplied,
   onRoomChange,
   onModeChange,
   onGuestNameChange,
+  onHostSeatChange,
+  onFirstTurnChange,
+  onInviteKindChange,
+  onApplySetup,
   onCreateRoom,
   onConnect,
   onDisconnect,
@@ -94,7 +110,7 @@ export function ArenaSidebar({
           </div>
 
           {!connected ? (
-            <button onClick={onConnect} className={controlBtn} type="button">
+            <button onClick={onConnect} className={controlBtn} type="button" disabled={!setupApplied}>
               Connect
             </button>
           ) : (
@@ -143,6 +159,49 @@ export function ArenaSidebar({
               Auto-connect: <strong>{autoConnectEnabled ? "On" : "Off"}</strong>
             </div>
 
+            <div className="grid gap-2 rounded-md border border-slate-700/70 bg-slate-900 p-3">
+              <div className="text-xs font-semibold tracking-wide text-slate-300 uppercase">Game Setup</div>
+              <label className="grid gap-1 text-xs text-slate-300">
+                Host seat
+                <select
+                  aria-label="Host seat"
+                  className={inputBase}
+                  value={hostSeat}
+                  onChange={(event) => onHostSeatChange(event.target.value as "white" | "black")}
+                >
+                  <option value="white">Host as White</option>
+                  <option value="black">Host as Black</option>
+                </select>
+              </label>
+              <label className="grid gap-1 text-xs text-slate-300">
+                First turn
+                <select
+                  aria-label="First turn"
+                  className={inputBase}
+                  value={firstTurn}
+                  onChange={(event) => onFirstTurnChange(event.target.value as "white" | "black")}
+                >
+                  <option value="white">White moves first</option>
+                  <option value="black">Black moves first</option>
+                </select>
+              </label>
+              <label className="grid gap-1 text-xs text-slate-300">
+                Invite kind
+                <select
+                  aria-label="Invite kind"
+                  className={inputBase}
+                  value={inviteKind}
+                  onChange={(event) => onInviteKindChange(event.target.value as "player" | "spectator")}
+                >
+                  <option value="player">Player invite</option>
+                  <option value="spectator">Spectator invite</option>
+                </select>
+              </label>
+              <button onClick={onApplySetup} className={controlBtn} type="button">
+                {setupApplied ? "Setup Applied" : "Apply Setup"}
+              </button>
+            </div>
+
             <div className="grid gap-2 sm:grid-cols-2">
               <div className="rounded-md border border-slate-700/70 bg-slate-900 p-2 text-xs text-slate-300">
                 Peers in room: <strong>{peersInRoom}</strong>
@@ -161,6 +220,9 @@ export function ArenaSidebar({
               </div>
               <div className="rounded-md border border-slate-700/70 bg-slate-900 p-2 text-xs text-slate-300">
                 Seat: <strong>{seat ?? "Unassigned"}</strong>
+              </div>
+              <div className="rounded-md border border-slate-700/70 bg-slate-900 p-2 text-xs text-slate-300">
+                Setup: <strong>{setupApplied ? "Ready" : "Required"}</strong>
               </div>
             </div>
 

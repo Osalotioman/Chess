@@ -16,9 +16,12 @@ export async function createBidirectionalFriendship(
   });
 }
 
-export async function generateUniqueInviteCode(socialPrisma: PrismaClientLike): Promise<string> {
+export async function generateUniqueInviteCode(
+  socialPrisma: PrismaClientLike,
+  prefix = ""
+): Promise<string> {
   for (let attempt = 0; attempt < 10; attempt += 1) {
-    const code = randomBytes(4).toString("hex");
+    const code = `${prefix}${randomBytes(4).toString("hex")}`;
     const existing = await socialPrisma.invite.findUnique({
       where: { code },
       select: { id: true },

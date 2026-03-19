@@ -42,13 +42,22 @@ function normalizePlayerIdentity(value: unknown): PlayerIdentity {
     typeof value.guestName === "string" ? value.guestName.trim().slice(0, 32) : undefined;
   const userId = typeof value.userId === "string" ? value.userId.trim().slice(0, 64) : undefined;
   const username = typeof value.username === "string" ? value.username.trim().slice(0, 32) : undefined;
+  const preferredSeat =
+    value.preferredSeat === "white" || value.preferredSeat === "black"
+      ? value.preferredSeat
+      : value.preferredSeat === "spectator"
+        ? "spectator"
+        : undefined;
+
+  const normalizedMode = mode === "account" && userId && userId.length > 0 ? "account" : "guest";
 
   return {
-    mode,
+    mode: normalizedMode,
     guestId: guestId && guestId.length > 0 ? guestId : undefined,
     guestName: guestName && guestName.length > 0 ? guestName : undefined,
     userId: userId && userId.length > 0 ? userId : undefined,
     username: username && username.length > 0 ? username : undefined,
+    preferredSeat,
   };
 }
 
@@ -74,10 +83,6 @@ async function handleJsonMessage(roomRegistry: RoomRegistry, ws: WebSocket, obj:
     const normalizedRoom = room.trim();
     const player = normalizePlayerIdentity(obj.player);
     const joinedRoom = roomRegistry.join(ws, normalizedRoom, player);
-    if (!joinedRoom.joined) {
-      return;
-    }
-
     if (joinedRoom.left && joinedRoom.left.peers > 0) {
       broadcast(roomRegistry, joinedRoom.left.room, ws, {
         type: "peer_left",
@@ -85,12 +90,24 @@ async function handleJsonMessage(roomRegistry: RoomRegistry, ws: WebSocket, obj:
       });
     }
 
-    send(ws, { type: "joined", room: normalizedRoom, peers: joinedRoom.peers, player });
-    broadcast(roomRegistry, normalizedRoom, ws, {
-      type: "peer_joined",
+    send(ws, {
+      type: "joined",
+      room: normalizedRoom,
       peers: joinedRoom.peers,
       player,
+      seat: joinedRoom.seat,
+      turn: joinedRoom.turn,
+      moves: joinedRoom.moves,
     });
+
+    if (joinedRoom.joined) {
+      broadcast(roomRegistry, normalizedRoom, ws, {
+        type: "peer_joined",
+        peers: joinedRoom.peers,
+        player,
+        seat: joinedRoom.seat,
+      });
+    }
     return;
   }
 
@@ -101,9 +118,20 @@ async function handleJsonMessage(roomRegistry: RoomRegistry, ws: WebSocket, obj:
       return;
     }
 
-    if (!internalWsSharedSecret) {
-      send(ws, { type: "error", message: "Move verification unavailable on server" });
+    const player = roomRegistry.getPlayer(ws);
+
+    const seat = roomRegistry.getSeat(ws);
+    if (seat === "spectator") {
+      send(ws, { type: "error", message: "Spectators cannot make moves" });
       return;
+    }
+
+    if (!(player.mode === "account" && player.userId)) {
+      const currentTurn = roomRegistry.getTurn(room);
+      if (currentTurn !== seat) {
+        send(ws, { type: "error", message: `It is ${currentTurn}'s turn` });
+        return;
+      }
     }
 
     const from = normalizeMoveField(obj.from);
@@ -115,26 +143,56 @@ async function handleJsonMessage(roomRegistry: RoomRegistry, ws: WebSocket, obj:
       return;
     }
 
-    const player = roomRegistry.getPlayer(ws);
-    let authorization;
-    try {
-      authorization = await authorizeAndAdvanceMove(
-        apiServerOrigin,
-        internalWsSharedSecret,
-        room,
-        player
-      );
-    } catch {
-      send(ws, { type: "error", message: "Move verification request failed" });
+    if (!internalWsSharedSecret) {
+      roomRegistry.recordMove(room, { from, to, promotion }, seat === "white" ? "black" : "white");
+      broadcast(roomRegistry, room, ws, {
+        type: "move",
+        from,
+        to,
+        promotion,
+        turn: roomRegistry.getTurn(room),
+      });
       return;
     }
 
-    if (!authorization.ok) {
-      send(ws, { type: "error", message: authorization.reason ?? "Move not authorized" });
+    if (player.mode === "account" && player.userId) {
+      let authorization;
+      try {
+        authorization = await authorizeAndAdvanceMove(
+          apiServerOrigin,
+          internalWsSharedSecret,
+          room,
+          player
+        );
+      } catch {
+        send(ws, { type: "error", message: "Move verification request failed" });
+        return;
+      }
+
+      if (!authorization.ok) {
+        send(ws, { type: "error", message: authorization.reason ?? "Move not authorized" });
+        return;
+      }
+
+      roomRegistry.recordMove(room, { from, to, promotion }, authorization.nextTurn);
+      broadcast(roomRegistry, room, ws, {
+        type: "move",
+        from,
+        to,
+        promotion,
+        turn: roomRegistry.getTurn(room),
+      });
       return;
     }
 
-    broadcast(roomRegistry, room, ws, { type: "move", from, to, promotion });
+    roomRegistry.recordMove(room, { from, to, promotion }, seat === "white" ? "black" : "white");
+    broadcast(roomRegistry, room, ws, {
+      type: "move",
+      from,
+      to,
+      promotion,
+      turn: roomRegistry.getTurn(room),
+    });
     return;
   }
 
