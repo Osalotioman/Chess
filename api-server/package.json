@@ -17,10 +17,12 @@
     "prisma:studio": "prisma studio"
   },
   "dependencies": {
+    "@prisma/adapter-pg": "^7.4.1",
     "@prisma/client": "^7.4.1",
     "bcryptjs": "^2.4.3",
     "fastify": "^5.8.1",
     "jsonwebtoken": "^9.0.2",
+    "pg": "^8.16.3",
     "zod": "^3.24.1"
   },
   "devDependencies": {
