@@ -34,6 +34,7 @@ type ArenaSidebarProps = {
   onCopyInvite: () => void;
   onCreateSignedInvite: () => void;
   onAcceptInvite: () => void;
+  onAbortGame: () => void;
 };
 
 const controlBtn =
@@ -76,6 +77,7 @@ export function ArenaSidebar({
   onCopyInvite,
   onCreateSignedInvite,
   onAcceptInvite,
+  onAbortGame,
 }: ArenaSidebarProps) {
   return (
     <aside
@@ -197,6 +199,9 @@ export function ArenaSidebar({
                   <option value="spectator">Spectator invite</option>
                 </select>
               </label>
+              <p className="text-[11px] text-slate-400">
+                Player invites are limited to two seats total. Use spectator invite once both player seats are occupied.
+              </p>
               <button onClick={onApplySetup} className={controlBtn} type="button">
                 {setupApplied ? "Setup Applied" : "Apply Setup"}
               </button>
@@ -245,6 +250,14 @@ export function ArenaSidebar({
                     Accept Invite
                   </button>
                 ) : null}
+                <button
+                  onClick={onAbortGame}
+                  className={`${controlBtn} sm:col-span-2`}
+                  type="button"
+                  disabled={inviteBusy || !seat || seat === "spectator"}
+                >
+                  Abort Current Game
+                </button>
               </div>
               <span className="text-xs text-slate-300">
                 {copyStatus === "copied" ? "Copied" : copyStatus === "failed" ? "Copy failed" : ""}

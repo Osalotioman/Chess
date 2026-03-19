@@ -257,17 +257,24 @@ export function useArenaRealtime({
       return;
     }
 
+    let initialConnectTimer: ReturnType<typeof setTimeout> | null = null;
+
     if (!connected) {
-      connect();
+      initialConnectTimer = setTimeout(() => {
+        connectRef.current?.();
+      }, 0);
     }
 
     return () => {
+      if (initialConnectTimer) {
+        clearTimeout(initialConnectTimer);
+      }
       if (retryTimerRef.current) {
         clearTimeout(retryTimerRef.current);
         retryTimerRef.current = null;
       }
     };
-  }, [canAttemptConnect, connected, connect]);
+  }, [canAttemptConnect, connected]);
 
   return {
     connected,

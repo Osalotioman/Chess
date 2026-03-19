@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { ChessBoard } from "@components/ChessBoard";
-import { apiGet, apiPost } from "@lib/api";
+import { ApiError, apiGet, apiPost } from "@lib/api";
 import { getAccessToken, getStoredSession } from "@lib/session";
 import { usePlayerIdentity } from "@lib/usePlayerIdentity";
 import { createRoomId } from "@lib/roomId";
@@ -93,10 +93,28 @@ export default function ArenaPage() {
         if (!active) return;
         setRoom(response.invite.roomCode);
         setInviteKind(response.invite.kind);
-        setInviteInfo(response.invite.active ? "Invite ready to join" : "Invite is no longer active");
+        if (!response.invite.active) {
+          setInviteInfo("Invite is no longer active");
+          return;
+        }
+
+        if (response.invite.kind === "player" && response.invite.seatsFull) {
+          setInviteInfo("Game already has two players. Ask for a spectator invite link.");
+          return;
+        }
+
+        setInviteInfo(
+          response.invite.kind === "spectator"
+            ? "Spectator invite ready. You will join as a watcher."
+            : "Player invite ready to join"
+        );
       })
-      .catch(() => {
+      .catch((error) => {
         if (!active) return;
+        if (error instanceof ApiError) {
+          setInviteInfo(error.message);
+          return;
+        }
         setInviteInfo("Unable to resolve invite link");
       })
       .finally(() => {
@@ -144,7 +162,11 @@ export default function ArenaPage() {
       setSeat(hostSeat);
       setInviteInfo(`Signed ${response.invite.kind} invite created`);
     } catch {
-      setInviteInfo("Unable to create signed invite");
+      setInviteInfo(
+        inviteKind === "player"
+          ? "Unable to create player invite. If room is full, switch invite kind to spectator."
+          : "Unable to create signed invite"
+      );
     } finally {
       setInviteBusy(false);
     }
@@ -180,8 +202,12 @@ export default function ArenaPage() {
       setInviteKind(response.invite.kind);
       setSetupApplied(true);
       setInviteInfo(`Invite accepted as ${response.invite.seat}`);
-    } catch {
-      setInviteInfo("Unable to accept invite");
+    } catch (error) {
+      if (error instanceof ApiError) {
+        setInviteInfo(error.message);
+      } else {
+        setInviteInfo("Unable to accept invite");
+      }
     } finally {
       setInviteBusy(false);
     }
@@ -193,6 +219,51 @@ export default function ArenaPage() {
       setCopyStatus("copied");
     } catch {
       setCopyStatus("failed");
+    }
+  }
+
+  async function abortCurrentGame() {
+    if (!room.trim()) return;
+
+    if (typeof window !== "undefined") {
+      const confirmed = window.confirm(
+        "Abort this game? Aborting immediately ends the game and gives the other player the win when applicable."
+      );
+      if (!confirmed) return;
+    }
+
+    const token = getAccessToken();
+    if (!token) {
+      setInviteInfo("You are playing as guest. Local abort only: disconnecting from room.");
+      disconnect();
+      return;
+    }
+
+    setInviteBusy(true);
+    try {
+      const response = await apiPost<{
+        result: {
+          roomCode: string;
+          status: string;
+          abortedBySeat: "white" | "black";
+          winnerSeat: "white" | "black" | null;
+        };
+      }>(`/games/${encodeURIComponent(room.trim())}/abort`, undefined, { token });
+
+      setInviteInfo(
+        response.result.winnerSeat
+          ? `Game aborted by ${response.result.abortedBySeat}. ${response.result.winnerSeat} wins.`
+          : `Game aborted by ${response.result.abortedBySeat}.`
+      );
+      disconnect();
+    } catch (error) {
+      if (error instanceof ApiError) {
+        setInviteInfo(error.message);
+      } else {
+        setInviteInfo("Unable to abort game");
+      }
+    } finally {
+      setInviteBusy(false);
     }
   }
 
@@ -268,6 +339,7 @@ export default function ArenaPage() {
         onCopyInvite={copyInviteLink}
         onCreateSignedInvite={createSignedInvite}
         onAcceptInvite={acceptInvite}
+        onAbortGame={abortCurrentGame}
       />
 
       {isSidebarOpen ? (

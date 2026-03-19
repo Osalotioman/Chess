@@ -39,17 +39,19 @@ interface RequestOptions {
 
 export async function apiRequest<T>(path: string, options: RequestOptions = {}): Promise<T> {
   const { method = "GET", token, body, headers, signal } = options;
+  const hasBody = body !== undefined;
+  const computedHeaders: HeadersInit = {
+    ...(hasBody ? { "Content-Type": "application/json" } : {}),
+    ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    ...headers,
+  };
 
   let response: Response;
   try {
     response = await fetch(normalizePath(path), {
       method,
-      headers: {
-        "Content-Type": "application/json",
-        ...(token ? { Authorization: `Bearer ${token}` } : {}),
-        ...headers,
-      },
-      body: body === undefined ? undefined : JSON.stringify(body),
+      headers: computedHeaders,
+      body: hasBody ? JSON.stringify(body) : undefined,
       signal,
       cache: "no-store",
     });
