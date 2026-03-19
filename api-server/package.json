@@ -16,6 +16,7 @@
     "prisma:studio": "prisma studio"
   },
   "dependencies": {
+    "@fastify/cors": "^11.2.0",
     "@prisma/adapter-pg": "^7.4.1",
     "@prisma/client": "^7.4.1",
     "bcryptjs": "^2.4.3",

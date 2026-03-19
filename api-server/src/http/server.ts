@@ -1,7 +1,9 @@
 import Fastify from "fastify";
+import cors from "@fastify/cors";
 import { AuthService } from "../domain/auth/authService";
 import { PrismaUserRepository } from "../domain/user/userRepository";
 import { prisma } from "../db/prisma";
+import { env, isOriginAllowed } from "../config/env";
 import { registerAuthRoutes } from "./routes/authRoutes";
 import { registerInternalWsRoutes } from "./routes/internalWsRoutes";
 import { registerSocialRoutes } from "./routes/socialRoutes";
@@ -11,6 +13,13 @@ export function createServer() {
 
   const userRepository = new PrismaUserRepository(prisma);
   const authService = new AuthService(userRepository);
+
+  app.register(cors, {
+    credentials: env.CORS_ALLOW_CREDENTIALS,
+    origin: (origin, callback) => {
+      callback(null, isOriginAllowed(origin));
+    },
+  });
 
   app.addHook("onClose", async () => {
     await prisma.$disconnect();
