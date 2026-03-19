@@ -5,6 +5,8 @@ import Link from "next/link";
 
 import { login, logout, signup } from "@lib/auth";
 import { clearStoredSession, getStoredSession, setStoredSession } from "@lib/session";
+import { Button } from "@components/ui/button";
+import { Input } from "@components/ui/input";
 
 type AuthMode = "signin" | "signup";
 
@@ -82,28 +84,12 @@ export default function AuthPage() {
         {!isLoggedIn ? (
           <>
             <div className="mb-3 flex flex-wrap gap-2" role="tablist" aria-label="Auth mode">
-              <button
-                type="button"
-                className={`inline-flex min-h-10 items-center justify-center rounded-lg border px-3 text-sm font-medium transition ${
-                  mode === "signin"
-                    ? "border-emerald-300 bg-emerald-300 text-slate-900"
-                    : "border-slate-600 bg-slate-800 text-slate-100 hover:border-emerald-300/70 hover:bg-slate-700"
-                }`}
-                onClick={() => setMode("signin")}
-              >
+              <Button type="button" variant={mode === "signin" ? "default" : "secondary"} onClick={() => setMode("signin")}>
                 Sign In
-              </button>
-              <button
-                type="button"
-                className={`inline-flex min-h-10 items-center justify-center rounded-lg border px-3 text-sm font-medium transition ${
-                  mode === "signup"
-                    ? "border-emerald-300 bg-emerald-300 text-slate-900"
-                    : "border-slate-600 bg-slate-800 text-slate-100 hover:border-emerald-300/70 hover:bg-slate-700"
-                }`}
-                onClick={() => setMode("signup")}
-              >
+              </Button>
+              <Button type="button" variant={mode === "signup" ? "default" : "secondary"} onClick={() => setMode("signup")}>
                 Sign Up
-              </button>
+              </Button>
             </div>
 
             <h2 className="mb-3 text-xl font-semibold text-slate-100">{heading}</h2>
@@ -112,21 +98,19 @@ export default function AuthPage() {
               {mode === "signup" ? (
                 <label className="grid gap-1 text-sm text-slate-300">
                   Username
-                  <input
+                  <Input
                     value={username}
                     onChange={(event) => setUsername(event.target.value)}
                     placeholder="chessmaster"
-                    className="w-full rounded-lg border border-slate-600 bg-slate-950 px-3 py-2 text-sm text-slate-100 outline-none focus:border-emerald-300/70"
                   />
                 </label>
               ) : (
                 <label className="grid gap-1 text-sm text-slate-300">
                   Email or Username
-                  <input
+                  <Input
                     value={emailOrUsername}
                     onChange={(event) => setEmailOrUsername(event.target.value)}
                     placeholder="you@example.com"
-                    className="w-full rounded-lg border border-slate-600 bg-slate-950 px-3 py-2 text-sm text-slate-100 outline-none focus:border-emerald-300/70"
                   />
                 </label>
               )}
@@ -134,34 +118,32 @@ export default function AuthPage() {
               {mode === "signup" ? (
                 <label className="grid gap-1 text-sm text-slate-300">
                   Email
-                  <input
+                  <Input
                     value={email}
                     onChange={(event) => setEmail(event.target.value)}
                     placeholder="you@example.com"
-                    className="w-full rounded-lg border border-slate-600 bg-slate-950 px-3 py-2 text-sm text-slate-100 outline-none focus:border-emerald-300/70"
                   />
                 </label>
               ) : null}
 
               <label className="grid gap-1 text-sm text-slate-300">
                 Password
-                <input
+                <Input
                   type="password"
                   value={password}
                   onChange={(event) => setPassword(event.target.value)}
                   placeholder="At least 8 characters"
-                  className="w-full rounded-lg border border-slate-600 bg-slate-950 px-3 py-2 text-sm text-slate-100 outline-none focus:border-emerald-300/70"
                 />
               </label>
 
-              <button
+              <Button
                 type="button"
-                className="inline-flex min-h-10 items-center justify-center rounded-lg border border-slate-600 bg-slate-800 px-3 text-sm font-medium text-slate-100 transition hover:border-emerald-300/70 hover:bg-slate-700 disabled:cursor-not-allowed disabled:opacity-60"
+                variant="secondary"
                 disabled={busy}
                 onClick={submit}
               >
                 {busy ? "Working..." : mode === "signin" ? "Sign In" : "Create Account"}
-              </button>
+              </Button>
             </div>
           </>
         ) : (
@@ -169,14 +151,14 @@ export default function AuthPage() {
             <h2 className="mb-3 text-xl font-semibold text-slate-100">Signed in as {sessionState?.user.username}</h2>
             <p className="mb-1 break-all text-sm text-slate-300">Email: {sessionState?.user.email}</p>
             <p className="mb-3 break-all text-sm text-slate-300">User ID: {sessionState?.user.id}</p>
-            <button
+            <Button
               type="button"
-              className="inline-flex min-h-10 items-center justify-center rounded-lg border border-slate-600 bg-slate-800 px-3 text-sm font-medium text-slate-100 transition hover:border-emerald-300/70 hover:bg-slate-700 disabled:cursor-not-allowed disabled:opacity-60"
+              variant="secondary"
               disabled={busy}
               onClick={signOut}
             >
               {busy ? "Signing out..." : "Sign Out"}
-            </button>
+            </Button>
           </>
         )}
 
@@ -185,12 +167,12 @@ export default function AuthPage() {
       </section>
 
       <div className="flex flex-wrap justify-center gap-3">
-        <Link href="/lobby" className="inline-flex min-h-10 items-center justify-center rounded-lg border border-slate-600 bg-slate-800 px-4 text-sm font-medium text-slate-100 transition hover:border-emerald-300/70 hover:bg-slate-700">
-          Go to Lobby
-        </Link>
-        <Link href="/arena" className="inline-flex min-h-10 items-center justify-center rounded-lg border border-slate-600 bg-slate-800 px-4 text-sm font-medium text-slate-100 transition hover:border-emerald-300/70 hover:bg-slate-700">
-          Go to Arena
-        </Link>
+        <Button asChild variant="secondary">
+          <Link href="/lobby">Go to Lobby</Link>
+        </Button>
+        <Button asChild variant="secondary">
+          <Link href="/arena">Go to Arena</Link>
+        </Button>
       </div>
     </main>
   );

@@ -53,6 +53,7 @@ export function useArenaRealtime({
   const [remoteMove, setRemoteMove] = useState<RemoteMove | null>(null);
 
   const socketRef = useRef<WebSocket | null>(null);
+  const connectRef = useRef<(() => void) | null>(null);
   const retryTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const retryAttemptRef = useRef(0);
   const remotePendingFrom = useRef<Square | null>(null);
@@ -107,7 +108,7 @@ export function useArenaRealtime({
         setStatus(`Reconnecting in ${Math.ceil(delayMs / 1000)}s...`);
         retryTimerRef.current = setTimeout(() => {
           retryTimerRef.current = null;
-          connect();
+          connectRef.current?.();
         }, delayMs);
       }
     };
@@ -212,6 +213,10 @@ export function useArenaRealtime({
       })
     );
   }, []);
+
+  useEffect(() => {
+    connectRef.current = connect;
+  }, [connect]);
 
   useEffect(() => {
     if (!canAttemptConnect) {

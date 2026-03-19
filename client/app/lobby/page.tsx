@@ -2,8 +2,10 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
+import { Button } from "@components/ui/button";
+import { Input } from "@components/ui/input";
 import { apiDelete, apiGet, apiPost } from "../lib/api";
-import { getAccessToken } from "../lib/session";
+import { getAccessToken, getStoredSession } from "../lib/session";
 
 type Player = {
   id: string;
@@ -61,6 +63,7 @@ type InviteCreateResponse = {
 };
 
 export default function LobbyPage() {
+  const currentUserId = getStoredSession()?.user.id ?? null;
   const [query, setQuery] = useState("");
   const [pendingRequests, setPendingRequests] = useState<string[]>([]);
   const [players, setPlayers] = useState<Player[]>([]);
@@ -87,10 +90,12 @@ export default function LobbyPage() {
         if (!active) return;
 
         setPlayers(
-          response.players.map((player) => ({
-            ...player,
-            isFriend: friends.some((friend) => friend.id === player.id),
-          }))
+          response.players
+            .filter((player) => player.id !== currentUserId)
+            .map((player) => ({
+              ...player,
+              isFriend: friends.some((friend) => friend.id === player.id),
+            }))
         );
       } catch {
         if (!active) return;
@@ -106,7 +111,7 @@ export default function LobbyPage() {
     return () => {
       active = false;
     };
-  }, [query, friends]);
+  }, [query, friends, currentUserId]);
 
   useEffect(() => {
     let active = true;
@@ -153,6 +158,10 @@ export default function LobbyPage() {
 
   async function requestFriend(playerId: string) {
     if (pendingRequests.includes(playerId)) return;
+    if (playerId === currentUserId) {
+      setLoadError("You cannot add yourself as a friend.");
+      return;
+    }
 
     const token = getAccessToken();
     if (!token) {
@@ -266,19 +275,15 @@ export default function LobbyPage() {
       </header>
 
       <section className="grid items-center gap-3 rounded-2xl border border-slate-700 bg-gradient-to-br from-slate-900/95 to-slate-800/70 p-3 shadow-xl md:grid-cols-[1fr_auto]">
-        <input
+        <Input
           aria-label="Search players"
           placeholder="Search by player name"
           value={query}
           onChange={(event) => setQuery(event.target.value)}
-          className="w-full rounded-lg border border-slate-600 bg-slate-950 px-3 py-2 text-sm text-slate-100 outline-none focus:border-emerald-300/70"
         />
-        <Link
-          href="/arena"
-          className="inline-flex min-h-10 items-center justify-center rounded-lg bg-gradient-to-r from-emerald-300 to-teal-200 px-4 text-sm font-semibold text-slate-900"
-        >
-          Go to Arena
-        </Link>
+        <Button asChild>
+          <Link href="/arena">Go to Arena</Link>
+        </Button>
       </section>
 
       {isLoading ? <div className="border-t border-dashed border-slate-600 pt-2 text-sm text-slate-300">Loading player directory...</div> : null}
@@ -307,14 +312,15 @@ export default function LobbyPage() {
                       </span>
                     ) : null}
                     {!player.isFriend ? (
-                      <button
+                      <Button
                         type="button"
-                        className="inline-flex min-h-9 items-center justify-center rounded-lg border border-slate-600 bg-slate-800 px-3 text-sm text-slate-100 transition hover:border-emerald-300/70 hover:bg-slate-700 disabled:opacity-60"
+                        variant="secondary"
+                        size="sm"
                         onClick={() => requestFriend(player.id)}
                         disabled={pending}
                       >
                         {pending ? "Requested" : "Add Friend"}
-                      </button>
+                      </Button>
                     ) : null}
                   </div>
                 </div>
@@ -337,12 +343,12 @@ export default function LobbyPage() {
                     <div className="text-xs text-slate-300">Rating {request.senderRating}</div>
                   </div>
                   <div className="flex items-center gap-2">
-                    <button className="inline-flex min-h-9 items-center justify-center rounded-lg border border-slate-600 bg-slate-800 px-3 text-sm text-slate-100 transition hover:border-emerald-300/70 hover:bg-slate-700" type="button" onClick={() => acceptRequest(request.id)}>
+                    <Button variant="secondary" size="sm" type="button" onClick={() => acceptRequest(request.id)}>
                       Accept
-                    </button>
-                    <button className="inline-flex min-h-9 items-center justify-center rounded-lg border border-slate-600 bg-slate-800 px-3 text-sm text-slate-100 transition hover:border-emerald-300/70 hover:bg-slate-700" type="button" onClick={() => rejectRequest(request.id)}>
+                    </Button>
+                    <Button variant="secondary" size="sm" type="button" onClick={() => rejectRequest(request.id)}>
                       Reject
-                    </button>
+                    </Button>
                   </div>
                 </div>
               ))}
@@ -359,9 +365,9 @@ export default function LobbyPage() {
                     <div className="text-xs text-slate-300">Rating {request.receiverRating}</div>
                   </div>
                   <div className="flex items-center gap-2">
-                    <button className="inline-flex min-h-9 items-center justify-center rounded-lg border border-slate-600 bg-slate-800 px-3 text-sm text-slate-100 transition hover:border-emerald-300/70 hover:bg-slate-700" type="button" onClick={() => cancelRequest(request.id)}>
+                    <Button variant="secondary" size="sm" type="button" onClick={() => cancelRequest(request.id)}>
                       Cancel
-                    </button>
+                    </Button>
                   </div>
                 </div>
               ))}
@@ -381,17 +387,18 @@ export default function LobbyPage() {
               >
                 <span>{friend.username}</span>
                 <div className="flex items-center gap-2">
-                  <button
-                    className="inline-flex min-h-9 items-center justify-center rounded-lg border border-slate-600 bg-slate-800 px-3 text-sm text-slate-100 transition hover:border-emerald-300/70 hover:bg-slate-700 disabled:opacity-60"
+                  <Button
+                    variant="secondary"
+                    size="sm"
                     type="button"
                     onClick={() => inviteFriend(friend.id)}
                     disabled={!friend.online}
                   >
                     {friend.online ? "Invite to Game" : "Offline"}
-                  </button>
-                  <button className="inline-flex min-h-9 items-center justify-center rounded-lg border border-slate-600 bg-slate-800 px-3 text-sm text-slate-100 transition hover:border-emerald-300/70 hover:bg-slate-700" type="button" onClick={() => removeFriend(friend.id)}>
+                  </Button>
+                  <Button variant="secondary" size="sm" type="button" onClick={() => removeFriend(friend.id)}>
                     Remove
-                  </button>
+                  </Button>
                 </div>
               </li>
             ))}

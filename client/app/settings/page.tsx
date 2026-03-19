@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { Button } from "@components/ui/button";
 import { useSettings } from "../lib/useSettings";
 
 export default function SettingsPage() {
@@ -95,23 +96,23 @@ export default function SettingsPage() {
         </div>
 
         <div className="mt-2">
-          <button
+          <Button
             onClick={() => setSettings(defaultSettings)}
-            className="inline-flex min-h-10 items-center justify-center rounded-lg border border-slate-600 bg-slate-800 px-4 text-sm font-medium text-slate-100 transition hover:border-emerald-300/70 hover:bg-slate-700"
+            variant="secondary"
             type="button"
           >
             Reset to Defaults
-          </button>
+          </Button>
         </div>
       </section>
 
       <div className="flex flex-wrap justify-center gap-3">
-        <Link href="/" className="inline-flex min-h-10 items-center justify-center rounded-lg border border-slate-600 bg-slate-800 px-4 text-sm font-medium text-slate-100 transition hover:border-emerald-300/70 hover:bg-slate-700">
-          Back to Home
-        </Link>
-        <Link href="/arena" className="inline-flex min-h-10 items-center justify-center rounded-lg border border-slate-600 bg-slate-800 px-4 text-sm font-medium text-slate-100 transition hover:border-emerald-300/70 hover:bg-slate-700">
-          Go to Arena
-        </Link>
+        <Button asChild variant="secondary">
+          <Link href="/">Back to Home</Link>
+        </Button>
+        <Button asChild variant="secondary">
+          <Link href="/arena">Go to Arena</Link>
+        </Button>
       </div>
     </main>
   );
