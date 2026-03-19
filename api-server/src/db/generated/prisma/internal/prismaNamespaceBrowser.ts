@@ -56,6 +56,7 @@ export const ModelName = {
   FriendRequest: 'FriendRequest',
   Friendship: 'Friendship',
   GameSession: 'GameSession',
+  GameMove: 'GameMove',
   Invite: 'Invite'
 } as const
 
@@ -132,11 +133,29 @@ export const GameSessionScalarFieldEnum = {
   turnColor: 'turnColor',
   fen: 'fen',
   moveCount: 'moveCount',
+  winnerSeat: 'winnerSeat',
+  terminationReason: 'terminationReason',
+  endedAt: 'endedAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
 
 export type GameSessionScalarFieldEnum = (typeof GameSessionScalarFieldEnum)[keyof typeof GameSessionScalarFieldEnum]
+
+
+export const GameMoveScalarFieldEnum = {
+  id: 'id',
+  gameSessionId: 'gameSessionId',
+  ply: 'ply',
+  fromSquare: 'fromSquare',
+  toSquare: 'toSquare',
+  promotion: 'promotion',
+  seat: 'seat',
+  playerUserId: 'playerUserId',
+  createdAt: 'createdAt'
+} as const
+
+export type GameMoveScalarFieldEnum = (typeof GameMoveScalarFieldEnum)[keyof typeof GameMoveScalarFieldEnum]
 
 
 export const InviteScalarFieldEnum = {

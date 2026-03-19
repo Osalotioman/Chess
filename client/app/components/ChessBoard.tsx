@@ -33,6 +33,7 @@ interface ChessBoardProps {
   onLocalMove?: (move: { from: Square; to: Square; promotion?: PromotionPiece }) => void;
   remoteMove?: { from: Square; to: Square; promotion?: PromotionPiece; nonce: number } | null;
   syncRoom?: string;
+  readOnly?: boolean;
   historySnapshot?: {
     moves: { from: Square; to: Square; promotion?: PromotionPiece }[];
     nonce: number;
@@ -45,6 +46,7 @@ export function ChessBoard({
   onLocalMove,
   remoteMove,
   syncRoom,
+  readOnly = false,
   historySnapshot,
 }: ChessBoardProps) {
   const [chess, setChess] = useState<Chess | null>(null);
@@ -201,6 +203,7 @@ export function ChessBoard({
   }, [remoteMove?.nonce]);
 
   function onSquareClick(square: Square) {
+    if (readOnly) return;
     if (!game) return;
     const piece = game.get(square);
 
@@ -316,7 +319,7 @@ export function ChessBoard({
       </div>
 
       <div className="mt-4 flex flex-wrap justify-center gap-2">
-        <button onClick={resetGame} className={controlBtn}>
+        <button onClick={resetGame} className={controlBtn} disabled={readOnly}>
           New Game
         </button>
         <button

@@ -13,6 +13,17 @@ const bodySchema = z.object({
     mode: z.enum(["guest", "account"]).optional(),
     userId: z.string().trim().min(1).max(64).optional(),
   }),
+  move: z
+    .object({
+      from: z.string().trim().min(2).max(4),
+      to: z.string().trim().min(2).max(4),
+      promotion: z.string().trim().min(1).max(2).optional(),
+    })
+    .optional(),
+});
+
+const presenceBodySchema = z.object({
+  playerSockets: z.coerce.number().int().min(0),
 });
 
 export function registerInternalWsRoutes(app: FastifyInstance, prismaClient: PrismaClient) {
@@ -41,6 +52,7 @@ export function registerInternalWsRoutes(app: FastifyInstance, prismaClient: Pri
           whitePlayerId: true,
           blackPlayerId: true,
           turnColor: true,
+          moveCount: true,
         },
       });
 
@@ -110,6 +122,20 @@ export function registerInternalWsRoutes(app: FastifyInstance, prismaClient: Pri
         };
       }
 
+      if (parsedBody.data.move) {
+        await tx.gameMove.create({
+          data: {
+            gameSessionId: game.id,
+            ply: game.moveCount + 1,
+            fromSquare: parsedBody.data.move.from,
+            toSquare: parsedBody.data.move.to,
+            promotion: parsedBody.data.move.promotion,
+            seat,
+            playerUserId: userId,
+          },
+        });
+      }
+
       return {
         ok: true,
         enforced: true,
@@ -119,5 +145,40 @@ export function registerInternalWsRoutes(app: FastifyInstance, prismaClient: Pri
     });
 
     return reply.send(result);
+  });
+
+  app.post("/internal/ws/rooms/:roomCode/presence", async (request, reply) => {
+    const providedSecret = request.headers["x-internal-ws-secret"];
+    if (providedSecret !== env.INTERNAL_WS_SHARED_SECRET) {
+      return reply.status(401).send({ ok: false, reason: "Unauthorized internal request" });
+    }
+
+    const parsedParams = paramsSchema.safeParse(request.params);
+    const parsedBody = presenceBodySchema.safeParse(request.body);
+
+    if (!parsedParams.success || !parsedBody.success) {
+      return reply.status(400).send({ ok: false, reason: "Invalid payload" });
+    }
+
+    const { roomCode } = parsedParams.data;
+    const { playerSockets } = parsedBody.data;
+
+    if (playerSockets > 0) {
+      return reply.send({ ok: true, ended: false });
+    }
+
+    const updated = await prismaClient.gameSession.updateMany({
+      where: {
+        roomCode,
+        status: { in: ["waiting", "active"] },
+      },
+      data: {
+        status: "finished",
+        terminationReason: "disconnect",
+        endedAt: new Date(),
+      },
+    });
+
+    return reply.send({ ok: true, ended: updated.count > 0 });
   });
 }

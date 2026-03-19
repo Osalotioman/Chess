@@ -42,6 +42,20 @@ export class RoomRegistry {
     return [...(this.rooms.get(room)?.moves ?? [])];
   }
 
+  public countActivePlayerSockets(room: RoomId): number {
+    const state = this.rooms.get(room);
+    if (!state) return 0;
+
+    let count = 0;
+    for (const seat of state.socketSeats.values()) {
+      if (seat === "white" || seat === "black") {
+        count += 1;
+      }
+    }
+
+    return count;
+  }
+
   public recordMove(room: RoomId, move: MoveSnapshot, nextTurn?: TurnColor): void {
     const state = this.rooms.get(room);
     if (!state) return;

@@ -61,7 +61,12 @@ function normalizePlayerIdentity(value: unknown): PlayerIdentity {
   };
 }
 
-async function handleJsonMessage(roomRegistry: RoomRegistry, ws: WebSocket, obj: unknown) {
+async function handleJsonMessage(
+  roomRegistry: RoomRegistry,
+  ws: WebSocket,
+  obj: unknown,
+  onRoomJoin?: (room: string) => void
+) {
   if (!isRecord(obj)) {
     // eslint-disable-next-line no-console
     console.log("This message is not a record:", obj);
@@ -107,6 +112,7 @@ async function handleJsonMessage(roomRegistry: RoomRegistry, ws: WebSocket, obj:
         player,
         seat: joinedRoom.seat,
       });
+      onRoomJoin?.(normalizedRoom);
     }
     return;
   }
@@ -162,7 +168,8 @@ async function handleJsonMessage(roomRegistry: RoomRegistry, ws: WebSocket, obj:
           apiServerOrigin,
           internalWsSharedSecret,
           room,
-          player
+          player,
+          { from, to, promotion }
         );
       } catch {
         send(ws, { type: "error", message: "Move verification request failed" });
@@ -210,10 +217,15 @@ function handleLegacyMessage(roomRegistry: RoomRegistry, ws: WebSocket, raw: str
   broadcastRaw(roomRegistry, room, ws, raw);
 }
 
-export async function handleIncomingMessage(roomRegistry: RoomRegistry, ws: WebSocket, raw: string) {
+export async function handleIncomingMessage(
+  roomRegistry: RoomRegistry,
+  ws: WebSocket,
+  raw: string,
+  onRoomJoin?: (room: string) => void
+) {
   const parsed = safeJsonParse(raw);
   if (parsed !== undefined) {
-    await handleJsonMessage(roomRegistry, ws, parsed);
+    await handleJsonMessage(roomRegistry, ws, parsed, onRoomJoin);
     return;
   }
 

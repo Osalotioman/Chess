@@ -43,6 +43,11 @@ export type Friendship = Prisma.FriendshipModel
  */
 export type GameSession = Prisma.GameSessionModel
 /**
+ * Model GameMove
+ * 
+ */
+export type GameMove = Prisma.GameMoveModel
+/**
  * Model Invite
  * 
  */

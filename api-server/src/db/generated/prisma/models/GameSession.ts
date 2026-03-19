@@ -43,6 +43,9 @@ export type GameSessionMinAggregateOutputType = {
   turnColor: $Enums.PieceColor | null
   fen: string | null
   moveCount: number | null
+  winnerSeat: $Enums.PieceColor | null
+  terminationReason: string | null
+  endedAt: Date | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -56,6 +59,9 @@ export type GameSessionMaxAggregateOutputType = {
   turnColor: $Enums.PieceColor | null
   fen: string | null
   moveCount: number | null
+  winnerSeat: $Enums.PieceColor | null
+  terminationReason: string | null
+  endedAt: Date | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -69,6 +75,9 @@ export type GameSessionCountAggregateOutputType = {
   turnColor: number
   fen: number
   moveCount: number
+  winnerSeat: number
+  terminationReason: number
+  endedAt: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -92,6 +101,9 @@ export type GameSessionMinAggregateInputType = {
   turnColor?: true
   fen?: true
   moveCount?: true
+  winnerSeat?: true
+  terminationReason?: true
+  endedAt?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -105,6 +117,9 @@ export type GameSessionMaxAggregateInputType = {
   turnColor?: true
   fen?: true
   moveCount?: true
+  winnerSeat?: true
+  terminationReason?: true
+  endedAt?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -118,6 +133,9 @@ export type GameSessionCountAggregateInputType = {
   turnColor?: true
   fen?: true
   moveCount?: true
+  winnerSeat?: true
+  terminationReason?: true
+  endedAt?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -218,6 +236,9 @@ export type GameSessionGroupByOutputType = {
   turnColor: $Enums.PieceColor
   fen: string
   moveCount: number
+  winnerSeat: $Enums.PieceColor | null
+  terminationReason: string | null
+  endedAt: Date | null
   createdAt: Date
   updatedAt: Date
   _count: GameSessionCountAggregateOutputType | null
@@ -254,11 +275,15 @@ export type GameSessionWhereInput = {
   turnColor?: Prisma.EnumPieceColorFilter<"GameSession"> | $Enums.PieceColor
   fen?: Prisma.StringFilter<"GameSession"> | string
   moveCount?: Prisma.IntFilter<"GameSession"> | number
+  winnerSeat?: Prisma.EnumPieceColorNullableFilter<"GameSession"> | $Enums.PieceColor | null
+  terminationReason?: Prisma.StringNullableFilter<"GameSession"> | string | null
+  endedAt?: Prisma.DateTimeNullableFilter<"GameSession"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"GameSession"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"GameSession"> | Date | string
   whitePlayer?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   blackPlayer?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   invites?: Prisma.InviteListRelationFilter
+  moves?: Prisma.GameMoveListRelationFilter
 }
 
 export type GameSessionOrderByWithRelationInput = {
@@ -270,11 +295,15 @@ export type GameSessionOrderByWithRelationInput = {
   turnColor?: Prisma.SortOrder
   fen?: Prisma.SortOrder
   moveCount?: Prisma.SortOrder
+  winnerSeat?: Prisma.SortOrderInput | Prisma.SortOrder
+  terminationReason?: Prisma.SortOrderInput | Prisma.SortOrder
+  endedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   whitePlayer?: Prisma.UserOrderByWithRelationInput
   blackPlayer?: Prisma.UserOrderByWithRelationInput
   invites?: Prisma.InviteOrderByRelationAggregateInput
+  moves?: Prisma.GameMoveOrderByRelationAggregateInput
 }
 
 export type GameSessionWhereUniqueInput = Prisma.AtLeast<{
@@ -289,11 +318,15 @@ export type GameSessionWhereUniqueInput = Prisma.AtLeast<{
   turnColor?: Prisma.EnumPieceColorFilter<"GameSession"> | $Enums.PieceColor
   fen?: Prisma.StringFilter<"GameSession"> | string
   moveCount?: Prisma.IntFilter<"GameSession"> | number
+  winnerSeat?: Prisma.EnumPieceColorNullableFilter<"GameSession"> | $Enums.PieceColor | null
+  terminationReason?: Prisma.StringNullableFilter<"GameSession"> | string | null
+  endedAt?: Prisma.DateTimeNullableFilter<"GameSession"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"GameSession"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"GameSession"> | Date | string
   whitePlayer?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   blackPlayer?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   invites?: Prisma.InviteListRelationFilter
+  moves?: Prisma.GameMoveListRelationFilter
 }, "id" | "roomCode">
 
 export type GameSessionOrderByWithAggregationInput = {
@@ -305,6 +338,9 @@ export type GameSessionOrderByWithAggregationInput = {
   turnColor?: Prisma.SortOrder
   fen?: Prisma.SortOrder
   moveCount?: Prisma.SortOrder
+  winnerSeat?: Prisma.SortOrderInput | Prisma.SortOrder
+  terminationReason?: Prisma.SortOrderInput | Prisma.SortOrder
+  endedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.GameSessionCountOrderByAggregateInput
@@ -326,6 +362,9 @@ export type GameSessionScalarWhereWithAggregatesInput = {
   turnColor?: Prisma.EnumPieceColorWithAggregatesFilter<"GameSession"> | $Enums.PieceColor
   fen?: Prisma.StringWithAggregatesFilter<"GameSession"> | string
   moveCount?: Prisma.IntWithAggregatesFilter<"GameSession"> | number
+  winnerSeat?: Prisma.EnumPieceColorNullableWithAggregatesFilter<"GameSession"> | $Enums.PieceColor | null
+  terminationReason?: Prisma.StringNullableWithAggregatesFilter<"GameSession"> | string | null
+  endedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"GameSession"> | Date | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"GameSession"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"GameSession"> | Date | string
 }
@@ -337,11 +376,15 @@ export type GameSessionCreateInput = {
   turnColor?: $Enums.PieceColor
   fen: string
   moveCount?: number
+  winnerSeat?: $Enums.PieceColor | null
+  terminationReason?: string | null
+  endedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   whitePlayer?: Prisma.UserCreateNestedOneWithoutGamesAsWhiteInput
   blackPlayer?: Prisma.UserCreateNestedOneWithoutGamesAsBlackInput
   invites?: Prisma.InviteCreateNestedManyWithoutGameSessionInput
+  moves?: Prisma.GameMoveCreateNestedManyWithoutGameSessionInput
 }
 
 export type GameSessionUncheckedCreateInput = {
@@ -353,9 +396,13 @@ export type GameSessionUncheckedCreateInput = {
   turnColor?: $Enums.PieceColor
   fen: string
   moveCount?: number
+  winnerSeat?: $Enums.PieceColor | null
+  terminationReason?: string | null
+  endedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   invites?: Prisma.InviteUncheckedCreateNestedManyWithoutGameSessionInput
+  moves?: Prisma.GameMoveUncheckedCreateNestedManyWithoutGameSessionInput
 }
 
 export type GameSessionUpdateInput = {
@@ -365,11 +412,15 @@ export type GameSessionUpdateInput = {
   turnColor?: Prisma.EnumPieceColorFieldUpdateOperationsInput | $Enums.PieceColor
   fen?: Prisma.StringFieldUpdateOperationsInput | string
   moveCount?: Prisma.IntFieldUpdateOperationsInput | number
+  winnerSeat?: Prisma.NullableEnumPieceColorFieldUpdateOperationsInput | $Enums.PieceColor | null
+  terminationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  endedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   whitePlayer?: Prisma.UserUpdateOneWithoutGamesAsWhiteNestedInput
   blackPlayer?: Prisma.UserUpdateOneWithoutGamesAsBlackNestedInput
   invites?: Prisma.InviteUpdateManyWithoutGameSessionNestedInput
+  moves?: Prisma.GameMoveUpdateManyWithoutGameSessionNestedInput
 }
 
 export type GameSessionUncheckedUpdateInput = {
@@ -381,9 +432,13 @@ export type GameSessionUncheckedUpdateInput = {
   turnColor?: Prisma.EnumPieceColorFieldUpdateOperationsInput | $Enums.PieceColor
   fen?: Prisma.StringFieldUpdateOperationsInput | string
   moveCount?: Prisma.IntFieldUpdateOperationsInput | number
+  winnerSeat?: Prisma.NullableEnumPieceColorFieldUpdateOperationsInput | $Enums.PieceColor | null
+  terminationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  endedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   invites?: Prisma.InviteUncheckedUpdateManyWithoutGameSessionNestedInput
+  moves?: Prisma.GameMoveUncheckedUpdateManyWithoutGameSessionNestedInput
 }
 
 export type GameSessionCreateManyInput = {
@@ -395,6 +450,9 @@ export type GameSessionCreateManyInput = {
   turnColor?: $Enums.PieceColor
   fen: string
   moveCount?: number
+  winnerSeat?: $Enums.PieceColor | null
+  terminationReason?: string | null
+  endedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -406,6 +464,9 @@ export type GameSessionUpdateManyMutationInput = {
   turnColor?: Prisma.EnumPieceColorFieldUpdateOperationsInput | $Enums.PieceColor
   fen?: Prisma.StringFieldUpdateOperationsInput | string
   moveCount?: Prisma.IntFieldUpdateOperationsInput | number
+  winnerSeat?: Prisma.NullableEnumPieceColorFieldUpdateOperationsInput | $Enums.PieceColor | null
+  terminationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  endedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -419,6 +480,9 @@ export type GameSessionUncheckedUpdateManyInput = {
   turnColor?: Prisma.EnumPieceColorFieldUpdateOperationsInput | $Enums.PieceColor
   fen?: Prisma.StringFieldUpdateOperationsInput | string
   moveCount?: Prisma.IntFieldUpdateOperationsInput | number
+  winnerSeat?: Prisma.NullableEnumPieceColorFieldUpdateOperationsInput | $Enums.PieceColor | null
+  terminationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  endedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -442,6 +506,9 @@ export type GameSessionCountOrderByAggregateInput = {
   turnColor?: Prisma.SortOrder
   fen?: Prisma.SortOrder
   moveCount?: Prisma.SortOrder
+  winnerSeat?: Prisma.SortOrder
+  terminationReason?: Prisma.SortOrder
+  endedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -459,6 +526,9 @@ export type GameSessionMaxOrderByAggregateInput = {
   turnColor?: Prisma.SortOrder
   fen?: Prisma.SortOrder
   moveCount?: Prisma.SortOrder
+  winnerSeat?: Prisma.SortOrder
+  terminationReason?: Prisma.SortOrder
+  endedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -472,6 +542,9 @@ export type GameSessionMinOrderByAggregateInput = {
   turnColor?: Prisma.SortOrder
   fen?: Prisma.SortOrder
   moveCount?: Prisma.SortOrder
+  winnerSeat?: Prisma.SortOrder
+  terminationReason?: Prisma.SortOrder
+  endedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -577,8 +650,26 @@ export type EnumPieceColorFieldUpdateOperationsInput = {
   set?: $Enums.PieceColor
 }
 
+export type NullableEnumPieceColorFieldUpdateOperationsInput = {
+  set?: $Enums.PieceColor | null
+}
+
 export type NullableStringFieldUpdateOperationsInput = {
   set?: string | null
+}
+
+export type GameSessionCreateNestedOneWithoutMovesInput = {
+  create?: Prisma.XOR<Prisma.GameSessionCreateWithoutMovesInput, Prisma.GameSessionUncheckedCreateWithoutMovesInput>
+  connectOrCreate?: Prisma.GameSessionCreateOrConnectWithoutMovesInput
+  connect?: Prisma.GameSessionWhereUniqueInput
+}
+
+export type GameSessionUpdateOneRequiredWithoutMovesNestedInput = {
+  create?: Prisma.XOR<Prisma.GameSessionCreateWithoutMovesInput, Prisma.GameSessionUncheckedCreateWithoutMovesInput>
+  connectOrCreate?: Prisma.GameSessionCreateOrConnectWithoutMovesInput
+  upsert?: Prisma.GameSessionUpsertWithoutMovesInput
+  connect?: Prisma.GameSessionWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.GameSessionUpdateToOneWithWhereWithoutMovesInput, Prisma.GameSessionUpdateWithoutMovesInput>, Prisma.GameSessionUncheckedUpdateWithoutMovesInput>
 }
 
 export type GameSessionCreateNestedOneWithoutInvitesInput = {
@@ -602,10 +693,14 @@ export type GameSessionCreateWithoutWhitePlayerInput = {
   turnColor?: $Enums.PieceColor
   fen: string
   moveCount?: number
+  winnerSeat?: $Enums.PieceColor | null
+  terminationReason?: string | null
+  endedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   blackPlayer?: Prisma.UserCreateNestedOneWithoutGamesAsBlackInput
   invites?: Prisma.InviteCreateNestedManyWithoutGameSessionInput
+  moves?: Prisma.GameMoveCreateNestedManyWithoutGameSessionInput
 }
 
 export type GameSessionUncheckedCreateWithoutWhitePlayerInput = {
@@ -616,9 +711,13 @@ export type GameSessionUncheckedCreateWithoutWhitePlayerInput = {
   turnColor?: $Enums.PieceColor
   fen: string
   moveCount?: number
+  winnerSeat?: $Enums.PieceColor | null
+  terminationReason?: string | null
+  endedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   invites?: Prisma.InviteUncheckedCreateNestedManyWithoutGameSessionInput
+  moves?: Prisma.GameMoveUncheckedCreateNestedManyWithoutGameSessionInput
 }
 
 export type GameSessionCreateOrConnectWithoutWhitePlayerInput = {
@@ -638,10 +737,14 @@ export type GameSessionCreateWithoutBlackPlayerInput = {
   turnColor?: $Enums.PieceColor
   fen: string
   moveCount?: number
+  winnerSeat?: $Enums.PieceColor | null
+  terminationReason?: string | null
+  endedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   whitePlayer?: Prisma.UserCreateNestedOneWithoutGamesAsWhiteInput
   invites?: Prisma.InviteCreateNestedManyWithoutGameSessionInput
+  moves?: Prisma.GameMoveCreateNestedManyWithoutGameSessionInput
 }
 
 export type GameSessionUncheckedCreateWithoutBlackPlayerInput = {
@@ -652,9 +755,13 @@ export type GameSessionUncheckedCreateWithoutBlackPlayerInput = {
   turnColor?: $Enums.PieceColor
   fen: string
   moveCount?: number
+  winnerSeat?: $Enums.PieceColor | null
+  terminationReason?: string | null
+  endedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   invites?: Prisma.InviteUncheckedCreateNestedManyWithoutGameSessionInput
+  moves?: Prisma.GameMoveUncheckedCreateNestedManyWithoutGameSessionInput
 }
 
 export type GameSessionCreateOrConnectWithoutBlackPlayerInput = {
@@ -695,6 +802,9 @@ export type GameSessionScalarWhereInput = {
   turnColor?: Prisma.EnumPieceColorFilter<"GameSession"> | $Enums.PieceColor
   fen?: Prisma.StringFilter<"GameSession"> | string
   moveCount?: Prisma.IntFilter<"GameSession"> | number
+  winnerSeat?: Prisma.EnumPieceColorNullableFilter<"GameSession"> | $Enums.PieceColor | null
+  terminationReason?: Prisma.StringNullableFilter<"GameSession"> | string | null
+  endedAt?: Prisma.DateTimeNullableFilter<"GameSession"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"GameSession"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"GameSession"> | Date | string
 }
@@ -715,6 +825,90 @@ export type GameSessionUpdateManyWithWhereWithoutBlackPlayerInput = {
   data: Prisma.XOR<Prisma.GameSessionUpdateManyMutationInput, Prisma.GameSessionUncheckedUpdateManyWithoutBlackPlayerInput>
 }
 
+export type GameSessionCreateWithoutMovesInput = {
+  id?: string
+  roomCode: string
+  status?: $Enums.GameStatus
+  turnColor?: $Enums.PieceColor
+  fen: string
+  moveCount?: number
+  winnerSeat?: $Enums.PieceColor | null
+  terminationReason?: string | null
+  endedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  whitePlayer?: Prisma.UserCreateNestedOneWithoutGamesAsWhiteInput
+  blackPlayer?: Prisma.UserCreateNestedOneWithoutGamesAsBlackInput
+  invites?: Prisma.InviteCreateNestedManyWithoutGameSessionInput
+}
+
+export type GameSessionUncheckedCreateWithoutMovesInput = {
+  id?: string
+  roomCode: string
+  status?: $Enums.GameStatus
+  whitePlayerId?: string | null
+  blackPlayerId?: string | null
+  turnColor?: $Enums.PieceColor
+  fen: string
+  moveCount?: number
+  winnerSeat?: $Enums.PieceColor | null
+  terminationReason?: string | null
+  endedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  invites?: Prisma.InviteUncheckedCreateNestedManyWithoutGameSessionInput
+}
+
+export type GameSessionCreateOrConnectWithoutMovesInput = {
+  where: Prisma.GameSessionWhereUniqueInput
+  create: Prisma.XOR<Prisma.GameSessionCreateWithoutMovesInput, Prisma.GameSessionUncheckedCreateWithoutMovesInput>
+}
+
+export type GameSessionUpsertWithoutMovesInput = {
+  update: Prisma.XOR<Prisma.GameSessionUpdateWithoutMovesInput, Prisma.GameSessionUncheckedUpdateWithoutMovesInput>
+  create: Prisma.XOR<Prisma.GameSessionCreateWithoutMovesInput, Prisma.GameSessionUncheckedCreateWithoutMovesInput>
+  where?: Prisma.GameSessionWhereInput
+}
+
+export type GameSessionUpdateToOneWithWhereWithoutMovesInput = {
+  where?: Prisma.GameSessionWhereInput
+  data: Prisma.XOR<Prisma.GameSessionUpdateWithoutMovesInput, Prisma.GameSessionUncheckedUpdateWithoutMovesInput>
+}
+
+export type GameSessionUpdateWithoutMovesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  roomCode?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumGameStatusFieldUpdateOperationsInput | $Enums.GameStatus
+  turnColor?: Prisma.EnumPieceColorFieldUpdateOperationsInput | $Enums.PieceColor
+  fen?: Prisma.StringFieldUpdateOperationsInput | string
+  moveCount?: Prisma.IntFieldUpdateOperationsInput | number
+  winnerSeat?: Prisma.NullableEnumPieceColorFieldUpdateOperationsInput | $Enums.PieceColor | null
+  terminationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  endedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  whitePlayer?: Prisma.UserUpdateOneWithoutGamesAsWhiteNestedInput
+  blackPlayer?: Prisma.UserUpdateOneWithoutGamesAsBlackNestedInput
+  invites?: Prisma.InviteUpdateManyWithoutGameSessionNestedInput
+}
+
+export type GameSessionUncheckedUpdateWithoutMovesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  roomCode?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumGameStatusFieldUpdateOperationsInput | $Enums.GameStatus
+  whitePlayerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  blackPlayerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  turnColor?: Prisma.EnumPieceColorFieldUpdateOperationsInput | $Enums.PieceColor
+  fen?: Prisma.StringFieldUpdateOperationsInput | string
+  moveCount?: Prisma.IntFieldUpdateOperationsInput | number
+  winnerSeat?: Prisma.NullableEnumPieceColorFieldUpdateOperationsInput | $Enums.PieceColor | null
+  terminationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  endedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  invites?: Prisma.InviteUncheckedUpdateManyWithoutGameSessionNestedInput
+}
+
 export type GameSessionCreateWithoutInvitesInput = {
   id?: string
   roomCode: string
@@ -722,10 +916,14 @@ export type GameSessionCreateWithoutInvitesInput = {
   turnColor?: $Enums.PieceColor
   fen: string
   moveCount?: number
+  winnerSeat?: $Enums.PieceColor | null
+  terminationReason?: string | null
+  endedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   whitePlayer?: Prisma.UserCreateNestedOneWithoutGamesAsWhiteInput
   blackPlayer?: Prisma.UserCreateNestedOneWithoutGamesAsBlackInput
+  moves?: Prisma.GameMoveCreateNestedManyWithoutGameSessionInput
 }
 
 export type GameSessionUncheckedCreateWithoutInvitesInput = {
@@ -737,8 +935,12 @@ export type GameSessionUncheckedCreateWithoutInvitesInput = {
   turnColor?: $Enums.PieceColor
   fen: string
   moveCount?: number
+  winnerSeat?: $Enums.PieceColor | null
+  terminationReason?: string | null
+  endedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  moves?: Prisma.GameMoveUncheckedCreateNestedManyWithoutGameSessionInput
 }
 
 export type GameSessionCreateOrConnectWithoutInvitesInput = {
@@ -764,10 +966,14 @@ export type GameSessionUpdateWithoutInvitesInput = {
   turnColor?: Prisma.EnumPieceColorFieldUpdateOperationsInput | $Enums.PieceColor
   fen?: Prisma.StringFieldUpdateOperationsInput | string
   moveCount?: Prisma.IntFieldUpdateOperationsInput | number
+  winnerSeat?: Prisma.NullableEnumPieceColorFieldUpdateOperationsInput | $Enums.PieceColor | null
+  terminationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  endedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   whitePlayer?: Prisma.UserUpdateOneWithoutGamesAsWhiteNestedInput
   blackPlayer?: Prisma.UserUpdateOneWithoutGamesAsBlackNestedInput
+  moves?: Prisma.GameMoveUpdateManyWithoutGameSessionNestedInput
 }
 
 export type GameSessionUncheckedUpdateWithoutInvitesInput = {
@@ -779,8 +985,12 @@ export type GameSessionUncheckedUpdateWithoutInvitesInput = {
   turnColor?: Prisma.EnumPieceColorFieldUpdateOperationsInput | $Enums.PieceColor
   fen?: Prisma.StringFieldUpdateOperationsInput | string
   moveCount?: Prisma.IntFieldUpdateOperationsInput | number
+  winnerSeat?: Prisma.NullableEnumPieceColorFieldUpdateOperationsInput | $Enums.PieceColor | null
+  terminationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  endedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  moves?: Prisma.GameMoveUncheckedUpdateManyWithoutGameSessionNestedInput
 }
 
 export type GameSessionCreateManyWhitePlayerInput = {
@@ -791,6 +1001,9 @@ export type GameSessionCreateManyWhitePlayerInput = {
   turnColor?: $Enums.PieceColor
   fen: string
   moveCount?: number
+  winnerSeat?: $Enums.PieceColor | null
+  terminationReason?: string | null
+  endedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -803,6 +1016,9 @@ export type GameSessionCreateManyBlackPlayerInput = {
   turnColor?: $Enums.PieceColor
   fen: string
   moveCount?: number
+  winnerSeat?: $Enums.PieceColor | null
+  terminationReason?: string | null
+  endedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -814,10 +1030,14 @@ export type GameSessionUpdateWithoutWhitePlayerInput = {
   turnColor?: Prisma.EnumPieceColorFieldUpdateOperationsInput | $Enums.PieceColor
   fen?: Prisma.StringFieldUpdateOperationsInput | string
   moveCount?: Prisma.IntFieldUpdateOperationsInput | number
+  winnerSeat?: Prisma.NullableEnumPieceColorFieldUpdateOperationsInput | $Enums.PieceColor | null
+  terminationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  endedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   blackPlayer?: Prisma.UserUpdateOneWithoutGamesAsBlackNestedInput
   invites?: Prisma.InviteUpdateManyWithoutGameSessionNestedInput
+  moves?: Prisma.GameMoveUpdateManyWithoutGameSessionNestedInput
 }
 
 export type GameSessionUncheckedUpdateWithoutWhitePlayerInput = {
@@ -828,9 +1048,13 @@ export type GameSessionUncheckedUpdateWithoutWhitePlayerInput = {
   turnColor?: Prisma.EnumPieceColorFieldUpdateOperationsInput | $Enums.PieceColor
   fen?: Prisma.StringFieldUpdateOperationsInput | string
   moveCount?: Prisma.IntFieldUpdateOperationsInput | number
+  winnerSeat?: Prisma.NullableEnumPieceColorFieldUpdateOperationsInput | $Enums.PieceColor | null
+  terminationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  endedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   invites?: Prisma.InviteUncheckedUpdateManyWithoutGameSessionNestedInput
+  moves?: Prisma.GameMoveUncheckedUpdateManyWithoutGameSessionNestedInput
 }
 
 export type GameSessionUncheckedUpdateManyWithoutWhitePlayerInput = {
@@ -841,6 +1065,9 @@ export type GameSessionUncheckedUpdateManyWithoutWhitePlayerInput = {
   turnColor?: Prisma.EnumPieceColorFieldUpdateOperationsInput | $Enums.PieceColor
   fen?: Prisma.StringFieldUpdateOperationsInput | string
   moveCount?: Prisma.IntFieldUpdateOperationsInput | number
+  winnerSeat?: Prisma.NullableEnumPieceColorFieldUpdateOperationsInput | $Enums.PieceColor | null
+  terminationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  endedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -852,10 +1079,14 @@ export type GameSessionUpdateWithoutBlackPlayerInput = {
   turnColor?: Prisma.EnumPieceColorFieldUpdateOperationsInput | $Enums.PieceColor
   fen?: Prisma.StringFieldUpdateOperationsInput | string
   moveCount?: Prisma.IntFieldUpdateOperationsInput | number
+  winnerSeat?: Prisma.NullableEnumPieceColorFieldUpdateOperationsInput | $Enums.PieceColor | null
+  terminationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  endedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   whitePlayer?: Prisma.UserUpdateOneWithoutGamesAsWhiteNestedInput
   invites?: Prisma.InviteUpdateManyWithoutGameSessionNestedInput
+  moves?: Prisma.GameMoveUpdateManyWithoutGameSessionNestedInput
 }
 
 export type GameSessionUncheckedUpdateWithoutBlackPlayerInput = {
@@ -866,9 +1097,13 @@ export type GameSessionUncheckedUpdateWithoutBlackPlayerInput = {
   turnColor?: Prisma.EnumPieceColorFieldUpdateOperationsInput | $Enums.PieceColor
   fen?: Prisma.StringFieldUpdateOperationsInput | string
   moveCount?: Prisma.IntFieldUpdateOperationsInput | number
+  winnerSeat?: Prisma.NullableEnumPieceColorFieldUpdateOperationsInput | $Enums.PieceColor | null
+  terminationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  endedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   invites?: Prisma.InviteUncheckedUpdateManyWithoutGameSessionNestedInput
+  moves?: Prisma.GameMoveUncheckedUpdateManyWithoutGameSessionNestedInput
 }
 
 export type GameSessionUncheckedUpdateManyWithoutBlackPlayerInput = {
@@ -879,6 +1114,9 @@ export type GameSessionUncheckedUpdateManyWithoutBlackPlayerInput = {
   turnColor?: Prisma.EnumPieceColorFieldUpdateOperationsInput | $Enums.PieceColor
   fen?: Prisma.StringFieldUpdateOperationsInput | string
   moveCount?: Prisma.IntFieldUpdateOperationsInput | number
+  winnerSeat?: Prisma.NullableEnumPieceColorFieldUpdateOperationsInput | $Enums.PieceColor | null
+  terminationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  endedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -890,10 +1128,12 @@ export type GameSessionUncheckedUpdateManyWithoutBlackPlayerInput = {
 
 export type GameSessionCountOutputType = {
   invites: number
+  moves: number
 }
 
 export type GameSessionCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   invites?: boolean | GameSessionCountOutputTypeCountInvitesArgs
+  moves?: boolean | GameSessionCountOutputTypeCountMovesArgs
 }
 
 /**
@@ -913,6 +1153,13 @@ export type GameSessionCountOutputTypeCountInvitesArgs<ExtArgs extends runtime.T
   where?: Prisma.InviteWhereInput
 }
 
+/**
+ * GameSessionCountOutputType without action
+ */
+export type GameSessionCountOutputTypeCountMovesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.GameMoveWhereInput
+}
+
 
 export type GameSessionSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -923,11 +1170,15 @@ export type GameSessionSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   turnColor?: boolean
   fen?: boolean
   moveCount?: boolean
+  winnerSeat?: boolean
+  terminationReason?: boolean
+  endedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   whitePlayer?: boolean | Prisma.GameSession$whitePlayerArgs<ExtArgs>
   blackPlayer?: boolean | Prisma.GameSession$blackPlayerArgs<ExtArgs>
   invites?: boolean | Prisma.GameSession$invitesArgs<ExtArgs>
+  moves?: boolean | Prisma.GameSession$movesArgs<ExtArgs>
   _count?: boolean | Prisma.GameSessionCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["gameSession"]>
 
@@ -940,6 +1191,9 @@ export type GameSessionSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
   turnColor?: boolean
   fen?: boolean
   moveCount?: boolean
+  winnerSeat?: boolean
+  terminationReason?: boolean
+  endedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   whitePlayer?: boolean | Prisma.GameSession$whitePlayerArgs<ExtArgs>
@@ -955,6 +1209,9 @@ export type GameSessionSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
   turnColor?: boolean
   fen?: boolean
   moveCount?: boolean
+  winnerSeat?: boolean
+  terminationReason?: boolean
+  endedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   whitePlayer?: boolean | Prisma.GameSession$whitePlayerArgs<ExtArgs>
@@ -970,15 +1227,19 @@ export type GameSessionSelectScalar = {
   turnColor?: boolean
   fen?: boolean
   moveCount?: boolean
+  winnerSeat?: boolean
+  terminationReason?: boolean
+  endedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type GameSessionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "roomCode" | "status" | "whitePlayerId" | "blackPlayerId" | "turnColor" | "fen" | "moveCount" | "createdAt" | "updatedAt", ExtArgs["result"]["gameSession"]>
+export type GameSessionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "roomCode" | "status" | "whitePlayerId" | "blackPlayerId" | "turnColor" | "fen" | "moveCount" | "winnerSeat" | "terminationReason" | "endedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["gameSession"]>
 export type GameSessionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   whitePlayer?: boolean | Prisma.GameSession$whitePlayerArgs<ExtArgs>
   blackPlayer?: boolean | Prisma.GameSession$blackPlayerArgs<ExtArgs>
   invites?: boolean | Prisma.GameSession$invitesArgs<ExtArgs>
+  moves?: boolean | Prisma.GameSession$movesArgs<ExtArgs>
   _count?: boolean | Prisma.GameSessionCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type GameSessionIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -996,6 +1257,7 @@ export type $GameSessionPayload<ExtArgs extends runtime.Types.Extensions.Interna
     whitePlayer: Prisma.$UserPayload<ExtArgs> | null
     blackPlayer: Prisma.$UserPayload<ExtArgs> | null
     invites: Prisma.$InvitePayload<ExtArgs>[]
+    moves: Prisma.$GameMovePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1006,6 +1268,9 @@ export type $GameSessionPayload<ExtArgs extends runtime.Types.Extensions.Interna
     turnColor: $Enums.PieceColor
     fen: string
     moveCount: number
+    winnerSeat: $Enums.PieceColor | null
+    terminationReason: string | null
+    endedAt: Date | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["gameSession"]>
@@ -1405,6 +1670,7 @@ export interface Prisma__GameSessionClient<T, Null = never, ExtArgs extends runt
   whitePlayer<T extends Prisma.GameSession$whitePlayerArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.GameSession$whitePlayerArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   blackPlayer<T extends Prisma.GameSession$blackPlayerArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.GameSession$blackPlayerArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   invites<T extends Prisma.GameSession$invitesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.GameSession$invitesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$InvitePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  moves<T extends Prisma.GameSession$movesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.GameSession$movesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$GameMovePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1442,6 +1708,9 @@ export interface GameSessionFieldRefs {
   readonly turnColor: Prisma.FieldRef<"GameSession", 'PieceColor'>
   readonly fen: Prisma.FieldRef<"GameSession", 'String'>
   readonly moveCount: Prisma.FieldRef<"GameSession", 'Int'>
+  readonly winnerSeat: Prisma.FieldRef<"GameSession", 'PieceColor'>
+  readonly terminationReason: Prisma.FieldRef<"GameSession", 'String'>
+  readonly endedAt: Prisma.FieldRef<"GameSession", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"GameSession", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"GameSession", 'DateTime'>
 }
@@ -1899,6 +2168,30 @@ export type GameSession$invitesArgs<ExtArgs extends runtime.Types.Extensions.Int
   take?: number
   skip?: number
   distinct?: Prisma.InviteScalarFieldEnum | Prisma.InviteScalarFieldEnum[]
+}
+
+/**
+ * GameSession.moves
+ */
+export type GameSession$movesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the GameMove
+   */
+  select?: Prisma.GameMoveSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the GameMove
+   */
+  omit?: Prisma.GameMoveOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.GameMoveInclude<ExtArgs> | null
+  where?: Prisma.GameMoveWhereInput
+  orderBy?: Prisma.GameMoveOrderByWithRelationInput | Prisma.GameMoveOrderByWithRelationInput[]
+  cursor?: Prisma.GameMoveWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.GameMoveScalarFieldEnum | Prisma.GameMoveScalarFieldEnum[]
 }
 
 /**

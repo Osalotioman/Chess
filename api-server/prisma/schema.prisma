@@ -107,17 +107,39 @@ model GameSession {
   turnColor     PieceColor @default(white)
   fen           String
   moveCount     Int        @default(0)
+  winnerSeat    PieceColor?
+  terminationReason String?
+  endedAt       DateTime?
   createdAt     DateTime   @default(now())
   updatedAt     DateTime   @updatedAt
 
   whitePlayer User?   @relation("GameWhitePlayer", fields: [whitePlayerId], references: [id], onDelete: SetNull)
   blackPlayer User?   @relation("GameBlackPlayer", fields: [blackPlayerId], references: [id], onDelete: SetNull)
   invites     Invite[]
+  moves       GameMove[]
 
   @@index([status])
   @@index([whitePlayerId])
   @@index([blackPlayerId])
   @@map("game_sessions")
+}
+
+model GameMove {
+  id            String    @id @default(cuid())
+  gameSessionId String
+  ply           Int
+  fromSquare    String
+  toSquare      String
+  promotion     String?
+  seat          PieceColor
+  playerUserId  String?
+  createdAt     DateTime  @default(now())
+
+  gameSession GameSession @relation(fields: [gameSessionId], references: [id], onDelete: Cascade)
+
+  @@unique([gameSessionId, ply])
+  @@index([gameSessionId, createdAt])
+  @@map("game_moves")
 }
 
 model Invite {

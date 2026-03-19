@@ -389,6 +389,7 @@ export const ModelName = {
   FriendRequest: 'FriendRequest',
   Friendship: 'Friendship',
   GameSession: 'GameSession',
+  GameMove: 'GameMove',
   Invite: 'Invite'
 } as const
 
@@ -405,7 +406,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "refreshToken" | "friendRequest" | "friendship" | "gameSession" | "invite"
+    modelProps: "user" | "refreshToken" | "friendRequest" | "friendship" | "gameSession" | "gameMove" | "invite"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -779,6 +780,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    GameMove: {
+      payload: Prisma.$GameMovePayload<ExtArgs>
+      fields: Prisma.GameMoveFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.GameMoveFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GameMovePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.GameMoveFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GameMovePayload>
+        }
+        findFirst: {
+          args: Prisma.GameMoveFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GameMovePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.GameMoveFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GameMovePayload>
+        }
+        findMany: {
+          args: Prisma.GameMoveFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GameMovePayload>[]
+        }
+        create: {
+          args: Prisma.GameMoveCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GameMovePayload>
+        }
+        createMany: {
+          args: Prisma.GameMoveCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.GameMoveCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GameMovePayload>[]
+        }
+        delete: {
+          args: Prisma.GameMoveDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GameMovePayload>
+        }
+        update: {
+          args: Prisma.GameMoveUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GameMovePayload>
+        }
+        deleteMany: {
+          args: Prisma.GameMoveDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.GameMoveUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.GameMoveUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GameMovePayload>[]
+        }
+        upsert: {
+          args: Prisma.GameMoveUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GameMovePayload>
+        }
+        aggregate: {
+          args: Prisma.GameMoveAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateGameMove>
+        }
+        groupBy: {
+          args: Prisma.GameMoveGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.GameMoveGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.GameMoveCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.GameMoveCountAggregateOutputType> | number
+        }
+      }
+    }
     Invite: {
       payload: Prisma.$InvitePayload<ExtArgs>
       fields: Prisma.InviteFieldRefs
@@ -949,11 +1024,29 @@ export const GameSessionScalarFieldEnum = {
   turnColor: 'turnColor',
   fen: 'fen',
   moveCount: 'moveCount',
+  winnerSeat: 'winnerSeat',
+  terminationReason: 'terminationReason',
+  endedAt: 'endedAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
 
 export type GameSessionScalarFieldEnum = (typeof GameSessionScalarFieldEnum)[keyof typeof GameSessionScalarFieldEnum]
+
+
+export const GameMoveScalarFieldEnum = {
+  id: 'id',
+  gameSessionId: 'gameSessionId',
+  ply: 'ply',
+  fromSquare: 'fromSquare',
+  toSquare: 'toSquare',
+  promotion: 'promotion',
+  seat: 'seat',
+  playerUserId: 'playerUserId',
+  createdAt: 'createdAt'
+} as const
+
+export type GameMoveScalarFieldEnum = (typeof GameMoveScalarFieldEnum)[keyof typeof GameMoveScalarFieldEnum]
 
 
 export const InviteScalarFieldEnum = {
@@ -1197,6 +1290,7 @@ export type GlobalOmitConfig = {
   friendRequest?: Prisma.FriendRequestOmit
   friendship?: Prisma.FriendshipOmit
   gameSession?: Prisma.GameSessionOmit
+  gameMove?: Prisma.GameMoveOmit
   invite?: Prisma.InviteOmit
 }
 

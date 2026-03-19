@@ -8,11 +8,18 @@ type MoveAuthorizationResult = {
   reason?: string;
 };
 
+type MovePayload = {
+  from: string;
+  to: string;
+  promotion?: string;
+};
+
 export async function authorizeAndAdvanceMove(
   apiOrigin: string,
   sharedSecret: string,
   room: string,
-  player: PlayerIdentity
+  player: PlayerIdentity,
+  move?: MovePayload
 ): Promise<MoveAuthorizationResult> {
   const response = await fetch(
     `${apiOrigin.replace(/\/$/, "")}/internal/ws/rooms/${encodeURIComponent(room)}/authorize-move`,
@@ -22,7 +29,7 @@ export async function authorizeAndAdvanceMove(
         "content-type": "application/json",
         "x-internal-ws-secret": sharedSecret,
       },
-      body: JSON.stringify({ player }),
+      body: JSON.stringify({ player, ...(move ? { move } : {}) }),
     }
   );
 
@@ -37,4 +44,23 @@ export async function authorizeAndAdvanceMove(
 
   const body = (await response.json()) as MoveAuthorizationResult;
   return body;
+}
+
+export async function reportRoomPresence(
+  apiOrigin: string,
+  sharedSecret: string,
+  room: string,
+  playerSockets: number
+): Promise<void> {
+  await fetch(
+    `${apiOrigin.replace(/\/$/, "")}/internal/ws/rooms/${encodeURIComponent(room)}/presence`,
+    {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+        "x-internal-ws-secret": sharedSecret,
+      },
+      body: JSON.stringify({ playerSockets }),
+    }
+  );
 }

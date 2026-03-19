@@ -175,6 +175,13 @@ export type EnumPieceColorFilter<$PrismaModel = never> = {
   not?: Prisma.NestedEnumPieceColorFilter<$PrismaModel> | $Enums.PieceColor
 }
 
+export type EnumPieceColorNullableFilter<$PrismaModel = never> = {
+  equals?: $Enums.PieceColor | Prisma.EnumPieceColorFieldRefInput<$PrismaModel> | null
+  in?: $Enums.PieceColor[] | Prisma.ListEnumPieceColorFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.PieceColor[] | Prisma.ListEnumPieceColorFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumPieceColorNullableFilter<$PrismaModel> | $Enums.PieceColor | null
+}
+
 export type EnumGameStatusWithAggregatesFilter<$PrismaModel = never> = {
   equals?: $Enums.GameStatus | Prisma.EnumGameStatusFieldRefInput<$PrismaModel>
   in?: $Enums.GameStatus[] | Prisma.ListEnumGameStatusFieldRefInput<$PrismaModel>
@@ -211,6 +218,16 @@ export type EnumPieceColorWithAggregatesFilter<$PrismaModel = never> = {
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumPieceColorFilter<$PrismaModel>
   _max?: Prisma.NestedEnumPieceColorFilter<$PrismaModel>
+}
+
+export type EnumPieceColorNullableWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.PieceColor | Prisma.EnumPieceColorFieldRefInput<$PrismaModel> | null
+  in?: $Enums.PieceColor[] | Prisma.ListEnumPieceColorFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.PieceColor[] | Prisma.ListEnumPieceColorFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumPieceColorNullableWithAggregatesFilter<$PrismaModel> | $Enums.PieceColor | null
+  _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumPieceColorNullableFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumPieceColorNullableFilter<$PrismaModel>
 }
 
 export type NestedStringFilter<$PrismaModel = never> = {
@@ -388,6 +405,13 @@ export type NestedEnumPieceColorFilter<$PrismaModel = never> = {
   not?: Prisma.NestedEnumPieceColorFilter<$PrismaModel> | $Enums.PieceColor
 }
 
+export type NestedEnumPieceColorNullableFilter<$PrismaModel = never> = {
+  equals?: $Enums.PieceColor | Prisma.EnumPieceColorFieldRefInput<$PrismaModel> | null
+  in?: $Enums.PieceColor[] | Prisma.ListEnumPieceColorFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.PieceColor[] | Prisma.ListEnumPieceColorFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumPieceColorNullableFilter<$PrismaModel> | $Enums.PieceColor | null
+}
+
 export type NestedEnumGameStatusWithAggregatesFilter<$PrismaModel = never> = {
   equals?: $Enums.GameStatus | Prisma.EnumGameStatusFieldRefInput<$PrismaModel>
   in?: $Enums.GameStatus[] | Prisma.ListEnumGameStatusFieldRefInput<$PrismaModel>
@@ -423,6 +447,16 @@ export type NestedEnumPieceColorWithAggregatesFilter<$PrismaModel = never> = {
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumPieceColorFilter<$PrismaModel>
   _max?: Prisma.NestedEnumPieceColorFilter<$PrismaModel>
+}
+
+export type NestedEnumPieceColorNullableWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.PieceColor | Prisma.EnumPieceColorFieldRefInput<$PrismaModel> | null
+  in?: $Enums.PieceColor[] | Prisma.ListEnumPieceColorFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.PieceColor[] | Prisma.ListEnumPieceColorFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumPieceColorNullableWithAggregatesFilter<$PrismaModel> | $Enums.PieceColor | null
+  _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumPieceColorNullableFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumPieceColorNullableFilter<$PrismaModel>
 }
 
 
