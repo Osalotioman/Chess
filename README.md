@@ -47,10 +47,6 @@ Health check: http://localhost:8080/health
 
 Health check: http://localhost:4000/health
 
-## Documentation
-
-- [CONTRIBUTING.md](CONTRIBUTING.md)
-
 ## License
 
 This project is licensed under the Apache License 2.0 See [LICENSE](LICENSE) for details.
