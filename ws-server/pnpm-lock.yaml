@@ -15,8 +15,8 @@ importers:
         specifier: ^17.3.1
         version: 17.3.1
       ws:
-        specifier: ^8.18.0
-        version: 8.19.0
+        specifier: ^8.20.1
+        version: 8.20.1
     devDependencies:
       '@types/node':
         specifier: ^22.13.0
@@ -231,8 +231,8 @@ packages:
   undici-types@6.21.0:
     resolution: {integrity: sha512-iwDZqg0QAGrg9Rav5H4n0M64c3mkR59cJ6wQp+7C4nI0gsmExaedaYLNO44eT4AtBBwjbTiGPMlt2Md0T9H9JQ==}
 
-  ws@8.19.0:
-    resolution: {integrity: sha512-blAT2mjOEIi0ZzruJfIhb3nps74PRWTCz1IjglWEEpQl5XS/UNama6u2/rjFkDDouqr4L67ry+1aGIALViWjDg==}
+  ws@8.20.1:
+    resolution: {integrity: sha512-It4dO0K5v//JtTXuPkfEOaI3uUN87iYPnqo/ZzqCoG3g8uhA66QUMs/SrM0YK7/NAu+r4LMh/9dq2A7k+rHs+w==}
     engines: {node: '>=10.0.0'}
     peerDependencies:
       bufferutil: ^4.0.1
@@ -384,4 +384,4 @@ snapshots:
 
   undici-types@6.21.0: {}
 
-  ws@8.19.0: {}
+  ws@8.20.1: {}
