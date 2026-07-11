@@ -1,19 +1,19 @@
 # Chess
+This project is no longer being maintained, you can [get in touch](mailto:osalotioman@gmail.com) if you have any questions or want to revive the project or anything.
 
-Chess is a two-player chess experience with a Next.js frontend, a Node.js WebSocket server for real-time multiplayer, and a dedicated REST API server for account/auth operations.
+The original code can be found here: [https://github.com/Osalotioman/Chess/tree/b08a8d548391b3f145817e245654b3fededc7f54](https://github.com/Osalotioman/Chess/tree/b08a8d548391b3f145817e245654b3fededc7f54)
 
+This is an implementation of a Chess game with a Next.js frontend, a Node.js WebSocket server for real-time multiplayer, and a dedicated REST API server for account/auth operations.
 A working version of this game can be found here: [https://chess-championship-arena.vercel.app/](https://chess-championship-arena.vercel.app/)
 
 ## Repository Structure
-
-- [client/](client) — Next.js frontend (App Router)
-- [ws-server/](ws-server) — Node.js WebSocket server (TypeScript, `ws`)
-- [api-server/](api-server) — Node.js REST API server (Fastify, Zod, Prisma, PostgreSQL, TypeScript)
+- [client/](client) - Next.js frontend (App Router)
+- [ws-server/](ws-server) - Node.js WebSocket server (TypeScript, `ws`)
+- [api-server/](api-server) - Node.js REST API server (Fastify, Zod, Prisma, PostgreSQL, TypeScript)
 
 ## Quick Start
 
 ### Frontend (Next.js)
-
 1. Install dependencies:
    - From [client/](client):
      - `pnpm install`
@@ -22,7 +22,6 @@ A working version of this game can be found here: [https://chess-championship-ar
 3. Open http://localhost:3000
 
 ### WebSocket Server (Node.js)
-
 1. Install dependencies:
    - From [ws-server/](ws-server):
      - `pnpm install`
@@ -30,11 +29,9 @@ A working version of this game can be found here: [https://chess-championship-ar
    - `pnpm dev` (recommended for development)
    - or `pnpm build && pnpm start`
 3. The server listens on ws://localhost:8080 by default.
-
 Health check: http://localhost:8080/health
 
 ### API Server (Node.js)
-
 1. Install dependencies:
    - From [api-server/](api-server):
      - `pnpm install`
@@ -44,9 +41,7 @@ Health check: http://localhost:8080/health
 3. The server listens on http://localhost:4000 by default.
 4. Run migrations before first start:
    - `pnpm prisma:migrate:dev`
-
 Health check: http://localhost:4000/health
 
 ## License
-
 This project is licensed under the Apache License 2.0 See [LICENSE](LICENSE) for details.
